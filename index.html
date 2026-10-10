@@ -170,7 +170,7 @@ svg.scene{width:100%;height:auto;max-height:calc(100vh - 60px);display:block;ove
 /* Bas : le texte à gauche, le dossier fixé à droite */
 .bas{display:grid;grid-template-columns:1fr minmax(300px,38%);gap:44px;padding-top:40px}
 .bas .cadre{position:sticky;top:24px;align-self:start}
-.bas .etape{min-height:72vh;display:flex;flex-direction:column;justify-content:center;position:relative}
+.bas .etape{min-height:72vh;padding:32px 0;display:flex;flex-direction:column;justify-content:center;position:relative}
 .bas .etape p{font-size:19px;max-width:560px}
 .bas .carte{align-self:flex-start;max-width:608px}
 .dossier{background:#fff;border:2px solid var(--teal);border-radius:4px 18px 4px 18px;padding:14px 16px;font:14px/1.75 'JetBrains Mono',ui-monospace,Menlo,monospace;position:relative}
@@ -698,7 +698,7 @@ body.compteur .coin .tete span:last-child{opacity:1}
 .retro-footer :focus-visible{outline-color:var(--jaune)}
 
 /* Avant l'étape 1, le mode d'emploi. Une piste de crans sans texte fait défiler ses états, écrits à même
-   le papier dans la scène : l'invitation, puis la longe et les flèches du clavier, puis rien. Le dernier
+   le papier dans la scène : l'invitation, ce qu'est la page, puis la longe et les flèches du clavier, puis rien. Le dernier
    cran est le pas 1.1 : sa carte, tenue au milieu de l'écran, entre par la gauche quand le cheval entre
    par la droite. La piste s'élargit jusqu'au filet du papier, pour que la carte sorte de sous son bord ;
    la scène, elle, garde sa largeur, son fond couvrirait l'angle arrondi du cadre. */
@@ -713,13 +713,13 @@ body.compteur .coin .tete span:last-child{opacity:1}
 .seuil{position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none}
 .seuil > *{grid-area:1/1}
 .invite,.notice{opacity:0;visibility:hidden;transition:opacity .4s,visibility 0s .4s}
-.a-invite .invite,.a-corde .nt-corde,.a-touches .nt-touches{opacity:1;visibility:visible;transition:opacity .6s .3s,visibility 0s}
+.a-invite .invite,.a-propos .nt-propos,.a-corde .nt-corde,.a-touches .nt-touches{opacity:1;visibility:visible;transition:opacity .6s .3s,visibility 0s}
 .invite .titre{margin:0 0 22px;font-size:clamp(30px,4vw,58px);color:var(--teal-sombre)}
 .hampe{display:block;margin:0 auto;width:clamp(56px,6vw,84px);height:auto;fill:none;stroke:var(--orange);stroke-width:13;stroke-linecap:round;stroke-linejoin:round}
 /* Seule chose de la page qui bouge sans s'arrêter : elle n'a que trois mots au-dessus d'elle, et s'efface au premier cran. */
 @keyframes appel{50%{opacity:.12}}
 .a-invite .hampe{animation:appel 1.3s ease-in-out infinite}
-.notices{width:min(640px,86%)}
+.notices,.nt-propos{width:min(640px,86%)}
 .notice + .notice{margin-top:34px}
 .notice p{margin:0 0 .8em;font-size:21px;line-height:1.5}
 .notice p:last-child{margin-bottom:0}
@@ -730,7 +730,7 @@ body.compteur .coin .tete span:last-child{opacity:1}
 
 /* La longe : un trait fin en haut de l'écran, un nœud par étape, une boucle aux étapes « À vous ».
    Elle tient dans les 24 points que le dossier du bas laisse au-dessus de lui, et ne prend aucune hauteur.
-   Au premier écran elle attend au-dessus, et descend au premier cran de défilement. */
+   Aux deux premiers écrans elle attend au-dessus, et descend au cran qui la présente. */
 .longe{position:sticky;top:0;height:0;z-index:30;transition:transform .9s cubic-bezier(.22,.7,.25,1)}
 .sans-longe .longe{transform:translateY(-70px);visibility:hidden;transition:transform .4s ease-in,visibility 0s .4s}
 .longe::before{content:'';position:absolute;left:0;right:0;top:0;height:24px;background:linear-gradient(var(--paper) 60%,rgba(242,239,230,0));pointer-events:none}
@@ -1198,7 +1198,7 @@ const D14 = 'douze icones quatorze', F14 = 'J fen long';
 // À l'étape 16, les deux petits programmes du kit se posent sur la machine, puis ce qui les distingue du modèle.
 const P16 = 'S branches local valid pont det';
 const SCENES = {
-  '0.1': 'invite', '0.2': 'corde', '0.3': 'corde touches', '0.4': '',
+  '0.1': 'invite', '0.2': 'propos', '0.3': 'corde', '0.4': 'corde touches', '0.5': '',
   '1.1': '', '1.2': 'cit', '1.3': 'mots', '1.4': '',
   '2.1': 'grille', '2.2': 'charge', '2.3': 'charge long trait', '2.4': 'charge long trait meme',
   '2.5': 'charge long trait sangles mot', '2.6': 'charge long trait sangles petits',
@@ -1655,7 +1655,7 @@ function jouer(id) {
   const rang = pas => pas.split('.').reduce((a, b) => a * 100 + Number(b), 0);
   document.querySelectorAll('.avec-memento').forEach(b => b.classList.toggle('vu', rang(id) >= rang(b.dataset.pas)));
   document.body.classList.toggle('avant', n === 0);
-  document.body.classList.toggle('sans-longe', id === '0.1');
+  document.body.classList.toggle('sans-longe', id === '0.1' || id === '0.2');
   document.body.classList.toggle('entree', n < 2);
   document.body.classList.toggle('regime-bas', id === '6.7' || n >= 7);
   document.body.classList.toggle('sans-coin', n === 15 || id === '20.7');
@@ -1670,13 +1670,14 @@ function jouer(id) {
     + mentions.texte.map((t, i) => `<p class="${classes[i] || 'retro-footer-licence'}">${t}</p>`).join('');
 })();
 
-// Le mode d'emploi vient lui aussi du montage : l'invitation de son premier cran, puis une notice par
-// cran qui a du texte. Une ligne écrite en liste y devient une ligne de légende, devant un nœud de la longe.
+// Le mode d'emploi vient lui aussi du montage : l'invitation de son premier cran, le propos du deuxième,
+// seul à l'écran, puis une notice par cran qui a du texte. Une ligne écrite en liste y devient une ligne de légende, devant un nœud de la longe.
 (function monterSeuil() {
-  const [invite, ...suite] = window.AVANT;
+  const [invite, propos, ...suite] = window.AVANT;
   const noms = ['corde', 'touches'], noeuds = ['ici', 'passe', '', 'anse'];
   $('seuil').innerHTML = `<div class="invite"><p class="titre">${invite.texte.join(' ')}</p>`
     + '<svg class="hampe" viewBox="0 0 84 120" aria-hidden="true"><path d="M42,10 V106 M12,74 L42,106 L72,74"/></svg></div>'
+    + '<div class="notice nt-propos">' + propos.texte.map(t => `<p>${t}</p>`).join('') + '</div>'
     + '<div class="notices">' + suite.filter(c => c.texte.length).map((c, i) => {
       const lignes = c.texte.filter(t => t.startsWith('- '));
       return `<div class="notice nt-${noms[i]}">` + c.texte.filter(t => !t.startsWith('- ')).map(t => `<p>${t}</p>`).join('')
