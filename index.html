@@ -1,0 +1,1904 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sortez du chatbot, forgez votre harnais (prototype, test de durée)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#127676;--orange:#E4632E;--jaune:#E3A535;--ink:#0D1617;--paper:#F2EFE6;--teal-sombre:#0B4E4E;--gris:#5d6b6b;--duree:900ms;--marge:28px}
+*{box-sizing:border-box}
+body{margin:0;padding:0 44px;color:var(--ink);font:18px/1.55 Inter,system-ui,sans-serif;background:var(--ink) url('medias/fond_art_nouveau.jpg') center/cover fixed}
+.page{max-width:1560px;margin:28px auto;padding:0 var(--marge) 90px;background:var(--paper);border:3px solid var(--teal);box-shadow:inset 0 0 0 2px var(--orange);border-radius:34px 6px 34px 6px}
+h1,.inter,.titre,.mot,.cit{font-family:Anton,Oswald,Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.04em;line-height:1.1}
+h1{font-size:clamp(26px,3vw,40px);margin:0 0 .7em;color:var(--teal-sombre)}
+code{font:.9em 'JetBrains Mono',ui-monospace,Menlo,monospace;background:rgba(18,118,118,.1);padding:.05em .3em;border-radius:3px;overflow-wrap:anywhere}
+a{color:var(--teal-sombre);overflow-wrap:anywhere}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.inter{font-size:clamp(28px,3.2vw,44px);margin:0 0 .5em}
+.inter .num{display:block;font-size:.5em;letter-spacing:.14em;color:var(--orange);margin-bottom:.3em}
+.sources,.bas .etape .sources{font-size:13px;line-height:1.45;color:var(--teal-sombre);margin-top:1em}
+.coupe{margin:0 auto;padding:14px 18px;max-width:620px;border:2px dashed var(--gris);border-radius:6px;font-size:15px;color:var(--gris);text-align:center}
+
+/* Haut : la gravure tient l'écran, le texte défile à gauche, sur sa marge vide */
+.haut .cadre{position:sticky;top:0;height:100vh;display:flex;align-items:center;background:var(--paper)}
+.haut .pas{position:relative;z-index:5;margin-top:-100vh}
+.haut .etape{min-height:90vh;display:flex;align-items:center;justify-content:flex-start}
+.carte{line-height:1.5;background:#fbfaf5;border:2px solid var(--teal);border-radius:4px 18px 4px 18px;padding:18px 22px;box-shadow:0 6px 24px rgba(13,22,23,.16)}
+.haut .carte{max-width:340px;font-size:21px}
+.carte p,.etape p{margin:0 0 .7em}
+.carte p:last-child{margin-bottom:0}
+svg.scene{width:100%;height:auto;max-height:calc(100vh - 60px);display:block;overflow:visible}
+.scene .gravure,.scene .piece,.e-petits image,.mini4 image,.e-autre image{mix-blend-mode:multiply}
+.scene > g,.scene > text,.scene > path,.scene > rect,.scene > line{transition:opacity .5s}
+.scene .cheval-g{transition:transform 1.1s ease .5s,opacity .5s 1.5s;transform-origin:1230px 520px}
+.piece{fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:.88}
+.piece.trace{stroke-dasharray:1 1.3;stroke-dashoffset:1.15;transition:stroke-dashoffset var(--duree) ease,stroke .5s}
+.piece.plein{opacity:0;transition:opacity var(--duree)}
+.t-trait .p-trait{stroke-dashoffset:0}
+.t-sangles .p-sangle{stroke-dashoffset:0}
+.t-sangles .p-sangle.plein{opacity:.88}
+.t-sangles .p-sangle,.t-trait .p-trait{transition-delay:var(--d,0s)}
+.cache{opacity:0}
+/* Le cheval entre par la droite au pas 1.1. Le déplacement porte sur l'image même : posé sur son
+   groupe, il l'isolerait du papier et la gravure ne s'y fondrait plus. */
+.scene .gravure{transition:transform 1.3s cubic-bezier(.22,.7,.25,1),opacity .6s}
+.avant .scene .gravure{transform:translateX(760px);opacity:0}
+.e-mots .petit{opacity:0;transition:opacity .5s}
+.t-mots .e-mots .petit{opacity:1;transition-delay:calc(1s + var(--i) * .35s)}
+.e-mots .but{fill:var(--ink)}
+.t-cit .e-cit,.t-mots .e-mots,.t-grille .e-grille,.t-charge .e-charge,.t-meme .e-meme,.t-mot .e-mot,.t-petits .e-petits,.t-mention .e-mention,.t-kit .e-kit{opacity:1}
+.cit{fill:var(--teal-sombre);font-size:34px}
+.mot{fill:var(--orange);font-size:40px}
+.etiq{font-family:Anton,Oswald,Impact,sans-serif;text-transform:uppercase;letter-spacing:.04em;font-size:24px;fill:var(--ink)}
+.petit{font:600 17px Inter,sans-serif;fill:var(--teal-sombre)}
+.fil{stroke:var(--ink);stroke-width:1.5;fill:none}
+.case{fill:transparent;stroke:var(--ink);stroke-width:2;transition:fill .18s}
+.charge{fill:var(--ink);width:53px;transition:width var(--duree) cubic-bezier(.3,.9,.3,1) .5s}
+.t-long .charge{width:153px}
+.chaine{stroke:var(--ink);stroke-width:3;fill:none}
+.regle line{stroke:var(--gris);stroke-width:1.5}.regle text{fill:var(--gris);font:15px Inter,sans-serif}
+.score{fill:var(--orange);font-family:Anton,Oswald,Impact,sans-serif;font-size:64px}
+.meme{fill:var(--ink);font:italic 22px Inter,sans-serif}
+.mention{fill:var(--teal-sombre);font:600 15px Inter,sans-serif}
+.picto{fill:none;stroke:var(--teal-sombre);stroke-width:2.5;stroke-linejoin:round}
+/* Étape 3 : les sangles s'éteignent, le modèle choisit le mot suivant */
+.piece.plein{transition:opacity var(--duree),fill .5s}
+.t-gris .piece.trace{stroke:#a9b0ad}
+.t-gris .piece.plein{fill:#a9b0ad}
+.t-phrase .e-phrase,.t-modele .e-modele{opacity:1}
+.phrase{font:600 26px Inter,sans-serif;fill:var(--ink)}
+.gagne{fill:var(--orange);opacity:0;transition:opacity .4s}
+.t-phrase .gagne{opacity:1;transition-delay:3.6s}
+.cand{opacity:0;transition:opacity .4s}
+.t-phrase .cand{opacity:1;transition-delay:1.7s}
+.cand text{font:600 19px Inter,sans-serif;fill:var(--ink);transition:fill .4s}
+.cand rect{fill:var(--teal);width:0;transition:width .9s ease,fill .4s}
+.t-phrase .cand rect{width:var(--w);transition-delay:2s,3.2s}
+.t-phrase .cand.perd rect,.t-phrase .cand.perd text{fill:var(--gris);transition-delay:2s,3.2s}
+.t-phrase .cand.perd text{transition-delay:3.2s}
+.t-phrase .cand.gagnant rect{fill:var(--orange)}
+.t-phrase .cand.gagnant text{fill:var(--orange);transition-delay:3.2s}
+/* Étape 4 : le cadre se resserre sur la tête, puis le clip du raisonnement jeté */
+.scene.zoome{overflow:hidden}
+.t-zoom .e-fondu,.t-fenetre .e-fenetre,.t-clip .e-clip{opacity:1}
+.scene > g.e-fondu{transition:opacity .15s}
+.lab4{font:600 9.5px Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase;fill:var(--gris)}
+.cadre4{fill:#fff;stroke:var(--ink);stroke-width:1.5}
+.b4{opacity:0;transition:opacity .4s}
+.b4 rect,.anc{fill:rgba(18,118,118,.16);stroke:var(--teal);stroke-width:1}
+.b4 text{font:600 10.5px Inter,sans-serif;fill:var(--teal-sombre)}
+.t-bandes .b4{opacity:1;transition-delay:calc(1.2s + var(--i) * .4s)}
+.t-vide .b4{opacity:0;transition:opacity .15s 2.7s}
+.fant rect{fill:var(--gris);opacity:0}
+@keyframes fantome{0%{opacity:0}25%,60%{opacity:.55}100%{opacity:0}}
+.t-fantomes .fant rect{animation:fantome 2.4s ease calc(var(--i) * .15s) both}
+.oeil,.regard{fill:none;stroke-dasharray:1 1.3;stroke-dashoffset:1.15;transition:stroke-dashoffset .9s ease}
+.oeil{stroke:var(--orange);stroke-width:2.5;stroke-linejoin:round}
+.regard{stroke:var(--ink);stroke-width:.8}
+.t-oeillere .oeil{stroke-dashoffset:0}
+.t-oeillere .regard{stroke-dashoffset:0;transition-delay:.9s}
+.t-clip .cheval-g{visibility:hidden}
+.mini4{visibility:hidden}
+.t-clip .mini4{visibility:visible}
+#clip4 g,#clip4 text,#clip4 rect{transition:opacity .45s,transform .6s ease,fill .3s}
+.cadre-clip{fill:#fff;stroke:var(--ink);stroke-width:2}
+.lab-clip{font:600 15px Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase;fill:var(--gris)}
+.bulle rect{fill:#fff;stroke:var(--orange);stroke-width:2}
+.bulle text{font:600 16px Inter,sans-serif;fill:var(--orange)}
+.coup{font:600 18px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--ink)}
+.note4 rect{fill:var(--gris);opacity:.55}
+.note4 text{font:600 14px Inter,sans-serif;fill:var(--gris)}
+.doute{font-family:Anton,Oswald,Impact,sans-serif;font-size:60px;fill:var(--orange)}
+.resume rect{fill:var(--teal)}
+.resume text{font:600 16px Inter,sans-serif;fill:#fff}
+/* Étape 5 : cinq pièces, une par pas. La pièce qui arrive est orange, les précédentes sarcelle. */
+@keyframes retrace{from{stroke-dashoffset:1.15}to{stroke-dashoffset:0}}
+.scene.t-cinq .piece{transition-delay:0s}
+.piece.trace.neuf{stroke:var(--orange);animation:retrace .9s ease both;transition:none}
+.piece.plein.neuf{fill:var(--orange)}
+.piece.trace.acquis{stroke:var(--teal)}
+.piece.plein.acquis{fill:var(--teal)}
+.t-tous .p-trait{stroke:var(--teal)}
+.t-oeilteal .oeil{stroke-dashoffset:0;stroke:var(--teal)}
+.t-colonne .e-colonne{opacity:1}
+.lig .num{font-family:Anton,Oswald,Impact,sans-serif;font-size:20px;fill:var(--gris)}
+.lig .regle5{stroke:var(--gris);stroke-width:1;transition:stroke .4s,stroke-width .4s}
+.lig .mot5{font-family:Anton,Oswald,Impact,sans-serif;font-size:20px;letter-spacing:.04em;text-transform:uppercase;fill:var(--teal);opacity:0;transition:opacity .5s .3s,fill .5s}
+.lig .picto5{fill:none;stroke:var(--teal);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .5s .5s,stroke .5s}
+.lig.vu .mot5,.lig.vu .picto5{opacity:1}
+.lig.neuf .mot5{fill:var(--orange)}
+.lig.neuf .picto5{stroke:var(--orange)}
+.lig .mention5{font:600 14px Inter,sans-serif;fill:var(--teal-sombre);opacity:0;transition:opacity .5s}
+.t-mentions .lig .mention5{opacity:1}
+.t-mentions .lig.souligne .regle5{stroke:var(--orange);stroke-width:3}
+/* Étape 6 : l'étiquette du fournisseur, le jardin clos, l'autre cheval devant la porte */
+.scene g.e-etiq{transform:translateY(-14px);transition:opacity .5s,transform .6s cubic-bezier(.3,1.5,.5,1)}
+.scene.t-etiq g.e-etiq{opacity:1;transform:none;transition-delay:.3s}
+.plaque{fill:#fbfaf5;stroke:var(--ink);stroke-width:1.5}
+@keyframes battement{0%,100%{fill:#fbfaf5;stroke:var(--ink)}35%,55%{fill:var(--orange);stroke:var(--orange)}}
+.t-bat .plaque{animation:battement 1.2s ease .5s 1}
+.scene g.e-mur{clip-path:inset(100% -12px -12px -12px);transition:clip-path .6s ease,opacity .5s}
+.scene.t-mur g.e-mur{clip-path:inset(-12px);transition:clip-path 1.5s cubic-bezier(.3,.8,.3,1) .5s,opacity .8s}
+.scene.t-dedans g.e-mur{opacity:0;transition:opacity 1.8s ease .4s}
+.mur{fill:rgba(18,118,118,.1);stroke:var(--teal);stroke-width:3;stroke-linejoin:round}
+.joints{fill:none;stroke:var(--teal);stroke-width:1.5;opacity:.6}
+.linteau{font-family:Anton,Oswald,Impact,sans-serif;font-size:28px;letter-spacing:.22em;text-transform:uppercase;fill:var(--teal-sombre)}
+.baie{fill:var(--paper);stroke:var(--teal);stroke-width:3}
+.battant{transform-box:fill-box;transform-origin:100% 50%}
+.battant path{fill:var(--teal)}
+.battant .planches{fill:none;stroke:var(--paper);stroke-width:1.5}
+@keyframes passage{0%,100%{transform:scaleX(1)}12%,80%{transform:scaleX(.16)}}
+.t-bandes .battant{animation:passage 3.4s ease .3s 1 both}
+.brin{fill:none;stroke:var(--teal);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1 1.3;stroke-dashoffset:1.15;transition:stroke-dashoffset .5s}
+.t-brins .brin{stroke-dashoffset:0;transition:stroke-dashoffset 1.4s ease calc(1.4s + var(--i) * .18s)}
+.depot{opacity:0;transform:translateX(300px);transition:opacity .3s}
+.depot rect{fill:#fbfaf5;stroke:var(--teal);stroke-width:2}
+.depot text{font:600 20px Inter,sans-serif;fill:var(--teal-sombre)}
+.t-bandes .depot{opacity:1;transform:none;transition:opacity .4s,transform 1.3s cubic-bezier(.3,.7,.3,1);transition-delay:calc(.9s + var(--i) * .4s)}
+.scene g.e-autre{opacity:0;transform:translateX(440px);transition:opacity .4s,transform .1s .4s}
+.scene.t-autre g.e-autre{opacity:1;transform:none;transition:opacity .6s .5s,transform 2.4s cubic-bezier(.25,.6,.3,1) .5s}
+/* Pas 6.7 : le cheval part vers le coin, puis les fichiers du kit tombent en pile */
+.t-depart .cheval-g{transform:scale(.2);opacity:0}
+.t-depart .piece{opacity:0;transition:opacity .5s}
+.e-kit .fich,.e-kit .fleche{opacity:0;transition:opacity .2s}
+.e-kit .fich{transform:translateY(-90px)}
+.t-kit .e-kit .fich{opacity:1;transform:none;transition:opacity .3s,transform .7s cubic-bezier(.3,1.5,.5,1);transition-delay:calc(1.9s + var(--i) * .3s)}
+.t-kit .e-kit .fleche{opacity:1;transition-delay:3s}
+
+/* Bas : le texte à gauche, le dossier fixé à droite */
+.bas{display:grid;grid-template-columns:1fr minmax(300px,38%);gap:44px;padding-top:40px}
+.bas .cadre{position:sticky;top:24px;align-self:start}
+.bas .etape{min-height:72vh;display:flex;flex-direction:column;justify-content:center;position:relative}
+.bas .etape p{font-size:19px;max-width:560px}
+.bas .carte{align-self:flex-start;max-width:608px}
+.dossier{background:#fff;border:2px solid var(--teal);border-radius:4px 18px 4px 18px;padding:14px 16px;font:14px/1.75 'JetBrains Mono',ui-monospace,Menlo,monospace;position:relative}
+.tete{font:600 12px/1.2 Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);margin-bottom:8px;display:flex;justify-content:space-between}
+.ligne{display:flex;align-items:center;gap:8px;padding:0 6px;border-radius:4px;transition:background var(--duree),color var(--duree),opacity var(--duree),transform var(--duree),outline-color var(--duree)}
+.ligne .ico{width:16px;height:16px;flex:none}
+.ligne.sous{margin-left:22px}
+.ligne .note{margin-left:auto;font:600 11px/1 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;opacity:0;transition:opacity var(--duree)}
+.l-agents{opacity:0;transform:translateX(-10px)}
+.d-agents .l-agents{opacity:1;transform:none;background:var(--teal);color:var(--paper)}
+.d-agents .l-agents .note{opacity:1}
+.d-tout .l-tout{background:rgba(18,118,118,.16)}
+.d-tout .l-tout .note{opacity:1;color:var(--teal-sombre)}
+.d-tout .l-plan{box-shadow:inset 3px 0 0 var(--teal)}
+.l-besoin{opacity:.28;outline:1.5px dashed transparent;outline-offset:-2px}
+.d-besoin .l-besoin{opacity:1;outline-color:var(--orange);transition-delay:calc(var(--i) * .4s)}
+.d-besoin .l-besoin .note{opacity:1;color:#B8431A}
+.cadre .dossier,.cadre .fenetre{transition:opacity .5s}
+.cadre.f .dossier{opacity:0;position:absolute;inset:0 0 auto 0;pointer-events:none}
+.cadre:not(.f) .fenetre{display:none}
+.fenetre{background:#fff;border:2px solid var(--teal);border-radius:4px 18px 4px 18px;padding:14px 16px}
+.fenetre svg{width:100%;height:auto;max-height:calc(100vh - 290px);display:block}
+.fenetre svg *{transition:opacity .6s,transform .9s,width .9s,height .9s}
+.bande{fill:rgba(18,118,118,.22)}
+.bande.x{fill:rgba(18,118,118,.5)}
+.contour{fill:none;stroke:var(--ink);stroke-width:2.5}
+.barre{fill:var(--orange);width:0}
+.f-poids .barre{width:var(--w)}
+.f-court .bande.loin,.f-court .barre.loin{opacity:0}
+.f-court .contour{height:124px}
+.f-melange .bande.m1{transform:translateY(196px)}.f-melange .bande.m2{transform:translateY(-196px)}.f-melange .bande.m3{transform:translateY(84px)}.f-melange .bande.m4{transform:translateY(-84px)}
+.f-repere .e-repere,.f-poids .e-poids,.f-pourquoi .e-pourquoi{opacity:1}
+.e-repere g:nth-child(2){transition-delay:.7s}.e-repere g:nth-child(3){transition-delay:1.4s}
+.ftxt{font:600 14px Inter,sans-serif;fill:var(--teal-sombre)}
+.hyp{font:600 14px Inter,sans-serif;fill:var(--gris)}
+
+/* Étape 7 : le plus petit harnais. Une fenêtre, une demande, un fichier de trois lignes. */
+.cadre:not(.m) .mini{display:none}
+.cadre.m:not(.pose) .dossier{display:none}
+@keyframes pose{from{opacity:0;transform:translateY(14px)}}
+.cadre.pose .dossier{margin:14px 56px 0 0;animation:pose .6s ease .9s both}
+.d-vide{min-height:74px}
+.d-vide .ligne{display:none}
+.mini svg{width:100%;height:auto;max-height:calc(100vh - 170px);display:block}
+.mini svg *{transition:opacity .5s,transform .9s ease,fill .5s,stroke .5s}
+.lab7{font:600 12px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;fill:var(--gris)}
+.ctx7{fill:#fff;stroke:var(--ink);stroke-width:2.5}
+.dem7,.rep7,.doute7,.fich7,.doc7,.disque7,.nom-a,.sur7{opacity:0}
+.dem7 rect{fill:rgba(18,118,118,.1)}
+.dem7 text{font:600 19px Inter,sans-serif;fill:var(--ink)}
+.m-demande .dem7{opacity:1}
+.rep7{clip-path:inset(0 0 100% 0)}
+.m-reponse .rep7{opacity:1;clip-path:inset(-4px);transition:opacity .3s,clip-path 1.2s ease .4s}
+.carte7{fill:#fff;stroke:var(--gris);stroke-width:1.5}
+.lr{fill:#c9cecb}
+.m-ajuste .lr.a{fill:var(--teal);transition-delay:.6s}
+.m-ajuste .lr.b{fill:var(--orange);transition-delay:1.1s}
+.m-ajuste .lr.c{fill:var(--jaune);transition-delay:1.6s}
+.m-doute .doute7{opacity:1;transition-delay:1.5s}
+.doute7 .q{font-family:Anton,Oswald,Impact,sans-serif;font-size:46px;fill:var(--gris)}
+.doute7 .quoi{font:600 15px Inter,sans-serif;fill:var(--gris)}
+@keyframes flotte{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.m-doute .doute7 g{animation:flotte 2.6s ease-in-out 1.6s 3}
+.m-doute .doute7 g + g{animation-delay:2.1s}
+.fich7{transform:translate(24px,-70px)}
+.m-fichier .fich7{opacity:1;transform:translate(24px,42px)}
+.m-doc .fich7{opacity:0;transform:translate(60px,250px)}
+.fich7 rect{fill:#fbfaf5;stroke:var(--teal);stroke-width:2}
+.fich7 text{font:600 15px Inter,sans-serif;fill:var(--ink)}
+.pa{fill:var(--teal)}.pb{fill:var(--orange)}.pc{fill:var(--jaune)}
+.doc7{transform:translate(0,-180px) scale(.8);transform-origin:240px 400px}
+.m-doc .doc7{opacity:1;transform:none;transition-delay:.3s}
+.doc7 .feuille{fill:#fff;stroke:var(--teal);stroke-width:2.5;stroke-linejoin:round}
+.doc7 text{font:15px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--ink)}
+.doc7 text.h{font-weight:600;font-size:18px}
+.doc7 text.nom{font-weight:600;font-size:17px;fill:var(--teal-sombre)}
+.m-eteint .ctx7{stroke:#b9c0bd}
+.m-eteint .lab-ctx{opacity:.4}
+.disque7 path,.disque7 ellipse{fill:var(--paper);stroke:var(--ink);stroke-width:2}
+.m-disque .disque7{opacity:1;transition-delay:.9s}
+.sur7{fill:var(--orange)}
+.m-agents .doc7 .nom-a{opacity:1}
+.m-agents .doc7 .nom-m{opacity:0}
+.m-agents .sur7{opacity:.35}
+
+/* Étape 8 : trois emplacements, un par programme, au-dessus du dossier encore vide */
+.cadre:not(.t) .trois{display:none}
+.trois svg{width:100%;height:auto;max-height:calc(100vh - 330px);display:block;margin-bottom:14px}
+.trois svg *{transition:opacity .5s,transform .7s ease,stroke .5s,fill .5s}
+.slot,.slot .plein{opacity:0}
+.h-cases .slot{opacity:1;transition-delay:calc(.2s + var(--i) * .35s)}
+.cadre8{fill:none;stroke:var(--gris);stroke-width:1.5;stroke-dasharray:6 5}
+.num8{font-family:Anton,Oswald,Impact,sans-serif;font-size:44px;fill:var(--gris)}
+.h-un .s1 .plein,.h-deux .s2 .plein,.h-trois .s3 .plein{opacity:1;transition-delay:.3s}
+.h-un .s1 .cadre8,.h-deux .s2 .cadre8,.h-trois .s3 .cadre8{fill:#fff;stroke:var(--teal);stroke-dasharray:none}
+.h-un .s1 .num8,.h-deux .s2 .num8,.h-trois .s3 .num8{fill:var(--teal-sombre)}
+.trait8{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.fond8{fill:#fff}
+.nom8{font-family:Anton,Oswald,Impact,sans-serif;font-size:22px;letter-spacing:.04em;text-transform:uppercase;fill:var(--teal-sombre)}
+.sous8{font:600 13px Inter,sans-serif;fill:var(--gris)}
+.mono8{font:600 13px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--paper)}
+@keyframes clin{0%,49%{opacity:1}50%,100%{opacity:0}}
+.h-deux .curseur{animation:clin .9s linear .7s 2 both}
+.fleche8{stroke:var(--orange);stroke-width:2.5;stroke-dasharray:1 1.3;stroke-dashoffset:1.15}
+.h-deux .fleche8{stroke-dashoffset:0;transition:stroke-dashoffset .8s ease 2.5s}
+.nuage8{opacity:0}
+.h-deux .nuage8{opacity:1;transition-delay:3s}
+.boite{opacity:0;transform:translateY(-44px)}
+.h-trois .boite{opacity:1;transform:none;transition:opacity .3s .6s,transform .7s cubic-bezier(.3,1.5,.5,1) .6s}
+.d-racine .ligne.sous{display:none}
+.d-racine .ligne{animation:pose .6s ease .3s both}
+/* Les commandes à copier, et le sélecteur de système et d'agent */
+.cmd p{margin:0 0 .3em!important;font-size:15px!important;font-weight:600;color:var(--teal-sombre)}
+.cmd pre,.dire pre{position:relative;margin:0 0 1em;background:var(--ink);color:var(--paper);border-radius:4px 14px 4px 14px;padding:14px 100px 14px 16px;font:14px/1.5 'JetBrains Mono',ui-monospace,Menlo,monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+.cmd pre code,.dire pre code{background:none;padding:0;font:inherit;color:inherit}
+.copier{position:absolute;right:8px;top:8px;border:1.5px solid var(--paper);background:transparent;color:var(--paper);font:700 12px/1 Oswald,Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:8px 10px;border-radius:10px 2px 10px 2px;cursor:pointer}
+.copier.fait{background:var(--jaune);border-color:var(--jaune);color:var(--ink)}
+.choix{display:grid;gap:8px;margin:0 0 14px}
+.rang{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:2px solid var(--ink);background:transparent;color:var(--ink);font:700 13px/1 Oswald,Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:9px 13px;border-radius:12px 3px 12px 3px;cursor:pointer}
+.opt[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:var(--paper)}
+code.choisi{background:var(--jaune);font-weight:600}
+
+/* Étape 9 : ce qui quitte la machine. Un clip tenu par états, puis les trois régimes. */
+.cadre:not(.n) .neuf,.cadre:not(.r) .regimes,.cadre:not(.q) .q9{display:none}
+.cadre.n .dossier,.cadre.r .dossier{display:none}
+.q9{font:400 84px/1 Anton,Oswald,Impact,sans-serif;color:var(--orange);text-align:center;margin-bottom:6px;animation:pose .6s ease .3s both}
+.neuf svg{width:100%;height:auto;max-height:calc(100vh - 130px);display:block}
+.neuf svg *{transition:opacity .5s,transform .9s ease,stroke-dashoffset .8s ease}
+.cote-f,.envoi9,.suite9,.fiche9,.sceau9,.interdit{opacity:0}
+.n-fournisseur .cote-f{opacity:1}
+.bande9 rect{fill:#fbfaf5;stroke:var(--teal);stroke-width:2}
+.bande9 text{font:600 11.5px Inter,sans-serif;fill:var(--teal-sombre)}
+.bA{transform:translate(70px,150px)}.bB{transform:translate(70px,184px)}
+.n-envoi .envoi9{opacity:1}
+.n-envoi .bA{transform:translate(349px,150px);transition:transform 1.8s ease .5s}
+.n-envoi .bB{transform:translate(349px,184px);transition:transform 1.8s ease 1.4s}
+.n-range .bA{transform:translate(366px,296px);transition:transform 1s ease .3s}
+.n-range .bB{transform:translate(366px,326px);transition:transform 1s ease .7s}
+.n-range .suite9{opacity:1;transition-delay:1.6s}
+.pointille{fill:none;stroke:var(--gris);stroke-width:2;stroke-dasharray:5 5}
+.n-loin .cote-f,.n-loin .envoi9,.n-loin .suite9{opacity:.22;transition-delay:0s}
+.n-fiche .fiche9{opacity:1;transition-delay:.4s}
+.sceau9{transform:scale(1.7) rotate(-12deg);transform-origin:158px 300px}
+.sceau9 circle{fill:var(--paper);stroke:var(--orange);stroke-width:3}
+.sceau9 text{font-family:Anton,Oswald,Impact,sans-serif;font-size:17px;letter-spacing:.06em;fill:var(--orange)}
+.n-fiche .sceau9{opacity:1;transform:rotate(-12deg);transition:opacity .2s 1.3s,transform .35s cubic-bezier(.3,1.6,.5,1) 1.3s}
+.interdit text{font:600 15px Inter,sans-serif;fill:var(--ink)}
+.interdit path{stroke:var(--orange);stroke-width:4;fill:none;opacity:.75}
+.n-interdits .interdit{opacity:1;transition-delay:calc(.3s + var(--i) * .5s)}
+.regimes{background:#fff;border:2px solid var(--teal);border-radius:4px 18px 4px 18px;padding:14px 16px;animation:pose .6s ease .2s both}
+.reg{display:flex;align-items:baseline;gap:12px;padding:10px 8px;border-top:1px solid rgba(18,118,118,.25);font-size:16px}
+.reg strong{font:400 19px Anton,Oswald,Impact,sans-serif;letter-spacing:.04em;text-transform:uppercase;min-width:138px}
+.reg em{margin-left:auto;font:700 11px/1 Oswald,Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;background:var(--jaune);padding:5px 8px;border-radius:8px 2px 8px 2px;visibility:hidden}
+.reg.choisi{background:rgba(227,165,53,.18)}
+.reg.choisi em{visibility:visible}
+
+/* Étape 10 : les trois supports de Leonard au-dessus du dossier, les six sous-dossiers, les prompts du kit */
+.cadre:not(.k) .memo,.cadre:not(.k) .kit10{display:none}
+.memo{display:block;height:196px;width:auto;max-width:100%;margin-bottom:10px;overflow:visible;transition:height .9s ease}
+.memo.k-petit{height:84px}
+.memo .obj{opacity:0;transform:translateY(-16px);filter:drop-shadow(0 4px 8px rgba(13,22,23,.28));transition:opacity .4s,transform .6s cubic-bezier(.3,1.5,.5,1)}
+.memo.k-photo .o-photo,.memo.k-note .o-note{opacity:1;transform:none;transition-delay:.3s}
+.memo.k-encre .o-bras{opacity:1;transform:none;transition-delay:1.1s}
+.bras{fill:#fbfaf5;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.tatou{font:400 19px Anton,Oswald,Impact,sans-serif;letter-spacing:.06em;text-transform:uppercase;fill:var(--ink);opacity:0;transition:opacity .9s}
+.tatou.rond{font:700 11.5px Oswald,Inter,sans-serif;letter-spacing:0}
+.memo.k-encre .tatou{opacity:1;transition-delay:1.9s}
+.griffe{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+.encre{fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round;stroke-dasharray:1 1.3;stroke-dashoffset:1.15;transition:stroke-dashoffset .9s ease}
+.memo.k-encre .encre{stroke-dashoffset:0;transition-delay:2.6s}
+.leg{font:600 12px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;fill:var(--gris);opacity:0;transition:opacity .5s}
+.memo.k-legendes .leg{opacity:1;transition-delay:calc(.5s + var(--i) * .8s)}
+.memo.k-petit .leg{opacity:0;transition-delay:0s}
+.d-dix .l-agents,.d-dix .l-tout,.d-dix .l-besoin{display:none}
+.d-deroule .l-plan{animation:pose .5s ease calc(.2s + var(--i) * .15s) both}
+.d-dix .l-plan{color:var(--gris);transition:color .5s,box-shadow .5s;transition-delay:calc(.2s + var(--j) * .8s)}
+.d-dix .l-plan .suite{color:transparent;background:#d9dcd8;border-radius:3px;transition:color .5s,background .5s;transition-delay:calc(.2s + var(--j) * .8s)}
+.d-noms3 .p1,.d-noms3 .p2,.d-noms3 .p3,.d-noms6 .l-plan{color:var(--ink);box-shadow:inset 3px 0 0 var(--teal)}
+.d-noms3 .p1 .suite,.d-noms3 .p2 .suite,.d-noms3 .p3 .suite,.d-noms6 .l-plan .suite{color:inherit;background:transparent}
+.d-neuf3 .p1,.d-neuf3 .p2,.d-neuf3 .p3,.d-neuf6 .p4,.d-neuf6 .p5,.d-neuf6 .p6{box-shadow:inset 3px 0 0 var(--orange)}
+.pic{opacity:0;color:var(--orange);transition:opacity .5s}
+.d-icones .pic{opacity:1}
+.d-deplie .p1 .pic{transition-delay:.4s}.d-deplie .p3 .pic{transition-delay:1.3s}
+.ligne.sous2{margin-left:44px}
+.l-sub{display:none}
+.d-sous .l-sub{display:flex}
+.d-deplie .l-sub{animation:pose .5s ease calc(2.2s + var(--i) * .3s) both}
+/* Pas 10.8 : un autre ordre, puis le retour. --u compte les lignes de 24,5 points à franchir. */
+@keyframes mel{0%,100%{transform:none}30%,64%{transform:translateY(calc(var(--u) * 24.5px))}}
+.d-melange .l-plan:not(.p5),.d-melange .bloc5{animation:mel 2.8s ease .5s 1 both}
+.d-melange .p1{--u:4}.d-melange .p2{--u:6}.d-melange .p3{--u:-2}.d-melange .p4{--u:3}.d-melange .bloc5{--u:-3}.d-melange .p6{--u:-2}
+.kit10{display:block;width:calc(100% - 56px);height:auto;margin-top:12px}
+.kit10 *{transition:opacity .4s,transform .6s cubic-bezier(.3,1.5,.5,1),fill .5s}
+.f10{opacity:0;transform:translateY(-40px)}
+.kit10.k-pile .f10{opacity:1;transform:none;transition-delay:calc(.3s + var(--i) * .25s)}
+.feuille10{fill:#fff;stroke:var(--teal-sombre);stroke-width:2;stroke-linejoin:round}
+.n10{font:600 13px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--teal-sombre)}
+.pile10 .lab7{opacity:0}
+.kit10.k-pile .pile10 .lab7{opacity:1}
+.kit10.k-premiers .un .feuille10{fill:var(--jaune);transition-delay:.4s}
+.kit10.k-permission .pile10,.perm10{opacity:0}
+.kit10.k-permission .perm10{opacity:1;transition-delay:.4s}
+.q10{font:600 15px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--ink)}
+.b10{font:600 13px Inter,sans-serif;fill:var(--ink)}
+
+/* Étape 11 : le chatbot qui oublie, les neuf questions, les deux fichiers et leur boucle, la classe sans nom */
+.cadre:not(.o) .onze{display:none}
+.onze svg{width:100%;height:auto;max-height:calc(100vh - 502px);display:block;margin-bottom:10px}
+.onze svg *{transition:opacity .5s,fill .5s,stroke .5s,stroke-dashoffset .8s ease}
+.s11,.t11,.badge11,.mot11,.fil11{opacity:0}
+.o-conv .s-conv,.o-points .s-points,.o-classe .s-classe{opacity:1}
+/* Pas 11.1 : la même bande, remise trois fois, pâlit trois fois. Sans mouvement, les trois sont pâles. */
+@keyframes oubli{0%{opacity:0;transform:translateY(-16px)}14%,62%{opacity:1;transform:none}100%{opacity:.3}}
+.b11{opacity:.3}
+.b11 rect{fill:rgba(18,118,118,.14);stroke:var(--teal);stroke-width:2}
+.b11 text{font:600 15px Inter,sans-serif;fill:var(--teal-sombre)}
+.o-conv .b11{animation:oubli 1.5s ease calc(.4s + var(--i) * 1.5s) both}
+.q11 circle{fill:#fff;stroke:var(--gris);stroke-width:2}
+.q11 .num11{font:600 13px Inter,sans-serif;fill:var(--gris);text-anchor:middle}
+.o-points .q11 circle{fill:var(--teal);stroke:var(--teal);transition-delay:calc(.4s + var(--i) * .35s)}
+.o-points .q11 .num11{fill:var(--paper);transition-delay:calc(.4s + var(--i) * .35s)}
+.mot11{font:600 14px Inter,sans-serif;fill:var(--teal-sombre);text-anchor:middle}
+.fil11{stroke:var(--teal);stroke-width:1.5}
+.o-points .mot11,.o-points .fil11{opacity:1;transition-delay:calc(.6s + var(--i) * .35s)}
+.o-classe .t11{opacity:1;transition-delay:calc(.2s + var(--i) * .12s)}
+.o-classe .badge11{opacity:1;transition-delay:1.3s}
+.barre11{fill:none;stroke:var(--orange);stroke-width:5;stroke-linecap:round;stroke-dasharray:1 1.3;stroke-dashoffset:1.15}
+.o-classe .barre11{stroke-dashoffset:0;transition-delay:2s}
+/* Pas 11.3 : les deux fichiers s'inscrivent dans le dossier, puis une boucle les entoure */
+.bloc11{position:relative}
+.boucle{position:absolute;left:12px;top:-1px;width:180px;height:51px;overflow:visible;pointer-events:none;opacity:0;transition:opacity .4s}
+.boucle path{fill:none;stroke:var(--teal);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke .5s,stroke-dashoffset .9s ease,opacity .4s}
+.boucle .tour{stroke-dasharray:1 1.3;stroke-dashoffset:1.15}
+.boucle .pointe{opacity:0}
+.d-onze .l-tout{display:flex}
+.d-onze .boucle,.d-onze .boucle .pointe{opacity:1}
+.d-onze .boucle .tour{stroke-dashoffset:0}
+.d-ecrit .l-tout{animation:pose .5s ease calc(.4s + var(--i) * .7s) both}
+.d-ecrit .boucle path{stroke:var(--orange)}
+.d-ecrit .boucle .tour{transition-delay:1.9s}
+.d-ecrit .boucle .pointe{transition-delay:2.7s}
+
+/* Étape 12 : le dossier reprend où l'étape 11 l'a laissé. Au pas 2, les six filets disent « le plan ». */
+.d-douze .l-plan{box-shadow:inset 3px 0 0 var(--teal);transition:box-shadow .5s}
+.d-plan .l-plan{box-shadow:inset 3px 0 0 var(--orange);transition-delay:.9s}
+@keyframes remplit{from{opacity:0}}
+.f-F .bande{animation:remplit .4s ease calc(.3s + (13 - var(--i)) * .09s) backwards}
+
+/* Étape 13 : la skill dans le dossier, puis le parcours qui se fige, le partage, la filiation */
+.ligne.sous3{margin-left:62px}
+.ligne.sous4{margin-left:80px}
+.l-skill{display:none}
+.d-treize .l-skill{display:flex}
+.d-treize .l-besoin{display:none}
+.d-deplie13 .l-skill{animation:pose .5s ease calc(.3s + var(--i) * .35s) both}
+.sansnom{color:transparent;background:#d9dcd8;border-radius:3px;transition:color .5s,background .5s}
+.d-nom13 .sansnom{color:inherit;background:transparent}
+.d-sorties .l-cn{box-shadow:inset 3px 0 0 var(--orange)}
+.d-depot .p1{box-shadow:inset 3px 0 0 var(--orange)}
+.bloc13{position:relative}
+.sorties{position:absolute;right:4px;top:49px;z-index:2;border-left:2px solid var(--orange);padding-left:9px;font:600 12px/24.5px Inter,sans-serif;color:var(--teal-sombre);opacity:0;transition:opacity .4s}
+.sorties::before{content:'';position:absolute;left:-28px;top:12px;width:24px;border-top:2px dashed var(--orange)}
+.sortie{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.sortie .ico{width:14px;height:14px;flex:none}
+.d-sorties .sorties{opacity:1;transition-delay:.7s}
+.d-sorties .sortie{animation:pose .5s ease calc(1.1s + var(--i) * .5s) both}
+.cadre:not(.p) .treize{display:none}
+.cadre.p .dossier{display:none}
+.treize svg{width:100%;height:auto;max-height:calc(100vh - 130px);display:block}
+.treize svg *{transition:opacity .5s,transform .9s ease,fill .5s,stroke .5s}
+.s13,.rep13,.fige13,.debut13,.adapt13,.vig13{opacity:0}
+.s-trait .a13,.s-partage .b13,.s-filiation .c13{opacity:1}
+.serp13{fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1.3;stroke-dashoffset:1.15}
+.s-trait .serp13{stroke-dashoffset:0;transition:stroke-dashoffset 2.6s ease .3s,opacity .6s}
+.s-trait .debut13{opacity:1;transition-delay:.3s}
+.rep13 circle{fill:var(--teal)}
+.rep13 text{font:600 15px Inter,sans-serif;fill:var(--ink)}
+.fil13{stroke:var(--gris);stroke-width:1.5;fill:none}
+.s-reperes .rep13.r{opacity:1;transition-delay:calc(.4s + var(--i) * .8s)}
+.s-reperes:not(.s-bulle) .rep13.r circle,.s-bulle:not(.s-fige) .rep13.b circle{fill:var(--orange)}
+.s-bulle .rep13.b{opacity:1;transition-delay:.4s}
+.s-bulle .rep13.r{transition-delay:0s}
+.q13{font:400 22px Anton,Oswald,Impact,sans-serif;fill:var(--ink) !important;text-anchor:middle}
+/* Pas 13.6 : le trait s'efface, les repères deviennent les puces d'une liste */
+.s-fige .serp13,.s-fige .debut13,.s-fige .et13{opacity:0;transition-delay:0s}
+.s-fige .rep13 circle{transform:translateX(var(--dx));transition:transform .9s ease .4s,fill .5s}
+.s-fige .fige13{opacity:1;transition-delay:.6s}
+.feuille13{fill:#fff;stroke:var(--teal);stroke-width:2.5;stroke-linejoin:round}
+.nom13s{font:600 17px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--teal-sombre)}
+.l13{fill:rgba(18,118,118,.35);width:0}
+.s-fige .l13{width:var(--w);transition:width .7s ease calc(1.4s + var(--i) * .25s)}
+/* Pas 13.7 et 13.8 : les copies partent, une ligne change de couleur */
+.lr13{fill:#c9cecb}
+.s-partage .c1{transform:translate(306px,-88px) scale(.8);transition:transform 1.2s ease .6s}
+.s-partage .c2{transform:translate(306px,108px) scale(.8);transition:transform 1.2s ease 1.7s}
+.s-partage .c2 .adapt,.s-filiation .f2 .adapt{fill:var(--orange);transition-delay:3.1s}
+.s-filiation .f2 .adapt{transition-delay:0s}
+.s-partage .adapt13{opacity:1;transition-delay:3.3s}
+.mot13{font:600 14px Inter,sans-serif;fill:#B8431A}
+.fl13{fill:none;stroke:var(--orange);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1.3;stroke-dashoffset:1.15}
+.s-filiation .fl13{stroke-dashoffset:0;transition:stroke-dashoffset .8s ease calc(.6s + var(--i) * 1s)}
+.s-filiation .vig13{opacity:1;transition-delay:2.5s}
+.s-filiation .adapt13{opacity:1}
+
+/* Étape 14 : le calendrier, la fenêtre qui s'allonge puis se ferme, le journal ; puis le dossier fini */
+.cadre:not(.j) .quatorze{display:none}
+.cadre.j .dossier{display:none}
+.quatorze svg{width:100%;height:auto;max-height:calc(100vh - 130px);display:block}
+.quatorze svg *{transition:opacity .5s,transform .9s ease,fill .5s}
+.s14,.g-cal > *,.b14,.u14,.att14,.neuve14,.jour14{opacity:0}
+.j-cal .g-cal,.j-fen .g-fen{opacity:1}
+.j-cal .g-cal > *{opacity:1;transition-delay:calc(.3s + var(--i) * .8s)}
+.q14{font:400 72px Anton,Oswald,Impact,sans-serif;fill:var(--orange);text-anchor:middle}
+.c14{fill:#fff;stroke:var(--ink);stroke-width:2.5}
+.vf{height:90px}
+.j-long .vf{height:334px;transition:height 1.6s ease .3s}
+.j-long .b14{opacity:1;transition-delay:calc(.4s + var(--i) * .11s)}
+.u14{fill:var(--orange)}
+.j-long .u14{opacity:1;transition-delay:calc(2.3s + var(--i) * .05s)}
+.j-long .att14{opacity:1;transition-delay:3.1s}
+.vieille{transform-origin:40px 28px}
+.j-ferme .vieille{transform:scaleY(.3);opacity:.25;transition:transform .9s ease .3s,opacity .9s .3s}
+.j-neuve .neuve14{opacity:1;transition-delay:1.3s}
+.j-journal .neuve14{transition-delay:0s}
+.j-journal .jour14{opacity:1;transition-delay:.3s}
+.sur14{fill:rgba(227,165,53,.4)}
+.mono14{font:600 13px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--ink)}
+.fl14{fill:none;stroke:var(--orange);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1.3;stroke-dashoffset:1.15}
+.j-journal .fl14{stroke-dashoffset:0;transition:stroke-dashoffset .9s ease 1.3s}
+.l-journal{display:none}
+.d-quatorze .l-journal,.d-quatorze .l-sk{display:flex}
+.d-quatorze .l-besoin{display:none}
+.d-quatorze .l-agents{opacity:1;transform:none}
+.d-quatorze .l-sk .note{opacity:1;color:var(--teal-sombre)}
+.d-jour .l-journal{box-shadow:inset 3px 0 0 var(--orange);animation:pose .5s ease .4s both}
+/* Pas 14.6 : six allumages, dans l'ordre de la phrase ; une ligne allumée le reste */
+.d-fini .l-plan,.d-fini .l-tout,.d-fini .l-agents,.d-fini .l-sk,.d-fini .l-journal{background:rgba(18,118,118,.16)}
+.d-fini .l-plan{transition:background .5s .4s}
+.d-fini .l-tout{transition-delay:calc(1.3s + var(--i) * .9s)}
+.d-fini .l-agents{transition-delay:3.1s}
+.d-fini .l-sk{transition-delay:4s}
+.d-fini .l-journal{transition-delay:4.9s}
+.d-memento .l-plan,.d-memento .l-tout,.d-memento .l-agents,.d-memento .l-sk,.d-memento .l-journal{transition-delay:0s}
+/* Pas 14.7 : les trois supports de Leonard, en petit, chacun au bout de sa ligne */
+.mem{width:34px;height:34px;margin:-7px 0 -7px auto;flex:none;overflow:visible;opacity:0;transform:translateY(-10px);filter:drop-shadow(0 2px 3px rgba(13,22,23,.3));transition:opacity .4s,transform .6s cubic-bezier(.3,1.5,.5,1)}
+.note + .mem{margin-left:10px}
+.d-memento .mem{opacity:1;transform:none;transition-delay:calc(.4s + var(--m) * .9s)}
+@keyframes unpas{0%,100%{transform:none}45%{transform:translateX(-12px)}}
+.coin.pas svg{animation:unpas 1.1s ease 1.6s 1}
+
+/* Étape 15 : le harnais passe d'un cheval à l'autre. Le cheval du coin s'efface, un grand naît de ce coin. */
+.cadre:not(.c) .quinze{display:none}
+.cadre.c .dossier{display:none}
+.quinze{background:var(--paper)}
+/* Le cheval du coin parti, la scène déborde un peu de la colonne, vers la gauche. */
+.quinze svg{width:110%;margin-left:-10%;height:auto;max-height:calc(100vh - 70px);display:block}
+.quinze svg *{transition:opacity .5s,transform .9s ease}
+.quinze image,.quinze .pc{mix-blend-mode:multiply}
+.h15a{transform-origin:480px 400px;transform:scale(.3);opacity:0}
+.c-un .h15a,.c-deux .h15a{transform:none;opacity:1;transition:transform 1.1s ease .3s,opacity .5s .3s}
+.h15b,.tag15,.dos15,.tx15,.mur15,.loue15{opacity:0}
+.c-un .h15b{opacity:1;transition-delay:1.6s}
+.c-deux .h15b{opacity:1}
+.pc{fill:none;stroke:var(--teal);stroke-linecap:round;stroke-linejoin:round;opacity:.9;stroke-dasharray:1 1.3;stroke-dashoffset:1.15}
+.quinze svg .pc{transition:stroke-dashoffset 1s ease,opacity 1s}
+.pc.plein{fill:var(--teal);stroke:none;opacity:0}
+.c-un .p15a .pc{stroke-dashoffset:0;transition-delay:calc(1.3s + var(--i) * .15s)}
+.c-un .p15a .plein{opacity:.9}
+.c-deux .p15a .pc{transition-delay:calc(.3s + var(--i) * .35s)}
+.c-deux .p15b .pc{stroke-dashoffset:0;transition-delay:calc(.8s + var(--i) * .35s)}
+.c-deux .p15b .plein{opacity:.9}
+.tag15{transform:translate(354px,74px)}
+.tag15 .etiq{fill:var(--orange)}
+.c-un .tag15{opacity:1;transition-delay:2.4s}
+.c-deux .tag15{opacity:1;transform:translate(12px,262px);transition:transform 1.8s ease .6s,opacity .5s}
+.c-deux .dos15{opacity:1;transition-delay:2.2s}
+.c-texte .tx15{opacity:1;transition-delay:.3s}
+.c-mur .mur15{opacity:.6;transition-delay:.3s}
+.mur15 rect,.mur15 path{fill:none;stroke:var(--gris);stroke-width:2}
+.mur15 .porte{fill:var(--paper)}
+.loue15 text{font:400 19px Anton,Oswald,Impact,sans-serif;letter-spacing:.06em;text-transform:uppercase;fill:var(--gris)}
+.c-loue .loue15{opacity:1;transition-delay:calc(.4s + var(--i) * .7s)}
+body.sans-coin.regime-bas .coin{opacity:0;transform:translateY(20px);transition-delay:0s}
+
+/* Étape 16 : deux branches partent du dossier, l'une sur la machine, l'autre en ligne */
+.cadre:not(.s) .seize{display:none}
+.cadre.s .dossier{display:none}
+.seize svg{width:100%;height:auto;max-height:calc(100vh - 130px);display:block}
+.seize svg *{transition:opacity .5s,transform .7s ease}
+.br16{fill:none;stroke:var(--ink);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1 1.3;stroke-dashoffset:1.15}
+.seize svg .br16{transition:stroke-dashoffset .9s ease .4s,opacity .5s}
+.s-branches .br16{stroke-dashoffset:0}
+.vide16,.loc16,.lig16,.apres16,.bx16,.net16{opacity:0}
+.s-branches .vide16{opacity:1;transition-delay:1.3s}
+.s-local .vg,.s-ligne .vd{opacity:0;transition-delay:0s}
+.s-local .loc16,.s-ligne .lig16{opacity:1}
+.bx16{transform:translateY(-14px)}
+.s-local .bx16{opacity:1;transform:none;transition-delay:calc(.8s + var(--i) * .8s)}
+.nm16{font:600 17px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--teal-sombre)}
+.fiche16{transform:translateY(-14px)}
+.s-ligne .fiche16{transform:none;transition:transform .5s cubic-bezier(.3,1.5,.5,1) .7s}
+.s-ligne .net16{opacity:1;transition-delay:1.5s}
+.s-apres .br16,.s-apres .loc16,.s-apres .lig16{opacity:.3}
+.apres16{font:400 22px Anton,Oswald,Impact,sans-serif;letter-spacing:.06em;text-transform:uppercase;fill:var(--orange);text-anchor:middle}
+.s-apres .apres16{opacity:1;transition-delay:.6s}
+/* Pas 3 à 6 : les deux petits programmes du kit arrivent sur la machine ; le modèle n'y est pour rien ; uv les lance */
+.pu16,.pv16,.pp16,.dt16,.uv16,.mo16{opacity:0}
+.s-valid .bx16{opacity:0;transform:translateY(-14px);transition-delay:0s}
+.s-valid .pu16{opacity:1;transition-delay:.4s}
+.pv16,.pp16{transform:translateY(-14px)}
+.s-valid .pv16{opacity:1;transform:none;transition-delay:.9s}
+.s-pont .pp16{opacity:1;transform:none;transition-delay:.4s}
+.bd16{stroke:var(--orange)}
+.s-pont .pv16 .bd16,.s-det .pp16 .bd16,.bd16t,.ck16{stroke:var(--teal)}
+.ar16{stroke:var(--orange)}
+.pt16{font:600 12px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--teal-sombre)}
+.dt16{font:600 12px Inter,sans-serif;fill:var(--teal-sombre)}
+.s-det .dt16{opacity:1;transition-delay:.3s}
+.s-zero .mo16{opacity:1;transition-delay:1s}
+.cx16{fill:none;stroke:var(--orange);stroke-width:3;stroke-linecap:round}
+.zt16{font:400 22px Anton,Oswald,Impact,sans-serif;letter-spacing:.06em;text-transform:uppercase;fill:var(--orange)}
+.uv16{fill:var(--jaune)}
+.uvt16{font:600 16px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--ink);stroke:none}
+.s-uv .uv16{opacity:1;transition-delay:.4s}
+
+/* Étape 17 : lundi. Une commande et ce qui s'ensuit. */
+.cadre:not(.l) .dixsept,.cadre:not(.b) .dixneuf,.cadre:not(.h) .vingt{display:none}
+.cadre.l .dossier,.cadre.b .dossier,.cadre.h .dossier{display:none}
+.dixsept svg,.dixneuf svg,.vingt svg{width:100%;height:auto;max-height:calc(100vh - 130px);display:block}
+.dixsept svg *,.dixneuf svg *,.vingt svg *{transition:opacity .5s,transform .7s ease,fill .5s}
+.s17,.g-lundi > *,.f17,.ck17{opacity:0}
+.l-lundi .g-lundi,.l-cmd .g-cmd{opacity:1}
+.l-lundi .g-lundi > *{opacity:1;transition-delay:calc(.3s + var(--i) * .8s)}
+.jour17{font:400 44px Anton,Oswald,Impact,sans-serif;letter-spacing:.04em;text-transform:uppercase;fill:var(--ink);text-anchor:middle}
+.typ17{clip-path:inset(0 100% 0 0)}
+.l-cmd .typ17{clip-path:inset(0);transition:clip-path 1.2s steps(22) .4s}
+.typ17 text{font:600 15px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--paper)}
+.f17{transform:translateY(-16px)}
+.l-cmd .f17{opacity:1;transform:none;transition-delay:calc(1.9s + var(--i) * .4s)}
+.l-cmd .ck17{opacity:1;transition-delay:3.4s}
+.co17{fill:none;stroke:var(--orange);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1.3;stroke-dashoffset:1.15}
+.dixsept svg .co17{transition:stroke-dashoffset .4s ease calc(4.2s + var(--i) * .5s)}
+.l-cmd .co17{stroke-dashoffset:0}
+.jr17{opacity:.3}
+.l-cmd .jr17{opacity:1;transition-delay:6s}
+.l-cmd .jr17 rect{fill:rgba(227,165,53,.5);transition-delay:6s}
+/* Étape 18 : sept programmes à installer, une case chacun ; la case du pas est jaune */
+.cadre:not(.u) .dixhuit{display:none}
+.cadre.u .dossier{display:none}
+.dixhuit svg{width:100%;height:auto;max-height:calc(100vh - 130px);display:block}
+.dixhuit svg *{transition:opacity .5s,transform .7s ease,fill .5s}
+.ou18{opacity:0}
+.u-vu1 .cs1 .ou18,.u-vu2 .cs2 .ou18,.u-vu3 .cs3 .ou18,.u-vu4 .cs4 .ou18,.u-vu5 .cs5 .ou18,.u-vu6 .cs6 .ou18,.u-vu7 .cs7 .ou18{opacity:1}
+.u-ici1 .cs1 .ou18 > rect:first-child,.u-ici2 .cs2 .ou18 > rect:first-child,.u-ici3 .cs3 .ou18 > rect:first-child,.u-ici4 .cs4 .ou18 > rect:first-child,.u-ici5 .cs5 .ou18 > rect:first-child,.u-ici6 .cs6 .ou18 > rect:first-child,.u-ici7 .cs7 .ou18 > rect:first-child{fill:var(--jaune)}
+.gd18{fill:var(--teal)}
+.ga18{fill:none;stroke:var(--orange);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1.3;stroke-dashoffset:1.15}
+.dixhuit svg .ga18{transition:stroke-dashoffset 1s ease .7s}
+.u-vu2 .ga18{stroke-dashoffset:0}
+/* Étape 19 : douze cases, une par skill bonus, rangées par usage ; la rangée du pas est jaune */
+.et19,.pl19{opacity:0}
+.nom19{font:600 11px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--ink)}
+.pl19 rect{stroke:var(--teal)}
+.b-r1 .rg1 .et19,.b-r2 .rg2 .et19,.b-r3 .rg3 .et19,.b-r4 .rg4 .et19,.b-r5 .rg5 .et19{opacity:1}
+.b-r1 .rg1 .pl19,.b-r2 .rg2 .pl19,.b-r3 .rg3 .pl19,.b-r4 .rg4 .pl19,.b-r5 .rg5 .pl19{opacity:1;transition-delay:calc(.2s + var(--i) * .25s)}
+.b-j1 .rg1 .pl19 rect,.b-j2 .rg2 .pl19 rect,.b-j3 .rg3 .pl19 rect,.b-j4 .rg4 .pl19 rect,.b-j5 .rg5 .pl19 rect{fill:var(--jaune)}
+/* Étape 20 : six vignettes, une par mot, puis la gravure en grand */
+.vingt{background:var(--paper)}
+.vingt image,.vingt .fp20{mix-blend-mode:multiply}
+.vg20 .in20,.mot20,.fin20,.ph20{opacity:0}
+.mot20{font-size:10.5px}
+.h-v1 .vg1 .in20,.h-v1 .vg1 .mot20,.h-v2 .vg2 .in20,.h-v2 .vg2 .mot20,.h-v3 .vg3 .in20,.h-v3 .vg3 .mot20,.h-v4 .vg4 .in20,.h-v4 .vg4 .mot20,.h-v5 .vg5 .in20,.h-v5 .vg5 .mot20,.h-v6 .vg6 .in20,.h-v6 .vg6 .mot20{opacity:1}
+.h-fin .vg20{opacity:0}
+.h-fin .fin20{opacity:1;transition-delay:.5s}
+.fp20{fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:.9;stroke-dasharray:1 1.3;stroke-dashoffset:1.15}
+.vingt svg .fp20{transition:stroke-dashoffset 1s ease calc(1.3s + var(--i) * .2s),opacity 1s 1.5s}
+.h-fin .fp20{stroke-dashoffset:0}
+.fp20.plein{stroke:none;opacity:0}
+.h-fin .fp20.plein{opacity:.9}
+.ph20{font:400 29px Anton,Oswald,Impact,sans-serif;letter-spacing:.04em;text-transform:uppercase;fill:var(--ink);text-anchor:middle}
+.h-fin .ph20{opacity:1;transition-delay:calc(3s + var(--i) * .8s)}
+
+/* Memento : le polaroïd et la note manuscrite se posent quand leur pas se joue, et restent */
+.manuscrite{position:absolute;left:500px;top:4%;width:176px;background:#f6e9c3;padding:20px 16px 24px;font:600 27px/1.05 Caveat,'Bradley Hand',cursive;color:var(--ink);box-shadow:0 8px 22px rgba(13,22,23,.28);transform:translateY(-22px) rotate(11deg);opacity:0;transition:opacity .4s,transform .6s cubic-bezier(.3,1.5,.5,1);z-index:3}
+.etape.vu .manuscrite{opacity:1;transform:rotate(4deg);transition-delay:.4s}
+.polaroid{position:absolute;left:506px;top:6%;width:178px;background:#fdfcf8;padding:10px 10px 12px;box-shadow:0 8px 22px rgba(13,22,23,.28);transform:translateY(-22px) rotate(-13deg);opacity:0;transition:opacity .4s,transform .6s cubic-bezier(.3,1.5,.5,1);z-index:3}
+.etape.vu .polaroid{opacity:1;transform:rotate(-5deg);transition-delay:.4s}
+.polaroid .photo{background:var(--teal-sombre);aspect-ratio:1/0.92;display:grid;place-items:center}
+.polaroid .photo svg{width:62%}
+.polaroid .legende{font:600 21px/1.05 Caveat,'Bradley Hand',cursive;margin-top:8px;text-align:center}
+.etape.avec-memento p{max-width:440px}
+
+/* À vous */
+.avous{max-width:580px;border-left:5px solid var(--orange);padding:4px 0 4px 18px}
+.avous .titre{font-size:22px;color:var(--orange);margin:0 0 .4em}
+.commandes{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0 16px}
+.btn{border:2px solid var(--ink);background:var(--jaune);color:var(--ink);font:700 14px/1 Oswald,Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:12px 16px;border-radius:14px 3px 14px 3px;box-shadow:3px 3px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn.second{background:transparent;box-shadow:none}
+.coche{display:flex;align-items:center;gap:12px;font-weight:600;cursor:pointer}
+.coche input{width:24px;height:24px;accent-color:var(--teal)}
+
+/* Le cheval du coin */
+.coin{position:fixed;right:22px;bottom:22px;width:220px;z-index:25;background:#fff;border:2px solid var(--teal);border-radius:18px 4px 18px 4px;padding:10px 12px;box-shadow:0 8px 24px rgba(13,22,23,.25);opacity:0;transform:translateY(20px);pointer-events:none;transition:opacity .6s 1.2s,transform .6s 1.2s}
+body.regime-bas .coin{opacity:1;transform:none}
+.coin svg{width:100%;height:auto;display:block;mix-blend-mode:multiply}
+.coin .piece{fill:none;stroke:var(--teal);stroke-linecap:round;stroke-linejoin:round;opacity:.9;stroke-dasharray:1 1.3;stroke-dashoffset:1.15;transition:stroke-dashoffset var(--duree) ease,stroke .5s}
+.coin .piece.posee{stroke-dashoffset:0}
+.coin .piece.neuve{stroke:var(--orange)}
+.coin .piece.plein{fill:var(--teal);stroke:none;opacity:0;transition:opacity var(--duree),fill .5s}
+.coin .piece.plein.posee{opacity:.9}
+.coin .piece.plein.neuve{fill:var(--orange)}
+.coin .tete{font-size:11px;letter-spacing:.06em;white-space:nowrap}
+.coin .tete span:last-child{opacity:0;transition:opacity .4s}
+body.compteur .coin .tete span:last-child{opacity:1}
+
+/* Fin de page : le pied de page de la charte racine */
+.retro-footer{max-width:1560px;margin:0 auto 28px;background:var(--ink);border-top:3px solid var(--teal);padding:3rem 2.5rem;color:var(--paper);text-align:center}
+.retro-footer p{margin:0}
+.retro-footer-ornament{color:var(--teal);font-size:1.5rem;margin-bottom:2rem!important}
+.retro-footer-credit{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem!important}
+.retro-footer-licence{font-size:.875rem;color:rgba(242,239,230,.6)}
+.retro-footer a{color:var(--jaune);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+.retro-footer a:hover{border-bottom-color:var(--jaune)}
+.retro-footer :focus-visible{outline-color:var(--jaune)}
+
+/* Avant l'étape 1, le mode d'emploi. Une piste de crans sans texte fait défiler ses états, écrits à même
+   le papier dans la scène : l'invitation, puis la longe et les flèches du clavier, puis rien. Le dernier
+   cran est le pas 1.1 : sa carte, tenue au milieu de l'écran, entre par la gauche quand le cheval entre
+   par la droite. La piste s'élargit jusqu'au filet du papier, pour que la carte sorte de sous son bord ;
+   la scène, elle, garde sa largeur, son fond couvrirait l'angle arrondi du cadre. */
+.piste{margin:0 calc(2px - var(--marge));padding:0 calc(var(--marge) - 2px) 45vh;overflow-x:clip}
+.cran{height:70vh}
+.tenue + .cran{height:calc(50vh + 40px)}
+.cran.bref{height:45vh}
+.tenue{position:sticky;top:50vh;height:0}
+.tenue .carte{position:absolute;left:0;top:0;width:max-content;transform:translateY(-50%);transition:transform 1.3s cubic-bezier(.22,.7,.25,1),opacity .4s}
+.avant .tenue .carte{transform:translate(calc(-100% - 60px),-50%);opacity:0}
+.entree .haut .cadre{overflow-x:clip}
+.seuil{position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none}
+.seuil > *{grid-area:1/1}
+.invite,.notice{opacity:0;visibility:hidden;transition:opacity .4s,visibility 0s .4s}
+.a-invite .invite,.a-corde .nt-corde,.a-touches .nt-touches{opacity:1;visibility:visible;transition:opacity .6s .3s,visibility 0s}
+.invite .titre{margin:0 0 22px;font-size:clamp(30px,4vw,58px);color:var(--teal-sombre)}
+.hampe{display:block;margin:0 auto;width:clamp(56px,6vw,84px);height:auto;fill:none;stroke:var(--orange);stroke-width:13;stroke-linecap:round;stroke-linejoin:round}
+/* Seule chose de la page qui bouge sans s'arrêter : elle n'a que trois mots au-dessus d'elle, et s'efface au premier cran. */
+@keyframes appel{50%{opacity:.12}}
+.a-invite .hampe{animation:appel 1.3s ease-in-out infinite}
+.notices{width:min(640px,86%)}
+.notice + .notice{margin-top:34px}
+.notice p{margin:0 0 .8em;font-size:21px;line-height:1.5}
+.notice p:last-child{margin-bottom:0}
+.signes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:auto auto;justify-content:center;gap:4px 34px;text-align:left;font-size:17px;color:var(--teal-sombre)}
+.signes li{display:flex;align-items:center;gap:4px}
+.signes .noeud{flex:none;cursor:default}
+.notice code{display:inline-block;min-width:2em;margin:0 .1em;padding:.1em .45em;background:#fbfaf5;border:2px solid var(--teal);border-bottom-width:4px;border-radius:6px;font-weight:600;line-height:1.3;color:var(--teal-sombre);text-align:center}
+
+/* La longe : un trait fin en haut de l'écran, un nœud par étape, une boucle aux étapes « À vous ».
+   Elle tient dans les 24 points que le dossier du bas laisse au-dessus de lui, et ne prend aucune hauteur.
+   Au premier écran elle attend au-dessus, et descend au premier cran de défilement. */
+.longe{position:sticky;top:0;height:0;z-index:30;transition:transform .9s cubic-bezier(.22,.7,.25,1)}
+.sans-longe .longe{transform:translateY(-70px);visibility:hidden;transition:transform .4s ease-in,visibility 0s .4s}
+.longe::before{content:'';position:absolute;left:0;right:0;top:0;height:24px;background:linear-gradient(var(--paper) 60%,rgba(242,239,230,0));pointer-events:none}
+.corde{position:absolute;left:0;right:0;top:0;height:24px;display:flex;justify-content:space-between}
+.corde::before,.corde::after{content:'';position:absolute;left:12px;top:11px;height:2px;border-radius:1px;background:var(--gris);opacity:.45;width:calc(100% - 24px)}
+.corde::after{background:var(--teal);opacity:1;width:calc((100% - 24px) * var(--part,0));transition:width .3s}
+.noeud{position:relative;z-index:1;width:24px;height:24px;padding:0;border:0;background:none;cursor:pointer}
+.noeud::before{content:'';position:absolute;left:7px;top:7px;width:10px;height:10px;border-radius:50%;background:#98a3a1;transition:background .3s,border-color .3s,transform .3s}
+.noeud.anse::before{left:5px;top:5px;width:8px;height:8px;background:var(--paper);border:3px solid #98a3a1}
+.noeud.passe::before{background:var(--teal)}
+.noeud.ici::before{background:var(--orange);transform:scale(1.3)}
+.noeud.anse.passe::before{background:var(--paper);border-color:var(--teal)}
+.noeud.anse.ici::before{background:var(--paper);border-color:var(--orange)}
+.noeud:focus-visible{outline-offset:-2px;border-radius:50%}
+.bulle{position:absolute;top:27px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#fbfaf5;border:2px solid var(--teal);border-radius:4px 12px 4px 12px;padding:5px 10px;font:600 13px/1.3 Inter,sans-serif;color:var(--ink);box-shadow:0 6px 18px rgba(13,22,23,.18);opacity:0;pointer-events:none;transition:opacity .15s}
+.bulle b{font:400 14px/1 Anton,Oswald,Impact,sans-serif;letter-spacing:.06em;color:var(--orange);margin-right:8px}
+.bulle i{font-style:normal;text-transform:uppercase;letter-spacing:.08em;font-size:11px;color:var(--orange);margin-left:10px}
+.noeud.g .bulle{left:0;transform:none}
+.noeud.d .bulle{left:auto;right:0;transform:none}
+.noeud:hover .bulle,.noeud:focus-visible .bulle{opacity:1}
+
+/* Aide de relecture du prototype */
+
+@media(max-width:860px){:root{--marge:14px}body{padding:0 8px}.page{padding:0 14px 60px}.bas{display:block}.bas .cadre{position:sticky;top:0;z-index:4;background:var(--paper);padding:8px 0}.polaroid,.manuscrite{position:relative;left:0;top:0;margin:0 0 16px}.coin{width:150px}.haut .carte{font-size:18px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main class="page">
+<nav class="longe" aria-label="Les étapes"><div class="corde" id="longe"></div></nav>
+
+<!-- ===== Haut, étapes 1 à 6 ===== -->
+<section class="haut">
+  <div class="cadre">
+    <svg class="scene" id="scene" viewBox="-380 32 1624 490" role="img" aria-labelledby="st sd">
+      <title id="st">Un cheval de trait gravé, harnaché, qui tire une charge</title>
+      <desc id="sd">La charge mesure le score du modèle au test : 13,3 puis 38,3 pour cent. Le dessin du cheval ne change pas, seules les sangles se colorent.</desc>
+      <defs>
+        <clipPath id="rogne"><rect x="14" y="32" width="942" height="440"/></clipPath>
+        <linearGradient id="fondu-bas" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2EFE6" stop-opacity="0"/><stop offset="1" stop-color="#F2EFE6"/></linearGradient>
+        <linearGradient id="fondu-droite" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F2EFE6" stop-opacity="0"/><stop offset="1" stop-color="#F2EFE6"/></linearGradient>
+      </defs>
+      <g class="cheval-g">
+        <image class="gravure" clip-path="url(#rogne)" href="medias/cheval_planche_4.png" x="0" y="0" width="1000" height="483"/>
+        <!-- Pièces relevées sur la gravure, de la tête vers la croupe. Les noms sont ceux de l'étape 5. -->
+        <path class="piece trace p-sangle p-bride" pathLength="1" stroke="#127676" stroke-width="5" d="M283,48 L250,130 M285,95 L222,118 M282,64 L243,62"/>
+        <path class="piece trace p-sangle p-bricole" pathLength="1" stroke="#127676" stroke-width="7" style="--d:.35s" d="M446,110 L334,183 M420,142 L358,195"/>
+        <path class="piece plein p-sangle p-coussinet" fill="#127676" style="--d:.7s" d="M433,110 L471,104 L481,117 L464,131 L459,149 L422,146 L427,127 Z"/>
+        <path class="piece trace p-sangle p-surdos" pathLength="1" stroke="#127676" stroke-width="8" style="--d:1s" d="M436,150 L428,192 L430,214"/>
+        <path class="piece trace p-sangle p-sangle-ventre" pathLength="1" stroke="#127676" stroke-width="8" style="--d:1.25s" d="M507,118 L489,193 L486,230"/>
+        <path class="piece trace p-sangle p-croupiere" pathLength="1" stroke="#127676" stroke-width="4" style="--d:1.5s" d="M483,117 L533,119 C560,118 580,108 600,107 C630,106 655,112 673,123 L697,138"/>
+        <path class="piece trace p-trait p-poitrail" pathLength="1" stroke="#E4632E" stroke-width="15" d="M333,208 C350,214 368,219 385,221 L433,224 L490,229"/>
+        <path class="piece trace p-trait" pathLength="1" stroke="#E4632E" stroke-width="9" style="--d:.55s" d="M490,229 L600,253 L700,267 L802,282"/>
+      </g>
+
+      <text class="cit cache e-cit" id="cit" x="400" y="66">« n'avait pas l'air très malin »</text>
+
+      <g class="cache e-mots">
+        <text class="etiq" x="560" y="66">Le modèle</text><path class="fil" d="M610,76 L610,172"/><circle class="but" cx="610" cy="172" r="3.5"/>
+        <text class="etiq" x="868" y="150">Ce qui l'entoure</text><path class="fil" d="M862,146 L762,272"/><circle class="but" cx="762" cy="275" r="3.5"/>
+        <text class="petit" style="--i:0" x="868" y="180">mémoire</text><text class="petit" style="--i:1" x="868" y="204">consignes</text><text class="petit" style="--i:2" x="868" y="228">outils</text>
+      </g>
+
+      <g class="cache e-grille" transform="translate(1010,150)">
+        <rect class="case" x="0" y="0" width="54" height="54"/><rect class="case a" x="60" y="0" width="54" height="54"/><rect class="case" x="120" y="0" width="54" height="54"/>
+        <rect class="case" x="0" y="60" width="54" height="54"/><rect class="case" x="60" y="60" width="54" height="54"/><rect class="case b" x="120" y="60" width="54" height="54"/>
+        <rect class="case c" x="0" y="120" width="54" height="54"/><rect class="case" x="60" y="120" width="54" height="54"/><rect class="case" x="120" y="120" width="54" height="54"/>
+      </g>
+
+      <g class="cache e-charge">
+        <path class="chaine" d="M828,297 C880,320 950,370 990,402"/>
+        <rect class="charge" x="990" y="372" height="60" rx="3"/>
+        <g class="regle"><line x1="990" y1="446" x2="1182" y2="446"/><line x1="990" y1="440" x2="990" y2="452"/><line x1="1182" y1="440" x2="1182" y2="452"/>
+          <text x="990" y="472" text-anchor="middle">0</text><text x="1182" y="472" text-anchor="middle">humain moyen, 48 %</text></g>
+        <text class="score" id="score" x="990" y="352">13,3 %</text>
+      </g>
+      <text class="meme cache e-meme" x="480" y="506" text-anchor="middle">le même cheval</text>
+      <text class="mot cache e-mot" x="560" y="80">son harnais</text>
+
+      <g class="cache e-petits" id="petits"></g>
+
+      <g class="cache e-phrase">
+        <text class="phrase" x="880" y="170"><tspan id="phrase">Le cheval tire une</tspan><tspan class="gagne" dx="8">charge</tspan></text>
+        <g class="cand gagnant"><text x="880" y="218">charge</text><rect style="--w:190px" x="1000" y="204" height="16" rx="2"/></g>
+        <g class="cand perd"><text x="880" y="252">charrette</text><rect style="--w:92px" x="1000" y="238" height="16" rx="2"/></g>
+        <g class="cand perd"><text x="880" y="286">carotte</text><rect style="--w:20px" x="1000" y="272" height="16" rx="2"/></g>
+      </g>
+
+      <!-- Étape 4, vue resserrée : la fenêtre de contexte devant la tête du cheval -->
+      <g class="cache e-fondu"><rect x="-420" y="236" width="902" height="46" fill="url(#fondu-bas)"/><rect x="428" y="10" width="54" height="272" fill="url(#fondu-droite)"/></g>
+      <g class="cache e-fenetre">
+        <text class="lab4" x="-110" y="38">La fenêtre de contexte</text>
+        <rect class="cadre4" x="-110" y="45" width="290" height="190" rx="3"/>
+        <g class="b4" style="--i:0"><rect x="-100" y="55" width="270" height="32" rx="2"/><text x="-90" y="75">votre demande</text></g>
+        <g class="b4" style="--i:1"><rect x="-100" y="95" width="270" height="32" rx="2"/><text x="-90" y="115">la conversation en cours</text></g>
+        <g class="b4" style="--i:2"><rect x="-100" y="135" width="270" height="32" rx="2"/><text x="-90" y="155">ce qu'on y a ajouté</text></g>
+        <g class="fant"><rect style="--i:0" x="30" y="18" width="150" height="14" rx="2"/><rect style="--i:1" x="-110" y="246" width="130" height="14" rx="2"/><rect style="--i:2" x="34" y="246" width="120" height="14" rx="2"/><rect style="--i:3" x="-60" y="264" width="170" height="14" rx="2"/></g>
+      </g>
+      <path class="regard" pathLength="1" d="M250,88 L180,45 M250,88 L180,235"/>
+      <path class="oeil" pathLength="1" d="M251,79 L272,84 L269,101 L249,96 Z"/>
+
+      <!-- Étape 4, clip : le raisonnement jeté après chaque coup, puis les deux réglages -->
+      <g class="cache e-clip" id="clip4">
+        <g transform="translate(250,160)"><rect class="case" data-c="0" x="0" y="0" width="62" height="62"/><rect class="case" data-c="1" x="68" y="0" width="62" height="62"/><rect class="case" data-c="2" x="136" y="0" width="62" height="62"/><rect class="case" data-c="3" x="0" y="68" width="62" height="62"/><rect class="case" data-c="4" x="68" y="68" width="62" height="62"/><rect class="case" data-c="5" x="136" y="68" width="62" height="62"/><rect class="case" data-c="6" x="0" y="136" width="62" height="62"/><rect class="case" data-c="7" x="68" y="136" width="62" height="62"/><rect class="case" data-c="8" x="136" y="136" width="62" height="62"/></g>
+        <text class="lab-clip" x="560" y="48">La fenêtre de contexte</text>
+        <rect class="cadre-clip" x="560" y="60" width="420" height="400" rx="4"/>
+        <rect class="anc" data-a="1" x="576" y="74" width="388" height="30" rx="2"/><rect class="anc" data-a="2" x="576" y="112" width="388" height="30" rx="2"/><rect class="anc" data-a="3" x="576" y="150" width="388" height="30" rx="2"/>
+        <g class="resume" id="resume4"><rect x="576" y="74" width="388" height="30" rx="2"/><text x="594" y="95">résumé</text></g>
+        <g class="bulle" data-b="1"><rect x="576" y="0" width="388" height="44" rx="10"/><text x="594" y="28">raisonnement</text></g><g class="bulle" data-b="2"><rect x="576" y="0" width="388" height="44" rx="10"/><text x="594" y="28">raisonnement</text></g><g class="bulle" data-b="3"><rect x="576" y="0" width="388" height="44" rx="10"/><text x="594" y="28">raisonnement</text></g><g class="bulle" data-b="4"><rect x="576" y="0" width="388" height="44" rx="10"/><text x="594" y="28">raisonnement</text></g><g class="bulle" data-b="5"><rect x="576" y="0" width="388" height="44" rx="10"/><text x="594" y="28">raisonnement</text></g><g class="bulle" data-b="6"><rect x="576" y="0" width="388" height="44" rx="10"/><text x="594" y="28">raisonnement</text></g>
+        <text class="coup" data-l="1" x="580" y="304">coup 1</text><text class="coup" data-l="2" x="580" y="334">coup 2</text><text class="coup" data-l="3" x="580" y="364">coup 3</text>
+        <g class="note4" id="notes4"><rect x="580" y="388" width="150" height="10" rx="2"/><rect x="580" y="408" width="110" height="10" rx="2"/><text x="746" y="407">notes</text></g>
+        <text class="doute" id="doute4" x="770" y="244" text-anchor="middle">?</text>
+        <text class="etiq" id="reglage1" x="1000" y="250">Réglage 1</text>
+        <text class="etiq" id="reglage2" x="1000" y="98">Réglage 2</text>
+      </g>
+      <svg class="mini4" x="1040" y="384" width="200" height="94" viewBox="14 32 942 440"><image href="medias/cheval_planche_4.png" x="0" y="0" width="1000" height="483"/></svg>
+
+      <!-- Étape 5 : la colonne des cinq pièces, à la place de la charge -->
+      <g class="cache e-colonne" id="colonne">
+        <g class="lig souligne" data-n="1"><text class="num" x="990" y="128">1</text><line class="regle5" x1="1016" y1="136" x2="1240" y2="136"/><text class="mot5" x="1016" y="128">contexte</text><text class="mention5" x="1016" y="128" dy="26">sa mémoire</text></g>
+        <g class="lig" data-n="2"><text class="num" x="990" y="192">2</text><line class="regle5" x1="1016" y1="200" x2="1240" y2="200"/><text class="mot5" x="1016" y="192">instructions</text></g>
+        <g class="lig souligne" data-n="3"><text class="num" x="990" y="256">3</text><line class="regle5" x1="1016" y1="264" x2="1240" y2="264"/><text class="mot5" x="1016" y="256">outils</text><text class="mention5" x="1016" y="256" dy="26">ses connecteurs</text></g>
+        <g class="lig" data-n="4"><text class="num" x="990" y="320">4</text><line class="regle5" x1="1016" y1="328" x2="1240" y2="328"/><text class="mot5" x="1016" y="320">actions</text><g class="picto5" data-y="320"><path d="M4,20 v-9 M4,11 v-6 M8,10 v-9 M12,10 v-8 M16,11 v-6 M16,11 v4 q0,5 -5,5 h-7 M4,14 l-3,-3"/></g></g>
+        <g class="lig" data-n="5"><text class="num" x="990" y="384">5</text><line class="regle5" x1="1016" y1="392" x2="1240" y2="392"/><text class="mot5" x="1016" y="384">règles de permission</text><g class="picto5" data-y="384"><path d="M2,9 h14 v11 h-14 z M5,9 v-4 a4,4 0 0 1 8,0 v4"/></g></g>
+      </g>
+
+      <text class="etiq cache e-modele" x="480" y="508" text-anchor="middle">Le modèle</text>
+
+      <g class="cache e-mention">
+        <text class="mention" x="1240" y="506" text-anchor="end">mesuré par OpenAI sur son propre modèle</text>
+        <path class="fil" d="M548,84 L470,106"/>
+        <g class="picto" transform="translate(540,22)"><path d="M0,8 h70 M0,28 h70 M0,48 h70"/><circle cx="20" cy="8" r="7" fill="#F2EFE6"/><circle cx="50" cy="28" r="7" fill="#F2EFE6"/><circle cx="32" cy="48" r="7" fill="#F2EFE6"/><path d="M96,28 h30 m-9,-8 l9,8 l-9,8"/><path d="M152,0 h28 l14,14 v42 h-42 z M180,0 v14 h14 M162,28 h22 M162,40 h22"/></g>
+      </g>
+
+      <!-- Étape 6 : l'étiquette, le mur qui borde la gravure, sa porte, les deux dépôts, l'autre cheval -->
+      <g class="cache e-etiq">
+        <path class="fil" d="M534,65 L454,107"/>
+        <rect class="plaque" x="520" y="46" width="330" height="38" rx="3"/>
+        <circle class="fil" cx="534" cy="65" r="3.5"/>
+        <text class="etiq" x="548" y="73" style="font-size:22px">Au fournisseur du modèle</text>
+      </g>
+      <g class="e-brins" id="brins"></g>
+      <g class="e-mur">
+        <path class="mur" fill-rule="evenodd" d="M-6,-4 H976 V490 H-6 Z M14,32 V472 H956 V32 Z"/>
+        <path class="joints" id="joints"/>
+        <text class="linteau" x="485" y="25" text-anchor="middle">Jardin clos</text>
+        <path class="baie" d="M940,472 V318 a30,30 0 0 1 60,0 V472 Z"/>
+        <g class="battant"><path d="M944,472 V320 a26,26 0 0 1 52,0 V472 Z"/><path class="planches" d="M957,300 V472 M970,295 V472 M983,300 V472"/></g>
+      </g>
+      <g class="e-depots">
+        <g class="depot" style="--i:0"><rect x="766" y="336" width="166" height="32" rx="3"/><text x="778" y="359">vos consignes</text></g>
+        <g class="depot" style="--i:1"><rect x="766" y="376" width="166" height="32" rx="3"/><text x="778" y="399">votre mémoire</text></g>
+      </g>
+      <g class="e-autre"><image href="medias/cheval_planche_4_second.png" x="1010" y="109" width="545" height="359"/></g>
+
+      <g class="cache e-kit picto" transform="translate(470,170)">
+        <path class="fich" style="--i:0" d="M0,0 h60 l26,26 v84 h-86 z" fill="#fff"/><path class="fich" style="--i:1" d="M26,22 h60 l26,26 v84 h-86 z" fill="#fff"/><path class="fich" style="--i:2" d="M52,44 h60 l26,26 v84 h-86 z" fill="#fff"/>
+        <path class="fleche" d="M190,70 v70 m-22,-22 l22,22 l22,-22 M160,160 h60" stroke="#E4632E" stroke-width="5"/>
+      </g>
+    </svg>
+    <div class="seuil" id="seuil"></div>
+  </div>
+  <div class="pas" id="pas-haut"></div>
+</section>
+
+<!-- ===== Bas, étapes 7 à 20 ===== -->
+<section class="bas">
+  <div class="pas" id="pas-bas"></div>
+  <div class="cadre" id="cadre-bas">
+    <div class="mini" id="mini">
+      <svg id="mini7" viewBox="0 0 480 600" role="img" aria-label="La fenêtre de contexte du modèle : une demande, puis un fichier de trois lignes qui change la réponse et qui reste sur le disque">
+        <text class="lab7 lab-ctx" x="10" y="20">La fenêtre de contexte</text>
+        <rect class="ctx7" x="10" y="30" width="460" height="196" rx="3"/>
+        <g class="dem7"><rect x="24" y="140" width="432" height="72" rx="2"/><text><tspan id="dem7a" x="38" y="170"></tspan><tspan id="dem7b" x="38" y="196"></tspan></text></g>
+        <g class="fich7"><rect x="0" y="0" width="432" height="84" rx="3"/>
+          <circle class="pa" cx="18" cy="21" r="5"/><text x="34" y="26">école professionnelle</text>
+          <circle class="pb" cx="18" cy="45" r="5"/><text x="34" y="50">dix-sept ans</text>
+          <circle class="pc" cx="18" cy="69" r="5"/><text x="34" y="74">pas d'ordinateurs</text></g>
+        <g class="rep7"><text class="lab7" x="10" y="258">La réponse du modèle</text><rect class="carte7" x="10" y="268" width="310" height="176" rx="3"/>
+          <rect class="lr" x="28" y="288" width="260" height="12" rx="2"/><rect class="lr a" x="28" y="312" width="230" height="12" rx="2"/><rect class="lr b" x="28" y="336" width="268" height="12" rx="2"/><rect class="lr" x="28" y="360" width="200" height="12" rx="2"/><rect class="lr c" x="28" y="384" width="250" height="12" rx="2"/><rect class="lr" x="28" y="408" width="150" height="12" rx="2"/></g>
+        <g class="doute7"><g><text class="q" x="345" y="340">?</text><text class="quoi" x="378" y="334">l'âge</text></g><g><text class="q" x="345" y="420">?</text><text class="quoi" x="378" y="414">le matériel</text></g></g>
+        <g class="disque7"><path d="M40,520 v22 a200,30 0 0 0 400,0 v-22"/><ellipse cx="240" cy="520" rx="200" ry="30"/><text class="lab7" x="240" y="594" text-anchor="middle">votre disque</text></g>
+        <g class="doc7"><rect class="sur7" x="64" y="268" width="112" height="26" rx="2"/>
+          <text class="nom nom-m" x="70" y="288">ma_classe.md</text><text class="nom nom-a" x="70" y="288">AGENTS.md</text>
+          <path class="feuille" d="M70,300 h300 l40,40 v160 h-340 z M370,300 v40 h40"/>
+          <text class="h" x="94" y="350"># Ma classe</text><text x="94" y="388">- école professionnelle</text><text x="94" y="416">- dix-sept ans</text><text x="94" y="444">- pas d'ordinateurs</text></g>
+      </svg>
+    </div>
+    <div class="q9" aria-hidden="true">?</div>
+    <div class="neuf">
+      <svg id="mini9" viewBox="0 84 480 400" role="img" aria-label="Votre machine à gauche, les serveurs du fournisseur du modèle à droite, et le texte qui voyage de l'une aux autres">
+        <text class="lab7" x="16" y="108">Votre machine</text>
+        <rect class="trait8 fond8" x="16" y="120" width="190" height="130" rx="4"/><path class="trait8 fond8" d="M4,250 h214 l-10,12 h-194 z"/>
+        <path class="trait8" d="M30,136 h9 l3,4 h14 v14 h-26 z M34,170 h12 l6,6 v16 h-18 z"/><text class="mono8" style="fill:var(--ink)" x="64" y="151">mon_harnais/</text>
+        <rect x="30" y="212" width="162" height="26" rx="3" fill="#0D1617"/><text class="mono8" x="38" y="230">&gt;</text><rect x="52" y="218" width="7" height="14" fill="#F2EFE6"/><text class="mono8" x="70" y="230" style="font-weight:400">l'agent</text>
+        <g class="cote-f"><text class="lab7" x="464" y="98" text-anchor="end">Fournisseur du modèle</text>
+          <rect class="trait8 fond8" x="330" y="110" width="134" height="152" rx="3"/>
+          <path class="trait8" d="M342,124 h110 v26 h-110 z M342,160 h110 v26 h-110 z M342,196 h110 v26 h-110 z M352,237 h30 M352,247 h18"/><circle cx="352" cy="137" r="2.5"/><circle cx="352" cy="173" r="2.5"/><circle cx="352" cy="209" r="2.5"/>
+          <path class="pointille" d="M224,200 H324"/><text class="sous8" x="274" y="190" text-anchor="middle">Internet</text></g>
+        <g class="suite9"><rect class="trait8 fond8" x="330" y="284" width="134" height="78" rx="3"/>
+          <path class="trait8" d="M338,296 h20 v20 h-20 z M338,302 h20 M343,292 v6 M353,292 v6"/>
+          <path class="pointille" d="M397,362 V388 M397,420 V442 m-7,-9 l7,9 l7,-9"/><circle class="trait8 fond8" cx="397" cy="392" r="4"/><circle class="trait8 fond8" cx="397" cy="416" r="4"/><path class="trait8" d="M397,416 L380,397"/>
+          <text class="sous8" x="368" y="410" text-anchor="end">le réglage du compte</text><text class="lab7" x="397" y="464" text-anchor="middle">Prochains modèles</text></g>
+        <g class="envoi9"><g class="bande9 bA"><rect width="96" height="24" rx="3"/><text x="8" y="16">votre demande</text></g><g class="bande9 bB"><rect width="96" height="24" rx="3"/><text x="8" y="16">un fichier lu</text></g></g>
+        <g class="fiche9"><rect class="trait8 fond8" x="40" y="290" width="130" height="84" rx="3"/><circle class="trait8" cx="64" cy="316" r="12"/><rect x="84" y="308" width="70" height="11" rx="2" fill="#0D1617"/><path class="trait8" style="stroke:var(--gris)" d="M84,330 h50 M52,346 h104 M52,358 h78"/></g>
+        <g class="sceau9"><circle cx="158" cy="300" r="30"/><text x="158" y="306" text-anchor="middle">RGPD</text></g>
+        <g class="interdit" style="--i:0"><path d="M24,405 h112"/><text x="30" y="410">noms d'élèves</text></g>
+        <g class="interdit" style="--i:1"><path d="M24,435 h52"/><text x="30" y="440">notes</text></g>
+        <g class="interdit" style="--i:2"><path d="M24,465 h112"/><text x="30" y="470">mots de passe</text></g>
+      </svg>
+    </div>
+    <div class="regimes" id="regimes"></div>
+    <div class="trois">
+      <svg id="mini8" viewBox="0 0 480 430" role="img" aria-label="Trois programmes à installer : l'éditeur de code, l'agent IA, uv">
+        <g class="slot s1" style="--i:0"><rect class="cadre8" x="44" y="6" width="426" height="130" rx="3"/><text class="num8" x="8" y="66">1</text>
+          <g class="plein"><rect class="trait8 fond8" x="62" y="20" width="160" height="102" rx="3"/><path class="trait8" d="M62,36 h160 M106,36 v60 M62,96 h160 M70,48 h26 M70,58 h20 M70,68 h24"/><circle cx="72" cy="28" r="2.5"/><circle cx="81" cy="28" r="2.5"/><circle cx="90" cy="28" r="2.5"/><text class="mono8" style="fill:var(--ink)" x="70" y="114">&gt;_</text>
+            <text class="nom8" x="250" y="66">L'éditeur de code</text><text class="sous8" x="250" y="88">VSCodium, avec son terminal</text></g></g>
+        <g class="slot s2" style="--i:1"><rect class="cadre8" x="44" y="148" width="426" height="130" rx="3"/><text class="num8" x="8" y="208">2</text>
+          <g class="plein"><path class="trait8 fond8" d="M64,170 h14 l5,6 h25 v26 h-44 z"/><path class="trait8 fleche8" pathLength="1" d="M118,188 h44 m-8,-7 l8,7 l-8,7"/>
+            <g class="nuage8"><path class="trait8 fond8" d="M184,202 a12,12 0 0 1 1,-24 a15,15 0 0 1 28,-3 a12,12 0 0 1 4,27 z"/><text class="sous8" x="200" y="220" text-anchor="middle">le modèle</text></g>
+            <rect x="62" y="232" width="166" height="34" rx="3" fill="#0D1617"/><text class="mono8" x="72" y="254">&gt;</text><rect class="curseur" x="88" y="242" width="8" height="15" fill="#F2EFE6"/>
+            <text class="nom8" x="250" y="208">L'agent IA</text><text class="sous8" x="250" y="230">il se lance dans le terminal</text></g></g>
+        <g class="slot s3" style="--i:2"><rect class="cadre8" x="44" y="290" width="426" height="130" rx="3"/><text class="num8" x="8" y="350">3</text>
+          <g class="plein"><rect class="trait8 fond8" x="92" y="352" width="100" height="50" rx="3"/><path class="trait8 fond8" d="M76,402 h132 l-8,8 h-116 z"/>
+            <g class="boite"><path class="trait8" style="stroke:var(--orange)" d="M142,304 v14"/><rect class="trait8" x="104" y="318" width="76" height="30" rx="2" style="fill:var(--jaune)"/><text class="sous8" style="fill:var(--ink)" x="142" y="338" text-anchor="middle">Python</text></g>
+            <text class="nom8" x="250" y="350">uv</text><text class="sous8" x="250" y="372">il met Python sur votre machine</text></g></g>
+      </svg>
+    </div>
+    <div class="onze">
+      <svg id="mini11" viewBox="0 0 480 150" preserveAspectRatio="xMinYMid meet" role="img" aria-label="Un chatbot à qui l'on redit trois fois son contexte, puis neuf questions posées une fois, puis une classe décrite sans aucun nom">
+        <g class="s11 s-conv"><rect class="trait8 fond8" x="10" y="4" width="330" height="142" rx="4"/><path class="trait8" d="M10,26 h330"/><circle cx="24" cy="15" r="2.5"/><circle cx="34" cy="15" r="2.5"/><text class="lab7" x="50" y="19">un chatbot</text>
+          <g transform="translate(28,36)"><g class="b11" style="--i:0"><rect width="190" height="28" rx="3"/><text x="12" y="19">mon contexte</text></g></g><g transform="translate(28,72)"><g class="b11" style="--i:1"><rect width="190" height="28" rx="3"/><text x="12" y="19">mon contexte</text></g></g><g transform="translate(28,108)"><g class="b11" style="--i:2"><rect width="190" height="28" rx="3"/><text x="12" y="19">mon contexte</text></g></g></g>
+        <g class="s11 s-points"><g class="q11" style="--i:0"><circle cx="40" cy="44" r="13"/><text class="num11" x="40" y="49">1</text><path class="fil11" d="M40,59 V82"/><text class="mot11" x="40" y="96">métier</text></g><g class="q11" style="--i:1"><circle cx="90" cy="44" r="13"/><text class="num11" x="90" y="49">2</text><path class="fil11" d="M90,59 V108"/><text class="mot11" x="90" y="122">élèves</text></g><g class="q11" style="--i:2"><circle cx="140" cy="44" r="13"/><text class="num11" x="140" y="49">3</text><path class="fil11" d="M140,59 V82"/><text class="mot11" x="140" y="96">contrainte</text></g><g class="q11" style="--i:3"><circle cx="190" cy="44" r="13"/><text class="num11" x="190" y="49">4</text></g><g class="q11" style="--i:4"><circle cx="240" cy="44" r="13"/><text class="num11" x="240" y="49">5</text><path class="fil11" d="M240,59 V108"/><text class="mot11" x="240" y="122">façon de travailler</text></g><g class="q11" style="--i:5"><circle cx="290" cy="44" r="13"/><text class="num11" x="290" y="49">6</text></g><g class="q11" style="--i:6"><circle cx="340" cy="44" r="13"/><text class="num11" x="340" y="49">7</text></g><g class="q11" style="--i:7"><circle cx="390" cy="44" r="13"/><text class="num11" x="390" y="49">8</text></g><g class="q11" style="--i:8"><circle cx="440" cy="44" r="13"/><text class="num11" x="440" y="49">9</text></g></g>
+        <g class="s11 s-classe"><g transform="translate(60,22)"><g class="t11" style="--i:0"><path class="trait8 fond8" d="M-24,46 C-24,26 -12,19 0,19 C12,19 24,26 24,46"/><circle class="trait8 fond8" r="13"/></g></g><g transform="translate(130,22)"><g class="t11" style="--i:1"><path class="trait8 fond8" d="M-24,46 C-24,26 -12,19 0,19 C12,19 24,26 24,46"/><circle class="trait8 fond8" r="13"/></g></g><g transform="translate(200,22)"><g class="t11" style="--i:2"><path class="trait8 fond8" d="M-24,46 C-24,26 -12,19 0,19 C12,19 24,26 24,46"/><circle class="trait8 fond8" r="13"/></g></g><g transform="translate(270,22)"><g class="t11" style="--i:3"><path class="trait8 fond8" d="M-24,46 C-24,26 -12,19 0,19 C12,19 24,26 24,46"/><circle class="trait8 fond8" r="13"/></g></g><g transform="translate(95,82)"><g class="t11" style="--i:4"><path class="trait8 fond8" d="M-24,46 C-24,26 -12,19 0,19 C12,19 24,26 24,46"/><circle class="trait8 fond8" r="13"/></g></g><g transform="translate(165,82)"><g class="t11" style="--i:5"><path class="trait8 fond8" d="M-24,46 C-24,26 -12,19 0,19 C12,19 24,26 24,46"/><circle class="trait8 fond8" r="13"/></g></g><g transform="translate(235,82)"><g class="t11" style="--i:6"><path class="trait8 fond8" d="M-24,46 C-24,26 -12,19 0,19 C12,19 24,26 24,46"/><circle class="trait8 fond8" r="13"/></g></g>
+          <g class="badge11"><path class="trait8" d="M378,40 L366,8 M412,40 L424,8"/><rect class="trait8 fond8" x="330" y="40" width="130" height="84" rx="6"/><path d="M330,62 V46 a6,6 0 0 1 6,-6 h118 a6,6 0 0 1 6,6 V62 Z" fill="#127676"/><rect x="383" y="47" width="24" height="6" rx="3" fill="#F2EFE6"/><rect x="346" y="84" width="98" height="16" rx="2" fill="#0D1617"/></g>
+          <path class="barre11" pathLength="1" d="M320,134 L470,30"/></g>
+      </svg>
+    </div>
+    <div class="dixsept">
+      <svg id="mini17" viewBox="0 0 480 400" role="img" aria-label="Lundi : une commande qui produit trois fichiers, un plan exécuté étape par étape et une entrée de journal">
+        <g class="s17 g-lundi">
+          <g style="--i:0"><rect class="trait8 fond8" x="36" y="172" width="148" height="36" rx="5"/><path class="trait8" d="M48,182 h9 l3,4 h13 v13 h-25 z"/><text class="mono14" x="82" y="195">mon_harnais/</text></g>
+          <g style="--i:1"><rect class="trait8 fond8" x="250" y="96" width="180" height="190" rx="6"/><path d="M250,136 V102 a6,6 0 0 1 6,-6 h168 a6,6 0 0 1 6,6 V136 Z" fill="#127676"/><path class="trait8" d="M292,84 v24 M388,84 v24"/><text class="jour17" x="340" y="228">lundi</text></g>
+        </g>
+        <g class="s17 g-cmd">
+          <rect x="20" y="16" width="440" height="42" rx="4" fill="#0D1617"/><g class="typ17"><text x="34" y="43">&gt; /conception_numerique</text><rect x="258" y="47" width="150" height="2.5" fill="#F2EFE6"/></g>
+          <g transform="translate(84,82)"><g class="f17" style="--i:0"><path class="feuille10" d="M0,0 h34 l16,16 v50 h-50 z M34,0 v16 h16"/><text class="sous8" x="25" y="84" text-anchor="middle">l'idée</text></g></g>
+          <g transform="translate(214,82)"><g class="f17" style="--i:1"><path class="feuille10" d="M0,0 h34 l16,16 v50 h-50 z M34,0 v16 h16"/><text class="sous8" x="25" y="84" text-anchor="middle">le plan</text></g></g>
+          <g transform="translate(344,82)"><g class="f17" style="--i:2"><path class="feuille10" d="M0,0 h34 l16,16 v50 h-50 z M34,0 v16 h16"/><text class="sous8" x="25" y="84" text-anchor="middle">la fiche du projet</text></g></g>
+          <g class="ck17"><text class="lab7" x="150" y="206">le plan</text>
+            <rect class="trait8 fond8" x="150" y="216" width="16" height="16" rx="2"/><rect class="lr13" x="178" y="220" width="150" height="8" rx="2"/>
+            <rect class="trait8 fond8" x="150" y="244" width="16" height="16" rx="2"/><rect class="lr13" x="178" y="248" width="118" height="8" rx="2"/>
+            <rect class="trait8 fond8" x="150" y="272" width="16" height="16" rx="2"/><rect class="lr13" x="178" y="276" width="138" height="8" rx="2"/>
+            <path class="co17" style="--i:0" pathLength="1" d="M153,224 l4,5 l8,-11"/><path class="co17" style="--i:1" pathLength="1" d="M153,252 l4,5 l8,-11"/><path class="co17" style="--i:2" pathLength="1" d="M153,280 l4,5 l8,-11"/>
+            <g class="jr17"><rect class="trait8 fond8" x="150" y="318" width="180" height="38" rx="5"/><path class="trait8" d="M163,328 h9 l5,5 v13 h-14 z"/><text class="mono14" x="188" y="342">JOURNAL.md</text></g></g>
+        </g>
+      </svg>
+    </div>
+    <div class="dixhuit">
+      <svg id="mini18" viewBox="0 0 480 400" role="img" aria-label="Sept programmes à installer, une case chacun : en haut le gestionnaire de paquets, Homebrew sur Mac et Scoop sur Windows, puis git, ripgrep, jq, Node.js, FFmpeg et Whisper">
+        <g class="cs1" transform="translate(44,8)"><rect class="cadre8" width="392" height="58" rx="3"/><g class="ou18"><rect class="trait8 fond8" width="392" height="58" rx="3" style="stroke:var(--teal)"/><path class="trait8" d="M18,18 h34 v26 h-34 z M18,27 h34 M35,18 v9"/><text class="nm16" x="68" y="27">gestionnaire de paquets</text><text class="sous8" x="68" y="46">Homebrew sur Mac, Scoop sur Windows</text></g></g>
+        <g class="cs2" transform="translate(44,84)"><rect class="cadre8" width="188" height="86" rx="3"/><g class="ou18"><rect class="trait8 fond8" width="188" height="86" rx="3" style="stroke:var(--teal)"/><path class="trait8" d="M16,50 H64"/><circle class="gd18" cx="18" cy="50" r="4.5"/><circle class="gd18" cx="33" cy="50" r="4.5"/><circle class="gd18" cx="48" cy="50" r="4.5"/><circle cx="63" cy="50" r="4.5" fill="#E4632E"/><path class="ga18" pathLength="1" d="M63,42 C58,24 38,24 34,40 m-2,-7 l2,7 l6,-3"/><text class="nm16" x="80" y="40">git</text><text class="sous8" x="80" y="62">l'historique</text></g></g>
+        <g class="cs3" transform="translate(248,84)"><rect class="cadre8" width="188" height="86" rx="3"/><g class="ou18"><rect class="trait8 fond8" width="188" height="86" rx="3" style="stroke:var(--teal)"/><path class="trait8" style="stroke:var(--gris)" d="M14,30 h44 M14,43 h10 M48,43 h12 M14,56 h36"/><rect x="28" y="38" width="16" height="10" rx="2" fill="#E4632E" opacity=".55"/><circle class="trait8" cx="36" cy="43" r="12"/><path class="trait8" d="M45,52 l13,13"/><text class="nm16" x="80" y="40">ripgrep</text><text class="sous8" x="80" y="62">chercher vite</text></g></g>
+        <g class="cs4" transform="translate(44,182)"><rect class="cadre8" width="188" height="86" rx="3"/><g class="ou18"><rect class="trait8 fond8" width="188" height="86" rx="3" style="stroke:var(--teal)"/><path class="trait8" d="M26,23 q-6,0 -6,6 v9 q0,5 -5,5 q5,0 5,5 v9 q0,6 6,6 M54,23 q6,0 6,6 v9 q0,5 5,5 q-5,0 -5,5 v9 q0,6 -6,6"/><path class="trait8" style="stroke:var(--gris)" d="M32,33 h16 M32,43 h11 M32,53 h16"/><text class="nm16" x="80" y="40">jq</text><text class="sous8" x="80" y="62">lire les données</text></g></g>
+        <g class="cs5" transform="translate(248,182)"><rect class="cadre8" width="188" height="86" rx="3"/><g class="ou18"><rect class="trait8 fond8" width="188" height="86" rx="3" style="stroke:var(--teal)"/><path class="trait8" d="M40,20 l20,11.5 v23 l-20,11.5 l-20,-11.5 v-23 z"/><path class="trait8" d="M35,33 v7 M45,33 v7 M32,40 h16 v4 a8,8 0 0 1 -16,0 z M40,52 v6"/><text class="nm16" x="80" y="40">Node.js</text><text class="sous8" x="80" y="62">les extensions</text></g></g>
+        <g class="cs6" transform="translate(44,280)"><rect class="cadre8" width="188" height="86" rx="3"/><g class="ou18" id="ffmpeg18" transform="translate(-30,-112)"></g></g>
+        <g class="cs7" transform="translate(248,280)"><rect class="cadre8" width="188" height="86" rx="3"/><g class="ou18" id="whisper18" transform="translate(-30,-212)"></g></g>
+      </svg>
+    </div>
+    <div class="dixneuf"><svg id="mini19" viewBox="0 0 480 400" role="img" aria-label="Douze cases, une par skill bonus, sur cinq rangées, une par usage : préparer ses cours, nourrir ses connaissances, entretenir son harnais, ouvrir et clore une séance, travailler le son et la vidéo"></svg></div>
+    <div class="vingt"><svg id="mini20" viewBox="0 0 480 400" role="img" aria-label="Six vignettes, une par mot à emporter, puis le cheval gravé en grand, harnaché de couleur, qui tire sa charge"></svg></div>
+    <div class="seize">
+      <svg id="mini16" viewBox="0 0 480 400" role="img" aria-label="Du dossier partent deux branches : sur votre machine, FFmpeg et Whisper, puis les deux petits programmes du kit, le validateur et le pont, que uv lance sans rien demander au modèle ; en ligne, une prise MCP reliée par Internet à un agenda et à un carnet de notes">
+        <path class="br16" pathLength="1" d="M206,50 C170,56 126,64 124,92"/><path class="br16" pathLength="1" d="M274,50 C310,56 366,60 370,90"/>
+        <circle class="cadre8 vide16 vg" cx="124" cy="112" r="16"/><circle class="cadre8 vide16 vd" cx="370" cy="110" r="16"/>
+        <rect class="trait8 fond8" x="166" y="14" width="148" height="36" rx="5"/><path class="trait8" d="M178,24 h9 l3,4 h13 v13 h-25 z"/><text class="mono14" x="212" y="37">mon_harnais/</text>
+        <g class="loc16"><rect class="trait8" x="16" y="96" width="216" height="218" rx="5"/><path class="trait8" d="M4,314 h240 l-12,14 h-216 z"/><text class="lab7" x="124" y="350" text-anchor="middle">votre machine</text>
+          <g class="bx16" style="--i:0"><rect class="trait8 fond8" x="30" y="112" width="188" height="86" rx="3" style="stroke:var(--teal)"/>
+            <rect class="trait8" x="44" y="134" width="52" height="42" rx="2"/><path class="trait8" d="M44,144 h52 M44,166 h52 M53,134 v10 M62,134 v10 M71,134 v10 M80,134 v10 M89,134 v10 M53,166 v10 M62,166 v10 M71,166 v10 M80,166 v10 M89,166 v10"/>
+            <text class="nm16" x="110" y="152">FFmpeg</text><text class="sous8" x="110" y="174">son et vidéo</text></g>
+          <g class="bx16" style="--i:1"><rect class="trait8 fond8" x="30" y="212" width="188" height="86" rx="3" style="stroke:var(--teal)"/>
+            <path class="trait8" d="M42,255 q3,-22 6,0 t6,0 t6,0 t6,0 M74,255 h8 m-4,-4 l4,4 l-4,4"/><path class="trait8" style="stroke:var(--gris)" d="M88,247 h14 M88,255 h10 M88,263 h13"/>
+            <text class="nm16" x="110" y="252">Whisper</text><text class="sous8" x="110" y="274">la voix en texte</text></g>
+          <path class="trait8 uv16" d="M4,314 h240 l-12,14 h-216 z"/><rect class="uv16" x="18" y="286" width="212" height="27"/><path class="trait8 uv16" d="M17,286 h214"/><text class="uvt16 uv16" x="124" y="305" text-anchor="middle">uv</text>
+          <g class="pu16"><rect class="trait8 fond8 bd16t" x="30" y="104" width="90" height="20" rx="10"/><text class="pt16" x="75" y="118" text-anchor="middle">FFmpeg</text>
+            <rect class="trait8 fond8 bd16t" x="128" y="104" width="90" height="20" rx="10"/><text class="pt16" x="173" y="118" text-anchor="middle">Whisper</text></g>
+          <g class="pv16"><rect class="trait8 fond8 bd16" x="30" y="130" width="188" height="60" rx="3"/>
+            <path class="trait8" d="M44,140 h10 v10 h-10 z M44,155 h10 v10 h-10 z M44,170 h10 v10 h-10 z"/><path class="trait8 ck16" d="M46,145 l3,3 l5,-6 M46,160 l3,3 l5,-6 M46,175 l3,3 l5,-6"/><path class="trait8" style="stroke:var(--gris)" d="M60,145 h26 M60,160 h18 M60,175 h24"/>
+            <text class="nm16" x="98" y="157">validateur</text><text class="sous8" x="98" y="176">contrôle les noms</text></g>
+          <g class="pp16"><rect class="trait8 fond8 bd16" x="30" y="196" width="188" height="60" rx="3"/>
+            <path class="trait8" d="M62,204 h12 l5,5 v13 h-17 z M62,230 h12 l5,5 v13 h-17 z"/><path class="trait8 ar16" d="M60,213 C46,213 46,239 60,239"/>
+            <text class="nm16" x="98" y="223">pont</text><text class="sous8" x="98" y="242">sur Claude Code</text></g>
+          <text class="dt16" x="124" y="275" text-anchor="middle">toujours le même résultat</text></g>
+        <g class="mo16"><path class="pointille" d="M238,193 H328"/><path class="cx16" d="M276,186 l14,14 M290,186 l-14,14"/>
+          <path class="trait8 fond8" style="stroke-width:1.45" transform="translate(92,-60) scale(1.4)" d="M184,202 a12,12 0 0 1 1,-24 a15,15 0 0 1 28,-3 a12,12 0 0 1 4,27 z"/>
+          <text class="sous8" x="372" y="244" text-anchor="middle">le modèle</text><text class="zt16" x="372" y="278" text-anchor="middle">0 token</text></g>
+        <g class="lig16"><rect class="trait8 fond8" x="332" y="140" width="76" height="16" rx="3"/><path class="trait8" d="M356,140 v8 M384,140 v8"/>
+          <g class="fiche16"><path class="trait8" d="M356,126 v14 M384,126 v14"/><rect x="340" y="94" width="60" height="32" rx="5" fill="#0D1617"/><text class="mono8" x="370" y="115" text-anchor="middle">MCP</text></g>
+          <g class="net16"><path class="pointille" d="M370,156 V184 M370,184 L330,212 M370,184 L414,212"/><text class="sous8" x="356" y="180" text-anchor="end">Internet</text>
+            <rect class="trait8 fond8" x="302" y="218" width="56" height="56" rx="4"/><path d="M302,234 v-12 a4,4 0 0 1 4,-4 h48 a4,4 0 0 1 4,4 v12 z" fill="#127676"/><path class="trait8" d="M316,212 v10 M344,212 v10"/><path class="trait8" style="stroke:var(--gris)" d="M312,246 h36 M312,256 h36 M312,266 h22"/>
+            <text class="sous8" x="330" y="294" text-anchor="middle">un agenda</text>
+            <rect class="trait8 fond8" x="390" y="218" width="50" height="56" rx="3"/><path class="trait8" d="M384,228 h10 M384,240 h10 M384,252 h10 M384,264 h10"/><path class="trait8" style="stroke:var(--gris)" d="M402,234 h28 M402,246 h28 M402,258 h18"/>
+            <text class="sous8" x="415" y="294" text-anchor="middle">des notes</text></g></g>
+        <text class="apres16" x="240" y="384">après l'atelier</text>
+      </svg>
+    </div>
+    <div class="quinze">
+      <svg id="mini15" viewBox="8 0 454 400" role="img" aria-label="Deux chevaux gravés : le harnais coloré quitte le premier et se pose sur le second, avec l'étiquette « à vous » ; le premier reste dans son jardin clos ; les deux chevaux sont loués">
+        <g class="mur15"><rect x="26" y="3" width="324" height="196" rx="2"/><rect x="32" y="9" width="312" height="184" rx="2"/><rect class="porte" x="341" y="78" width="12" height="52"/><path d="M347,84 v40"/><text class="lab7" x="30" y="216">jardin clos</text></g>
+        <g class="h15a"><svg x="40" y="10" width="300" height="183" viewBox="150 30 720 440"><image href="medias/cheval_planche_4.png" x="0" y="0" width="1000" height="483" clip-path="url(#r2)"/>
+          <g class="p15a"><path class="pc" style="--i:0" pathLength="1" stroke-width="7" d="M283,48 L250,130 M285,95 L222,118 M282,64 L243,62 M251,79 L272,84 L269,101 L249,96 Z"/>
+            <path class="pc plein" style="--i:1" d="M433,110 L471,104 L481,117 L464,131 L459,149 L422,146 L427,127 Z"/>
+            <path class="pc" style="--i:2" pathLength="1" stroke-width="9" d="M507,118 L489,193 L486,230"/>
+            <path class="pc" style="--i:3" pathLength="1" stroke-width="9" d="M446,110 L334,183 M420,142 L358,195"/>
+            <path class="pc" style="--i:4" pathLength="1" stroke-width="6" d="M483,117 L533,119 C560,118 580,108 600,107 C630,106 655,112 673,123 L697,138"/>
+            <path class="pc" style="--i:5" pathLength="1" stroke-width="13" d="M333,208 C350,214 368,219 385,221 L433,224 L490,229 L600,253 L700,267 L802,282"/></g></svg></g>
+        <g class="h15b"><svg x="150" y="205" width="290" height="191" viewBox="0 0 1220 804"><image href="medias/cheval_planche_4_second.png" x="0" y="0" width="1220" height="804"/>
+          <!-- Les mêmes six pièces, relevées sur la pose du second cheval -->
+          <g class="p15b"><path class="pc" style="--i:0" pathLength="1" stroke-width="13" d="M190,58 L140,215 M82,185 L150,205 M120,100 L188,86 M108,118 L150,112 L152,168 L112,172 Z"/>
+            <path class="pc plein" style="--i:1" d="M462,158 L578,172 L548,234 L442,218 Z"/>
+            <path class="pc" style="--i:2" pathLength="1" stroke-width="17" d="M565,238 L572,330 L574,400"/>
+            <path class="pc" style="--i:3" pathLength="1" stroke-width="17" d="M455,218 L275,322 M482,236 L330,342"/>
+            <path class="pc" style="--i:4" pathLength="1" stroke-width="12" d="M582,182 C680,192 800,186 870,214 L935,276"/>
+            <path class="pc" style="--i:5" pathLength="1" stroke-width="24" d="M265,347 L330,366 L460,372 L700,380 L830,382 M712,436 L1010,522 L1128,550"/></g></svg></g>
+        <g class="tag15"><text class="etiq" x="0" y="0">à vous</text><text class="mono14 dos15" x="0" y="24">mon_harnais/</text></g>
+        <g class="tx15"><path class="feuille10" d="M366,56 h62 l28,28 v96 h-90 z M428,56 v28 h28"/><rect class="lr13" x="378" y="100" width="56" height="7" rx="2"/><rect class="lr13" x="378" y="116" width="66" height="7" rx="2"/><rect class="lr13" x="378" y="132" width="40" height="7" rx="2"/><rect class="lr13" x="378" y="148" width="60" height="7" rx="2"/><rect class="lr13" x="378" y="164" width="48" height="7" rx="2"/><text class="lab7" x="366" y="198">du texte</text></g>
+        <g class="loue15" style="--i:0"><text x="336" y="34" text-anchor="end">loué</text></g>
+        <g class="loue15" style="--i:1"><text x="436" y="238" text-anchor="end">loué</text></g>
+      </svg>
+    </div>
+    <div class="quatorze">
+      <svg id="mini14" viewBox="0 0 480 400" role="img" aria-label="Un calendrier, aujourd'hui puis demain ; la fenêtre de contexte qui s'allonge, puis se ferme pendant qu'une neuve s'ouvre ; le fichier JOURNAL.md, dont l'entrée la plus récente mène à la fenêtre neuve">
+        <g class="s14 g-cal">
+          <g style="--i:0"><rect class="trait8 fond8" x="50" y="110" width="150" height="170" rx="6"/><path d="M50,146 V116 a6,6 0 0 1 6,-6 h138 a6,6 0 0 1 6,6 V146 Z" fill="#127676"/><path class="trait8" d="M88,98 v22 M162,98 v22"/><path class="trait8" style="stroke:var(--gris)" d="M70,176 h110 M70,198 h90 M70,220 h104 M70,242 h60"/><text class="lab7" x="125" y="304" text-anchor="middle">aujourd'hui</text></g>
+          <g style="--i:1"><rect class="cadre8" x="280" y="110" width="150" height="170" rx="6"/><path class="cadre8" d="M280,146 h150 M318,98 v22 M392,98 v22"/><text class="lab7" x="355" y="304" text-anchor="middle">demain</text></g>
+          <text class="q14" style="--i:2" x="240" y="222">?</text>
+        </g>
+        <g class="s14 g-fen">
+          <text class="lab7" x="32" y="18">La fenêtre de contexte</text>
+          <g class="vieille" id="vieille14"></g>
+          <g class="neuve14"><rect class="c14" x="310" y="28" width="130" height="90" rx="3"/><rect class="bande" x="318" y="38" width="114" height="15" rx="2"/><text class="ftxt" x="310" y="140">une neuve</text></g>
+          <g class="jour14"><text class="nom13s" x="34" y="166">JOURNAL.md</text><path class="feuille13" d="M32,174 h196 l40,40 v170 h-236 z M228,174 v40 h40"/>
+            <rect class="sur14" x="44" y="190" width="176" height="62" rx="3"/><text class="mono14" x="52" y="210">## aujourd'hui</text><rect class="lr13" x="52" y="222" width="150" height="8" rx="2"/><rect class="lr13" x="52" y="236" width="110" height="8" rx="2"/>
+            <text class="mono14" style="fill:var(--gris)" x="52" y="284">##</text><rect class="lr13" x="76" y="274" width="74" height="11" rx="2"/><rect class="lr13" x="52" y="296" width="140" height="8" rx="2"/>
+            <text class="mono14" style="fill:var(--gris)" x="52" y="340">##</text><rect class="lr13" x="76" y="330" width="74" height="11" rx="2"/><rect class="lr13" x="52" y="352" width="120" height="8" rx="2"/>
+            <path class="fl14" pathLength="1" d="M226,220 C340,226 400,206 400,134 m-8,10 l8,-10 l8,10"/></g>
+        </g>
+      </svg>
+    </div>
+    <div class="treize">
+      <svg id="mini13" viewBox="0 0 480 400" role="img" aria-label="Un trait hésitant où quatre repères se posent, puis se rangent en une liste dans un fichier ; ce fichier copié vers deux dossiers ; puis deux fichiers reliés, dont le second mène à cette page">
+        <g class="s13 a13">
+          <g class="fige13"><path class="feuille13" d="M30,62 h330 l50,50 v278 h-380 z M360,62 v50 h50"/><text class="nom13s" x="34" y="50">SKILL.md</text>
+            <rect class="l13" style="--w:236px;--i:0" x="118" y="111" height="14" rx="2"/><rect class="l13" style="--w:264px;--i:1" x="118" y="189" height="14" rx="2"/><rect class="l13" style="--w:150px;--i:2" x="118" y="267" height="14" rx="2"/><rect class="l13" style="--w:214px;--i:3" x="118" y="345" height="14" rx="2"/></g>
+          <text class="lab7 debut13" x="128" y="44">Au début, aucun fichier persistant</text>
+          <path class="serp13" pathLength="1" d="M60,34 C20,52 112,62 72,84 C50,96 96,104 84,118 C70,134 28,140 44,162 C56,178 76,176 52,196 C30,214 110,222 98,246 C92,258 70,256 90,274 C108,290 30,296 40,318 C46,332 78,334 60,352 C50,362 66,372 60,380"/>
+          <g class="rep13 r" style="--i:0;--dx:12px"><path class="fil13 et13" d="M97,118 H120"/><text class="et13" x="128" y="123">une fiche du projet</text><circle cx="84" cy="118" r="9"/></g>
+          <g class="rep13 r" style="--i:1;--dx:44px"><path class="fil13 et13" d="M65,196 H120"/><text class="et13" x="128" y="201">ce que l'outil doit faire</text><circle cx="52" cy="196" r="9"/></g>
+          <g class="rep13 r" style="--i:2;--dx:6px"><path class="fil13 et13" d="M103,274 H120"/><text class="et13" x="128" y="279">le plan</text><circle cx="90" cy="274" r="9"/></g>
+          <g class="rep13 b" style="--dx:36px"><g class="et13"><path class="fil13" d="M73,352 H120"/>
+            <path class="trait8 fond8" d="M134,334 h32 a6,6 0 0 1 6,6 v18 a6,6 0 0 1 -6,6 h-20 l-10,9 v-9 h-2 a6,6 0 0 1 -6,-6 v-18 a6,6 0 0 1 6,-6 z"/><text class="q13" x="150" y="358">?</text>
+            <path class="trait8 fond8" d="M190,342 h36 a6,6 0 0 1 6,6 v18 a6,6 0 0 1 -6,6 h-2 v9 l-10,-9 h-24 a6,6 0 0 1 -6,-6 v-18 a6,6 0 0 1 6,-6 z"/><path class="trait8" style="stroke:var(--gris)" d="M194,353 h28 M194,362 h18"/>
+            <text x="246" y="362">se faire interviewer</text></g><circle cx="60" cy="352" r="9"/></g>
+        </g>
+        <g class="s13 b13" id="partage13"></g>
+        <g class="s13 c13" id="filiation13"></g>
+      </svg>
+    </div>
+    <svg id="mini10" class="memo" viewBox="0 0 480 196" role="img" aria-label="Les trois supports de Leonard dans Memento : une photo Polaroid, une note écrite à la main, un tatouage">
+      <g transform="translate(14,14) rotate(-5 65 75)"><g class="obj o-photo"><rect width="130" height="150" fill="#fdfcf8"/><rect x="10" y="10" width="110" height="102" fill="#0B4E4E"/>
+        <g fill="none" stroke="#F2EFE6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="65" cy="50" r="14"/><path d="M33,112 C33,84 48,72 65,72 C82,72 97,84 97,112"/></g></g></g>
+      <g transform="translate(164,22) rotate(3 62 62)"><g class="obj o-note"><rect width="124" height="124" fill="#f6e9c3"/>
+        <path class="griffe" d="M14,30 c8,-9 14,7 22,0 s14,-8 22,0 s16,6 26,-2 M14,54 c10,-8 16,8 26,0 s18,-6 28,2 M14,78 c8,-8 18,6 26,0 s12,-8 20,-2 s14,4 24,-2 M14,102 c10,-6 18,6 30,0"/></g></g>
+      <g transform="translate(300,20)"><g class="obj o-bras"><path style="fill:#fbfaf5" d="M62,0 C62,12 54,18 34,24 C14,30 4,40 4,60 L8,150 L162,150 L166,60 C166,40 156,30 136,24 C116,18 108,12 108,0 Z"/>
+        <path class="bras" style="fill:none" d="M62,0 C62,12 54,18 34,24 C14,30 4,40 4,60 L8,150 M108,0 C108,12 116,18 136,24 C156,30 166,40 166,60 L162,150"/>
+        <path id="anneau10" fill="none" d="M85,50 a38,38 0 1 1 -0.1,0"/>
+        <text class="tatou rond"><textPath href="#anneau10" textLength="232" lengthAdjust="spacing">fait 1 → fait 2 → fait 3 →</textPath></text>
+        <text class="tatou" x="85" y="95" text-anchor="middle">Faits</text><path class="encre" pathLength="1" d="M63,102 C72,100 96,104 107,101"/></g></g>
+      <text class="leg" style="--i:0" x="79" y="190" text-anchor="middle">photos</text><text class="leg" style="--i:1" x="226" y="190" text-anchor="middle">notes</text><text class="leg" style="--i:2" x="386" y="190" text-anchor="middle">tatouages</text>
+    </svg>
+    <div class="dossier" id="arbre">
+      <div class="tete"><span>Votre dossier</span></div>
+      <div class="ligne"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 3.5h5l1.5 2h6.5v8h-13z"/></svg>mon_harnais/</div>
+      <div class="ligne sous l-agents"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h6l3 3v10h-9z"/></svg>AGENTS.md<span class="note">lu d'abord</span><svg class="mem" style="--m:0" viewBox="0 0 28 28" aria-hidden="true"><g transform="rotate(-6 14 14)"><rect x="4" y="2" width="20" height="24" fill="#fdfcf8"/><rect x="6.5" y="4.5" width="15" height="14" fill="#0B4E4E"/></g></svg></div>
+      <div class="bloc11"><svg class="boucle" viewBox="0 0 180 51" aria-hidden="true"><path class="tour" pathLength="1" d="M178,24 V39 a10,10 0 0 1 -10,10 H12 a10,10 0 0 1 -10,-10 V12 a10,10 0 0 1 10,-10 H168 a10,10 0 0 1 10,10"/><path class="pointe" d="M172,8 l6,9 l6,-9"/></svg>
+        <div class="ligne sous l-tout" style="--i:0"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h6l3 3v10h-9z"/></svg>IDENTITE.md<svg class="ico pic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5a2.6 2.6 0 1 0 .01 0z M3 14c0-3.4 2.2-5 5-5s5 1.6 5 5"/></svg><span class="note">tout de suite</span></div>
+        <div class="ligne sous l-tout" style="--i:1"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h6l3 3v10h-9z"/></svg>PERSONA.md<svg class="ico pic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5l4 3.5-4 3.5 M9 12h4.5"/></svg><span class="note">tout de suite</span></div></div>
+      <div class="ligne sous l-journal"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h6l3 3v10h-9z"/></svg>JOURNAL.md<svg class="mem" style="--m:2" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="13" fill="#fbfaf5"/><circle cx="14" cy="14" r="8.5" fill="none" stroke="#0D1617" stroke-width="2.6" stroke-dasharray="5 2.4"/><path d="M10.5,14.5 h7" stroke="#0D1617" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+      <div class="ligne sous l-plan p1" style="--i:0;--j:0"><span>1<span class="suite">.depot/</span></span><svg class="ico pic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M1.5 3.5h13v9h-13z M1.5 4l6.5 5 6.5-5"/></svg></div>
+      <div class="ligne sous l-plan p2" style="--i:1;--j:1"><span>2<span class="suite">.recherches/</span></span></div>
+      <div class="ligne sous l-plan p3" style="--i:2;--j:2"><span>3<span class="suite">.connaissances/</span></span><svg class="ico pic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M4 1.5h8v13l-4-3.5-4 3.5z"/></svg></div>
+      <div class="ligne sous l-plan p4" style="--i:3;--j:0"><span>4<span class="suite">.automatisations/</span></span></div>
+      <div class="bloc13"><div class="ligne sous2 l-skill l-sk" style="--i:0"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 3.5h5l1.5 2h6.5v8h-13z"/></svg>skills/<span class="note">2 skills</span><svg class="mem" style="--m:1" viewBox="0 0 28 28" aria-hidden="true"><g transform="rotate(4 14 14)"><rect x="3" y="3" width="22" height="22" fill="#f6e9c3"/><path d="M7,10 c3,-3 5,3 8,0 s4,-2 6,0 M7,16 c3,-3 6,2 9,0 M7,21 c2,-2 4,1 6,0" fill="none" stroke="#0D1617" stroke-width="1.3" stroke-linecap="round"/></g></svg></div>
+        <div class="ligne sous3 l-skill l-cn" style="--i:1"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 3.5h5l1.5 2h6.5v8h-13z"/></svg><span><span class="sansnom">conception_numerique</span>/</span></div>
+        <div class="ligne sous4 l-skill" style="--i:2"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h6l3 3v10h-9z"/></svg>SKILL.md</div>
+        <div class="sorties" aria-hidden="true"><div class="sortie" style="--i:0"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h6l3 3v10h-9z"/></svg>l'idée</div><div class="sortie" style="--i:1"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h6l3 3v10h-9z"/></svg>le plan</div><div class="sortie" style="--i:2"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h6l3 3v10h-9z"/></svg>la fiche du projet</div></div></div>
+      <div class="bloc5"><div class="ligne sous l-plan p5" style="--i:4;--j:1"><span>5<span class="suite">.productions/</span></span></div>
+        <div class="ligne sous2 l-sub" style="--i:0">cours/</div><div class="ligne sous2 l-sub" style="--i:1">vibe_coding/</div></div>
+      <div class="ligne sous l-plan p6" style="--i:5;--j:2"><span>6<span class="suite">.editions/</span></span></div>
+      <div class="ligne sous l-besoin" style="--i:0">cours/AGENTS.md<span class="note">au besoin</span></div>
+      <div class="ligne sous l-besoin" style="--i:1">JOURNAL.md<span class="note">au besoin</span></div>
+      <div class="ligne sous l-besoin" style="--i:2">skills/…/SKILL.md<span class="note">au besoin</span></div>
+    </div>
+    <svg id="kit10" class="kit10" viewBox="0 0 480 118" role="img" aria-label="Les prompts du kit : quatre fichiers numérotés, puis la fenêtre où l'agent demande la permission d'écrire">
+      <g class="pile10"><text class="lab7" x="10" y="14">Les prompts du kit</text>
+        <g transform="translate(20,26)"><g class="f10 un" style="--i:0"><path class="feuille10" d="M0,0 h32 l14,14 v52 h-46 z"/><text class="n10" x="5" y="60">01</text></g></g><g transform="translate(50,31)"><g class="f10 un" style="--i:1"><path class="feuille10" d="M0,0 h32 l14,14 v52 h-46 z"/><text class="n10" x="5" y="60">02</text></g></g><g transform="translate(80,36)"><g class="f10" style="--i:2"><path class="feuille10" d="M0,0 h32 l14,14 v52 h-46 z"/><text class="n10" x="5" y="60">03</text></g></g><g transform="translate(110,41)"><g class="f10" style="--i:3"><path class="feuille10" d="M0,0 h32 l14,14 v52 h-46 z"/><text class="n10" x="5" y="60">04</text></g></g>
+        </g>
+      <g class="perm10"><rect class="trait8 fond8" x="10" y="14" width="300" height="96" rx="4"/><path class="trait8" d="M10,36 h300"/><circle cx="24" cy="25" r="2.5"/><circle cx="34" cy="25" r="2.5"/><text class="lab7" x="50" y="29">l'agent</text>
+        <text class="q10" x="30" y="64">écrire dans mon_harnais ?</text>
+        <rect class="trait8" x="30" y="76" width="64" height="24" rx="12"/><text class="b10" x="62" y="93" text-anchor="middle">oui</text>
+        <rect class="trait8" x="106" y="76" width="64" height="24" rx="12"/><text class="b10" x="138" y="93" text-anchor="middle">non</text></g>
+    </svg>
+    <div class="fenetre" id="fenetre">
+      <div class="tete"><span>La fenêtre de contexte</span></div>
+      <svg id="clip" viewBox="0 0 360 440" role="img" aria-label="La fenêtre de contexte, remplie de passages, et le poids que le modèle donne à chacun"></svg>
+    </div>
+  </div>
+</section>
+
+
+</main>
+
+<footer class="retro-footer" id="pied"></footer>
+
+<aside class="coin" id="coin" aria-live="polite">
+  <div class="tete"><span>Votre harnais</span><span id="compte">0 pièce sur 6</span></div>
+  <svg viewBox="150 30 720 440" role="img" aria-label="Un cheval gravé dont les pièces du harnais se colorent à chaque étape faite">
+    <defs><clipPath id="r2"><rect x="150" y="32" width="720" height="438"/></clipPath></defs>
+    <image clip-path="url(#r2)" href="medias/cheval_planche_4.png" x="0" y="0" width="1000" height="483"/>
+    <!-- Une pièce par case « À vous », dans l'ordre des étapes 8, 10, 11, 12, 13 et 14 -->
+    <path class="piece" data-etape="8" pathLength="1" stroke-width="7" d="M283,48 L250,130 M285,95 L222,118 M282,64 L243,62 M251,79 L272,84 L269,101 L249,96 Z"/>
+    <path class="piece plein" data-etape="10" d="M433,110 L471,104 L481,117 L464,131 L459,149 L422,146 L427,127 Z"/>
+    <path class="piece" data-etape="11" pathLength="1" stroke-width="9" d="M507,118 L489,193 L486,230"/>
+    <path class="piece" data-etape="12" pathLength="1" stroke-width="9" d="M446,110 L334,183 M420,142 L358,195"/>
+    <path class="piece" data-etape="13" pathLength="1" stroke-width="6" d="M483,117 L533,119 C560,118 580,108 600,107 C630,106 655,112 673,123 L697,138"/>
+    <path class="piece" data-etape="14" pathLength="1" stroke-width="13" d="M333,208 C350,214 368,219 385,221 L433,224 L490,229 L600,253 L700,267 L802,282"/>
+  </svg>
+</aside>
+
+
+<script src="pas.js"></script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+
+// Ce que la page enchaîne : les vingt étapes.
+const HAUT = [{n: 1}, {n: 2}, {n: 3}, {n: 4}, {n: 5}, {n: 6}];
+const BAS = [{n: 7}, {n: 8}, {n: 9}, {n: 10}, {n: 11}, {n: 12}, {n: 13}, {n: 14}, {n: 15}, {n: 16}, {n: 17}, {n: 18}, {n: 19}, {n: 20}];
+
+// Ce que chaque pas allume. La scène ne dépend que du pas en cours.
+// À l'étape 6, le cheval garde le harnais sarcelle de la fin de l'étape 5, sous l'étiquette.
+const H6 = 'long trait sangles cinq oeilteal tous etiq', J6 = H6 + ' recul mur';
+// À l'étape 10, les trois supports de Leonard restent rangés en petit ; S10 est le dossier une fois nommé.
+const K10 = 'K photo note encre legendes', D10 = K10 + ' petit dix', S10 = D10 + ' noms6 icones sous';
+// À l'étape 11, le dossier garde ses six sous-dossiers, repliés pour tenir au-dessus du cheval du coin ;
+// les deux fichiers s'y ajoutent au pas 3.
+const D11 = 'O dix noms6 icones', E11 = D11 + ' onze';
+// À l'étape 12, il garde ses pictogrammes et ses filets.
+const D12 = 'douze icones agents', T12 = D12 + ' tout besoin';
+// À l'étape 13, les trois lignes « au besoin » laissent la place à la skill, dépliée sous 4.automatisations/.
+// Du pas 3 au pas 8, le parcours puis le partage prennent la colonne, comme la fenêtre à l'étape 12.
+const D13 = 'douze icones agents treize', P13 = 'P trait reperes';
+// À l'étape 14, le dossier est fini : JOURNAL.md y a sa ligne, skills/ se replie sur ses deux skills.
+const D14 = 'douze icones quatorze', F14 = 'J fen long';
+// À l'étape 16, les deux petits programmes du kit se posent sur la machine, puis ce qui les distingue du modèle.
+const P16 = 'S branches local valid pont det';
+const SCENES = {
+  '0.1': 'invite', '0.2': 'corde', '0.3': 'corde touches', '0.4': '',
+  '1.1': '', '1.2': 'cit', '1.3': 'mots', '1.4': '',
+  '2.1': 'grille', '2.2': 'charge', '2.3': 'charge long trait', '2.4': 'charge long trait meme',
+  '2.5': 'charge long trait sangles mot', '2.6': 'charge long trait sangles petits',
+  '2.7': 'charge long trait sangles mention',
+  '3.1': 'long trait sangles gris phrase', '3.2': 'long trait sangles gris modele',
+  '4.1': 'long trait sangles gris zoom fenetre bandes', '4.2': 'long trait sangles gris zoom fenetre bandes vide fantomes',
+  '4.3': 'long trait sangles gris zoom fenetre bandes oeillere',
+  '4.4': 'long trait sangles gris clip', '4.5': 'long trait sangles gris clip', '4.6': 'long trait sangles gris clip',
+  '5.1': 'long trait sangles gris cinq colonne oeilteal', '5.2': 'long trait sangles gris cinq colonne oeilteal', '5.3': 'long trait sangles gris cinq colonne oeilteal', '5.4': 'long trait sangles gris cinq colonne oeilteal', '5.5': 'long trait sangles gris cinq colonne oeilteal', '5.6': 'long trait sangles gris cinq colonne oeilteal',
+  '5.7': 'long trait sangles cinq colonne oeilteal tous mentions', '5.8': 'long trait sangles cinq oeilteal tous',
+  '6.1': H6, '6.2': J6, '6.3': J6 + ' dedans brins', '6.4': J6 + ' bandes', '6.5': J6 + ' bandes bat',
+  '6.6': J6 + ' bandes autre', '6.7': 'depart kit',
+  '7.1': 'M demande', '7.2': 'M demande reponse doute', '7.3': 'M demande reponse doute fichier',
+  '7.4': 'M demande reponse fichier ajuste', '7.5': 'M demande doc', '7.6': 'M doc eteint disque',
+  '7.7': 'M doc eteint disque agents pose vide',
+  '8.1': 'T cases vide', '8.2': 'T cases un vide', '8.3': 'T cases un deux vide', '8.4': 'T cases un deux trois vide',
+  '8.5': 'T cases un deux trois racine', '8.6': 'T cases un deux trois racine', '8.7': 'T cases un deux trois racine',
+  '8.8': 'T cases un deux trois racine', '8.9': 'T cases un deux trois racine',
+  '9.1': 'racine question', '9.2': 'N', '9.3': 'N fournisseur', '9.4': 'N fournisseur envoi', '9.5': 'N fournisseur envoi range',
+  '9.6': 'N fournisseur envoi range loin fiche', '9.7': 'N fournisseur envoi range loin fiche interdits', '9.8': 'R',
+  '10.1': 'K racine photo', '10.2': K10 + ' racine', '10.3': K10 + ' racine petit',
+  '10.4': D10 + ' deroule', '10.5': D10 + ' noms3 neuf3', '10.6': D10 + ' noms6 neuf6',
+  '10.7': S10 + ' deplie', '10.8': S10 + ' melange', '10.9': S10 + ' pile',
+  '10.10': S10 + ' pile permission', '10.11': S10 + ' pile premiers',
+  '11.1': D11 + ' conv', '11.2': D11 + ' points', '11.3': E11 + ' points ecrit', '11.4': E11 + ' classe', '11.5': E11 + ' classe',
+  '12.1': D12, '12.2': D12 + ' tout plan', '12.3': T12,
+  '12.4': 'F', '12.5': 'F repere', '12.6': 'F poids', '12.7': 'F poids melange',
+  '12.8': 'F poids melange pourquoi', '12.9': 'F poids court',
+  '12.10': T12,
+  '13.1': D13 + ' deplie13', '13.2': D13 + ' nom13 sorties',
+  '13.3': 'P trait', '13.4': P13, '13.5': P13 + ' bulle', '13.6': P13 + ' bulle fige',
+  '13.7': 'P partage', '13.8': 'P filiation',
+  '13.9': D13 + ' nom13', '13.10': D13 + ' nom13 depot',
+  '14.1': 'J cal', '14.2': F14, '14.3': F14 + ' ferme neuve', '14.4': F14 + ' ferme neuve journal',
+  '14.5': D14 + ' jour', '14.6': D14 + ' fini', '14.7': D14 + ' fini memento',
+  // À l'étape 15, le harnais est complet pour tous : l'image explique, elle ne compte pas les cases.
+  '15.1': 'C un', '15.2': 'C deux', '15.3': 'C deux texte', '15.4': 'C deux mur', '15.5': 'C deux mur loue',
+  '17.1': 'L lundi', '17.2': 'L cmd',
+  '20.1': 'H v1', '20.2': 'H v1 v2', '20.3': 'H v1 v2 v3', '20.4': 'H v1 v2 v3 v4', '20.5': 'H v1 v2 v3 v4 v5',
+  '20.6': 'H v1 v2 v3 v4 v5 v6', '20.7': 'H fin',
+  // À l'étape 18, une case par programme : vu l'allume, ici la met en jaune tant qu'elle est celle du pas.
+  '18.1': 'U', '18.2': 'U vu1 ici1', '18.3': 'U vu1 vu2 ici2', '18.4': 'U vu1 vu2 vu3 ici3', '18.5': 'U vu1 vu2 vu3 vu4 ici4', '18.6': 'U vu1 vu2 vu3 vu4 vu5 ici5', '18.7': 'U vu1 vu2 vu3 vu4 vu5 vu6 ici6', '18.8': 'U vu1 vu2 vu3 vu4 vu5 vu6 vu7 ici7',
+  // À l'étape 19, une rangée de skills par pas : r l'allume, j la met en jaune tant qu'elle est celle du pas.
+  '19.1': 'B', '19.2': 'B r1 j1', '19.3': 'B r1 r2 j2', '19.4': 'B r1 r2 r3 j3', '19.5': 'B r1 r2 r3 r4 j4', '19.6': 'B r1 r2 r3 r4 r5 j5',
+  '16.1': 'S branches', '16.2': 'S branches local', '16.3': 'S branches local valid', '16.4': 'S branches local valid pont',
+  '16.5': P16 + ' zero', '16.6': P16 + ' zero uv', '16.7': P16 + ' uv ligne', '16.8': P16 + ' uv ligne apres',
+};
+const AVOUS = {
+  '8.5': {titre: true}, '8.6': {}, '8.7': {}, '8.8': {},
+  '8.9': {coche: "C'est fait, uv affiche son numéro"},
+  '10.11': {
+    titre: true,
+    boutons: [{texte: 'Télécharger le prompt 01', fichier: '01_architecture.md'}, {texte: 'Télécharger le prompt 02', fichier: '02_productions_cours_vibe_coding.md'}],
+    coche: "C'est fait, l'agent a créé mes dossiers",
+  },
+  '11.5': {
+    titre: true,
+    boutons: [{texte: 'Télécharger le prompt 03', fichier: '03_identite_persona.md'}],
+    coche: "C'est fait, mon agent a écrit mes deux fichiers",
+  },
+  '12.10': {
+    titre: true,
+    boutons: [{texte: 'Télécharger le prompt 04', fichier: '04_agents.md'}],
+    coche: "C'est fait, mon agent a écrit AGENTS.md",
+  },
+  '13.10': {
+    titre: true,
+    boutons: [{texte: 'Télécharger conception_numerique', dossier: 'conception_numerique'}],
+    dire: true,
+    coche: "C'est fait, mon agent a intégré la skill",
+  },
+  '14.5': {titre: true, boutons: [{texte: 'Télécharger journaling', dossier: 'journaling'}], dire: true, coche: "C'est fait, mon journal a sa première entrée"},
+};
+const POLAROID = {
+  '12.1': {legende: 'AGENTS.md : ce qui se trouve où', dessin: '<path d="M6 16h17l5 6h26v28H6z"/><path d="M38 50V32h10v18"/><circle cx="45.5" cy="41" r="1.2" fill="#F2EFE6"/>'},
+};
+// Hors des « À vous » : un pas peut offrir à copier sa première commande, un fichier du kit ou le dossier d'une skill.
+const COPIE = ['17.2', '18.8'];
+const BOUTONS = {
+  '16.6': [
+    {texte: 'Télécharger validateur', dossier: 'validateur'},
+    {texte: 'Prompt du pont, Claude Code', fichier: 'bonus_hook_claude_code.md', second: true},
+  ],
+  '18.3': [{texte: 'Télécharger git', dossier: 'git'}],
+};
+// Un bouton livre un fichier du kit, ou le dossier d'une skill en archive ; « second » le dessine en contour.
+const bouton = b => b.dossier
+  ? `<a class="btn" href="#" data-dossier="${b.dossier}" download="${b.dossier}.zip">${b.texte}</a>`
+  : `<a class="btn${b.second ? ' second' : ''}" href="#" data-fichier="${b.fichier}" download="${b.fichier}">${b.texte}</a>`;
+// La note manuscrite de Leonard : ses mots sont ceux que le montage donne entre guillemets.
+const NOTE = ['13.9'];
+
+// Les systèmes et les agents que le montage nomme devant ses commandes, dans l'ordre où il les donne.
+const SYS = new Map(), AGENTS_IA = new Map();
+const cle = nom => nom.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+// Le corps d'un pas : ses paragraphes, et ses commandes avec leur bouton pour copier. Le paragraphe
+// qui précède une commande dit pour quel système elle vaut, et parfois pour quel agent.
+function corps(p) {
+  let h = '';
+  p.texte.forEach((t, i) => {
+    if (typeof t !== 'string') return;
+    const suivant = p.texte[i + 1];
+    if (!suivant || typeof suivant === 'string') { h += `<p>${t}</p>`; return; }
+    const coupe = t.lastIndexOf('. ') + 1, etiquette = t.slice(coupe).trim();
+    if (coupe) h += `<p>${t.slice(0, coupe)}</p>`;
+    const m = etiquette.match(/^(?:(.+), s|S)ur (.+) :$/) || [];
+    const sys = cle(m[2] || ''), agent = m[1] ? cle(m[1]) : '';
+    SYS.set(sys, m[2]);
+    if (agent) AGENTS_IA.set(agent, m[1]);
+    const code = suivant.code.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    h += `<div class="cmd" data-sys="${sys}"${agent ? ` data-agent="${agent}"` : ''}><p>${etiquette}</p><pre><code>${code}</code><button type="button" class="copier">Copier</button></pre></div>`;
+  });
+  return h;
+}
+
+function monter(conteneur, selection, haut) {
+  for (const choix of selection) {
+    const etape = window.MONTAGE.find(e => e.n === choix.n);
+    const liste = etape.pas.filter((p, i) => !choix.pas || choix.pas.includes(i + 1));
+    liste.forEach(p => {
+      const premier = p.id.endsWith('.1'), dernier = p === etape.pas[etape.pas.length - 1];
+      let h = '';
+      if (p.id === '1.1') h += '<h1>Sortez du chatbot, forgez votre harnais</h1>';
+      if (premier) h += `<h2 class="inter"><span class="num">${etape.n}</span>${etape.titre}</h2>`;
+      const avous = AVOUS[p.id];
+      if (avous) {
+        h += '<div class="avous">' + (avous.titre ? '<h3 class="titre">À vous</h3>' : '') + corps(p).replace('<strong>À vous.</strong> ', '')
+          + (avous.boutons ? '<div class="commandes">' + avous.boutons.map(bouton).join('') + '</div>' : '')
+          + (avous.dire ? '<div class="dire">' + [...p.texte.join(' ').matchAll(/« ([^»]+) »/g)].map(m => `<pre><code>${m[1]}</code><button type="button" class="copier">Copier</button></pre>`).join('') + '</div>' : '')
+          + (avous.coche ? `<label class="coche"><input type="checkbox" autocomplete="off" data-coche="${p.id}"> ${avous.coche}</label>` : '') + '</div>';
+      } else {
+        h += corps(p);
+        if (COPIE.includes(p.id)) h += `<div class="dire"><pre><code>${(p.texte.join(' ').match(/<code>([^<]+)<\/code>/) || [])[1] || ''}</code><button type="button" class="copier">Copier</button></pre></div>`;
+        if (BOUTONS[p.id]) h += '<div class="commandes">' + BOUTONS[p.id].map(bouton).join('') + '</div>';
+      }
+      if (dernier && etape.sources) h += `<p class="sources">Sources : ${etape.sources}</p>`;
+      const pol = POLAROID[p.id];
+      const polaroid = pol && `<div class="polaroid" aria-hidden="true"><div class="photo"><svg viewBox="0 0 60 60" fill="none" stroke="#F2EFE6" stroke-width="2.4" stroke-linejoin="round">${pol.dessin}</svg></div><div class="legende">${pol.legende}</div></div>`;
+      const mots = NOTE.includes(p.id) && (p.ecran.match(/« ([^»]+) »/) || [])[1];
+      const memento = pol ? polaroid : mots ? `<div class="manuscrite" aria-hidden="true">${mots}</div>` : '';
+      const bloc = document.createElement('div');
+      bloc.className = 'etape' + (memento ? ' avec-memento' : '');
+      // En bas aussi le texte vit dans une carte ; seul le « À vous » reste une bande sans cadre.
+      bloc.innerHTML = haut ? `<div class="carte cible" data-pas="${p.id}">${h}</div>` : memento + (avous ? h : `<div class="carte">${h}</div>`);
+      if (!haut) { bloc.classList.add('cible'); bloc.dataset.pas = p.id; }
+      // Le pas 1.1 ne défile pas vers son texte : sa carte attend au milieu de l'écran, au bout de la
+      // piste du mode d'emploi, et c'est le dernier cran de cette piste qui le joue.
+      if (p.id === '1.1') {
+        bloc.className = 'piste';
+        bloc.innerHTML = `<div class="tenue"><div class="carte">${h}</div></div>`
+          + [...window.AVANT, p].map(c => `<div class="cran cible${c.texte.length ? '' : ' bref'}" data-pas="${c.id}"></div>`).join('');
+      }
+      conteneur.appendChild(bloc);
+    });
+  }
+}
+
+// Les trois petits chevaux du pas 2.6 : le même fil mince, la même charge courte.
+$('petits').innerHTML = [44, 122, 200].map(y =>
+  `<svg x="1000" y="${y}" width="150" height="70" viewBox="14 32 942 440"><image href="medias/cheval_planche_4.png" x="0" y="0" width="1000" height="483"/><path d="M334,206 L800,284" stroke="#127676" stroke-width="10" fill="none"/></svg>`
+  + `<path class="chaine" d="M1128,${y + 40} L1160,${y + 52}"/><rect x="1160" y="${y + 40}" width="22" height="24" rx="2" fill="#0D1617"/>`).join('');
+
+// Étape 13. Le même petit fichier de quatre lignes, posé plusieurs fois : la deuxième ligne est celle
+// qu'on adapte. Les copies partent de la place de l'original.
+(function dessinerPartage() {
+  const fichier = (x, y, classe) => `<g transform="translate(${x},${y})"><g class="${classe}"><path class="feuille10" d="M0,0 h62 l28,28 v88 h-90 z M62,0 v28 h28"/>`
+    + [[44, 56], [60, 64], [76, 38], [92, 50]].map(([ly, w], i) => `<rect class="lr13${i === 1 ? ' adapt' : ''}" x="12" y="${ly}" width="${w}" height="7" rx="2"/>`).join('') + '</g></g>';
+  const dossier = (x, y) => `<path class="trait8 fond8" d="M${x},${y + 14} h52 l14,16 h84 v90 h-150 z"/>`;
+  $('partage13').innerHTML = '<text class="n10" x="30" y="130">SKILL.md</text>'
+    + '<path class="pointille" d="M130,176 C200,150 240,122 290,110 M130,222 C200,252 240,284 290,300"/>'
+    + dossier(300, 40) + dossier(300, 236) + fichier(30, 140, 'c1') + fichier(30, 140, 'c2') + fichier(30, 140, '')
+    + '<text class="mot13 adapt13" x="300" y="380">adaptée</text>';
+  $('filiation13').innerHTML = '<text class="lab7" x="40" y="58">Benoît Raphaël</text><text class="mot13 adapt13" x="220" y="58">adaptée</text>'
+    + fichier(40, 70, '') + fichier(220, 70, 'f2')
+    + '<path class="fl13" style="--i:0" pathLength="1" d="M142,128 H208 m-9,-8 l9,8 l-9,8"/>'
+    + '<path class="fl13" style="--i:1" pathLength="1" d="M265,198 V250 m-8,-9 l8,9 l8,-9"/>'
+    + '<g class="vig13"><text class="lab7" x="400" y="254" text-anchor="end">cette page</text>'
+    + '<rect class="trait8 fond8" x="130" y="262" width="270" height="128" rx="4"/><path class="trait8" d="M130,280 h270"/><circle cx="142" cy="271" r="2.5"/><circle cx="151" cy="271" r="2.5"/>'
+    + '<svg x="250" y="294" width="140" height="66" viewBox="14 32 942 440"><image href="medias/cheval_planche_4.png" x="0" y="0" width="1000" height="483"/></svg>'
+    + '<rect class="trait8 fond8" x="144" y="298" width="92" height="62" rx="3" style="stroke:var(--teal)"/><path class="trait8" style="stroke:var(--gris)" d="M152,312 h70 M152,324 h76 M152,336 h54 M152,348 h64"/></g>';
+})();
+
+// Étape 14. La fenêtre qui s'allonge : quatorze passages, et les poids en U de l'étape 12, en petit.
+$('vieille14').innerHTML = '<rect class="c14 vf" x="32" y="28" width="146" rx="3"/>'
+  + [120, 104, 84, 60, 40, 28, 22, 22, 28, 40, 60, 84, 104, 120].map((w, i) =>
+    `<rect class="bande b14" style="--i:${i}" x="40" y="${38 + i * 23}" width="130" height="15" rx="2"/><rect class="u14" style="--i:${i}" x="190" y="${41 + i * 23}" width="${w / 2}" height="9" rx="2"/>`).join('')
+  + '<text class="ftxt att14" x="190" y="384">attention</text>';
+
+// Étape 18. Les boîtes FFmpeg et Whisper de l'étape 16, reprises telles quelles dans leurs cases.
+document.querySelectorAll('#mini16 .bx16').forEach((b, i) => { $(['ffmpeg18', 'whisper18'][i]).innerHTML = b.innerHTML; });
+
+// Étape 19. Douze cases, une par skill bonus, rangées par usage : le titre d'une rangée est ce que son pas
+// écrit en gras, le nom d'une case est celui qui ouvre un paragraphe. Chaque nom reçoit aussi son bouton.
+(function dessinerBonus() {
+  const rangees = window.MONTAGE.find(e => e.n === 19).pas.slice(1).map(p => ({
+    id: p.id, titre: (p.texte[0].match(/<strong>([^<]+)<\/strong>/) || [])[1] || '',
+    noms: p.texte.map(t => (t.match(/^<code>([^<]+)<\/code>/) || [])[1]).filter(Boolean)}));
+  rangees.forEach(r => { BOUTONS[r.id] = r.noms.map(nom => ({texte: 'Télécharger ' + nom, dossier: nom})); });
+  $('mini19').innerHTML = rangees.map((r, i) => `<g class="rg19 rg${i + 1}" transform="translate(0,${14 + i * 78})"><text class="lab7 et19" x="14" y="12">${r.titre}</text>`
+    + r.noms.map((nom, j) => `<g transform="translate(${14 + j * 154},24)"><rect class="cadre8" width="144" height="44" rx="4"/>`
+      + `<g class="pl19" style="--i:${j}"><rect class="trait8 fond8" width="144" height="44" rx="4"/><text class="nom19" x="72" y="27" text-anchor="middle">${nom}</text></g></g>`).join('') + '</g>').join('');
+})();
+
+// Étape 20. Six vignettes, chacune sous le mot que son pas définit, lu dans le texte ; puis la gravure
+// en grand, et la fin de la dernière phrase en capitales.
+(function dessinerMots() {
+  const pas = window.MONTAGE.find(e => e.n === 20).pas;
+  const cheval = '<image href="medias/cheval_planche_4.png" x="0" y="0" width="1000" height="483" clip-path="url(#r2)"/>';
+  const pieces = (classe, couleur, gras = 1) => [['M283,48 L250,130 M285,95 L222,118 M282,64 L243,62 M251,79 L272,84 L269,101 L249,96 Z', 7], ['M433,110 L471,104 L481,117 L464,131 L459,149 L422,146 L427,127 Z', 0],
+    ['M507,118 L489,193 L486,230', 9], ['M446,110 L334,183 M420,142 L358,195', 9], ['M483,117 L533,119 C560,118 580,108 600,107 C630,106 655,112 673,123 L697,138', 6],
+    ['M333,208 C350,214 368,219 385,221 L433,224 L490,229 L600,253 L700,267 L802,282', 13]].map(([d, w], i) => {
+    const c = couleur(i);
+    return w ? `<path class="${classe}" style="--i:${i}" pathLength="1" fill="none" stroke="${c}" stroke-width="${w * gras}" stroke-linecap="round" stroke-linejoin="round" d="${d}"/>` : `<path class="${classe} plein" style="--i:${i}" fill="${c}" d="${d}"/>`;
+  }).join('');
+  const dans = [
+    `<svg x="8" y="30" width="124" height="76" viewBox="150 30 720 440">${cheval}</svg>`,
+    '<rect class="c14" x="14" y="34" width="62" height="72" rx="2"/><rect class="bande" x="20" y="42" width="50" height="12" rx="2"/><rect class="bande" x="20" y="62" width="50" height="12" rx="2"/><rect class="bande" x="20" y="82" width="50" height="12" rx="2"/>'
+      + '<path class="trait8 fond8" d="M88,70 q19,-19 38,0 q-19,19 -38,0 z"/><circle cx="103" cy="70" r="6.5" fill="#0D1617"/>',
+    `<svg x="8" y="42" width="124" height="54" viewBox="205 35 615 265">${pieces('', () => '#127676', 1.7)}</svg>`,
+    '<g fill="none" stroke="#667A75" stroke-width="2"><rect x="20" y="30" width="96" height="80" rx="2"/><rect x="26" y="36" width="84" height="68" rx="2"/><rect x="110" y="54" width="12" height="32" fill="#fff"/><path d="M116,60 v20"/></g>',
+    '<path class="trait8 fond8" d="M26,98 v12 a44,11 0 0 0 88,0 v-12"/><ellipse class="trait8 fond8" cx="70" cy="98" rx="44" ry="11"/><path class="feuille10" d="M50,22 h26 l14,14 v50 h-40 z M76,22 v14 h14"/><text class="mono14" x="56" y="72" style="font-size:11px">.md</text>',
+    '<g transform="rotate(4 70 70)"><rect x="34" y="34" width="72" height="72" fill="#f6e9c3"/><path class="griffe" d="M44,54 c6,-6 10,5 16,0 s10,-5 16,0 s8,3 14,-1 M44,72 c7,-6 12,5 18,0 s10,-4 16,1 M44,90 c6,-5 12,4 18,0 s8,-4 12,0"/></g>',
+  ];
+  const fin = (pas[6].texte[0].match(/, ([^,]+,) ([^,]+\.)$/) || []).slice(1);
+  $('mini20').innerHTML = dans.map((c, i) => `<g class="vg20 vg${i + 1}" transform="translate(${14 + i % 3 * 156},${12 + Math.floor(i / 3) * 190})"><rect class="cadre8" width="140" height="140" rx="4"/>`
+    + `<g class="in20"><rect class="trait8 fond8" width="140" height="140" rx="4" style="stroke:var(--teal)"/>${c}</g><text class="lab7 mot20" x="70" y="160" text-anchor="middle">${pas[i].texte[0].split(' : ')[0]}</text></g>`).join('')
+    + `<g class="fin20"><svg x="0" y="36" width="390" height="238" viewBox="150 30 720 440">${cheval}${pieces('fp20', i => i === 5 ? '#E4632E' : '#127676')}</svg>`
+    + '<path class="chaine" d="M354,186 C376,196 392,206 410,214"/><rect x="408" y="186" width="62" height="58" rx="3" fill="#0D1617"/></g>'
+    + fin.map((l, i) => `<text class="ph20" style="--i:${i}${i ? ';fill:var(--orange)' : ''}" x="240" y="${326 + i * 40}">${l}</text>`).join('');
+})();
+
+// Étape 6. Les joints du mur, et les brins du pas 6.3 : la même volute, plus ou moins grande,
+// tournée à droite ou à gauche, plantée sur le sol de la gravure.
+(function dessinerJardin() {
+  let d = '';
+  for (let y = 72; y <= 432; y += 40) d += `M-6,${y} h20` + (y <= 272 ? `M956,${y} h20` : '');
+  for (let x = 54; x <= 914; x += 40) d += `M${x},472 v18` + (x < 340 || x > 630 ? `M${x},-4 v36` : '');
+  $('joints').setAttribute('d', d);
+  const volute = [[0, 0], [4, -30], [34, -42], [30, -66], [27, -82], [8, -78], [13, -64], [16, -56], [26, -58], [25, -66]];
+  $('brins').innerHTML = [[40, 1.3], [78, -.9], [112, .8], [505, .7], [545, -.6], [800, 1], [850, -1.3], [905, .9], [928, -.6]].map(([x, s], i) => {
+    const p = volute.map(([a, b]) => `${Math.round(x + a * s)},${Math.round(472 + b * Math.abs(s))}`);
+    return `<path class="brin" pathLength="1" style="--i:${i}" d="M${p[0]} C${p.slice(1, 4).join(' ')} C${p.slice(4, 7).join(' ')} C${p.slice(7).join(' ')}"/>`;
+  }).join('');
+})();
+
+// La fenêtre de contexte du clip de l'étape 12 : quatorze passages, leur poids en U.
+(function dessinerClip() {
+  const n = 14, pas = 28, x = 40, y0 = 24, poids = [120, 104, 84, 60, 40, 28, 22, 22, 28, 40, 60, 84, 104, 120];
+  const melange = {2: 'm1', 9: 'm2', 5: 'm3', 8: 'm4'};
+  let s = `<rect class="contour" x="${x - 8}" y="${y0 - 10}" width="166" height="${n * pas + 12}" rx="3"/>`;
+  for (let i = 0; i < n; i++) {
+    const loin = i >= 4 ? ' loin' : '', m = melange[i] ? ' x ' + melange[i] : '';
+    s += `<rect class="bande${loin}${m}" style="--i:${i}" x="${x}" y="${y0 + i * pas}" width="150" height="20" rx="2"/>`;
+    s += `<rect class="barre${loin}" style="--w:${poids[i]}px" x="${x + 172}" y="${y0 + i * pas + 4}" height="12" rx="2"/>`;
+  }
+  const marque = (i, bon) => `<g><circle cx="${x + 14}" cy="${y0 + i * pas + 10}" r="6" fill="#E4632E"/><text class="ftxt" x="${x + 172}" y="${y0 + i * pas + 15}" fill="${bon ? '#127676' : '#B8431A'}">${bon ? '✓ retrouvée' : '✗ perdue'}</text></g>`;
+  s += `<g class="cache e-repere">${marque(0, true)}${marque(13, true)}${marque(6, false)}</g>`;
+  s += `<text class="ftxt cache e-poids" x="${x + 172}" y="12">attention</text>`;
+  s += `<g class="cache e-pourquoi"><text class="hyp" x="${x + 222}" y="200" style="font-size:30px">?</text><text class="hyp" x="${x + 172}" y="232">textes d'entraînement ?</text><text class="hyp" x="${x + 172}" y="254">construction du modèle ?</text></g>`;
+  $('clip').innerHTML = s;
+})();
+
+// Le chiffre suit le bloc : même attente, même durée, dans les deux sens du défilement.
+let scoreVu = 13.3, scoreAnim;
+function compter(cible) {
+  cancelAnimationFrame(scoreAnim);
+  const ecrire = v => { $('score').textContent = v.toFixed(1).replace('.', ',') + ' %'; };
+  const depart = scoreVu;
+  if (depart === cible || matchMedia('(prefers-reduced-motion: reduce)').matches) { scoreVu = cible; ecrire(cible); return; }
+  const t0 = performance.now() + 500, duree = 900;
+  (function image(t) {
+    const k = Math.min(1, Math.max(0, (t - t0) / duree));
+    scoreVu = depart + (cible - depart) * (1 - Math.pow(1 - k, 3));
+    ecrire(scoreVu);
+    if (k < 1) scoreAnim = requestAnimationFrame(image);
+  })(performance.now());
+}
+
+// Le petit jeu du pas 2.1 : trois cases clignotent, se déplacent d'une case à la fois et
+// changent de couleur, huit coups durant, puis s'arrêtent sur le dernier.
+const CASES = [...document.querySelectorAll('.e-grille .case')];  // la grille de l'étape 2, pas celle du clip
+const COUPS = [[0, 4, 8], [1, 3, 7], [2, 6, 4], [5, 7, 1], [4, 8, 2], [3, 5, 1], [0, 4, 2], [1, 7, 5]];
+const TEINTES = ['#E4632E', '#E3A535', '#127676'];
+let grilleFil = [];
+function peindre(coup, n) {
+  CASES.forEach((c, i) => { const k = coup ? coup.indexOf(i) : -1; c.style.fill = k < 0 ? '' : TEINTES[(k + n) % 3]; });
+}
+function jouerGrille(actif) {
+  grilleFil.forEach(clearTimeout);
+  grilleFil = [];
+  const dernier = COUPS.length - 1;
+  if (!actif) { peindre(null, 0); return; }
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { peindre(COUPS[dernier], dernier); return; }
+  COUPS.forEach((coup, n) => {
+    grilleFil.push(setTimeout(() => peindre(coup, n), 300 + n * 650));
+    if (n < dernier) grilleFil.push(setTimeout(() => peindre(null, 0), 770 + n * 650));
+  });
+}
+
+// La citation du pas 1.2 et la phrase du pas 3.1 s'inscrivent lettre après lettre.
+// Leur texte est lu dans la page, jamais retapé ici.
+function graveur(id, attente) {
+  const el = $(id), texte = el.textContent;
+  let fil = [];
+  return actif => {
+    fil.forEach(clearTimeout);
+    fil = [];
+    if (!actif || matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = texte; return; }
+    el.textContent = '';
+    for (let n = 1; n <= texte.length; n++) fil.push(setTimeout(() => { el.textContent = texte.slice(0, n); }, attente + n * 45));
+  };
+}
+const inscrire = graveur('cit', 0), ecrirePhrase = graveur('phrase', 600);
+
+// Étape 4. Le cadre se resserre sur la tête : c'est la vue du SVG qui change, pas le cheval,
+// pour que la gravure continue de se fondre dans le papier.
+// À l'étape 6, il recule au contraire, pour montrer le mur et ce qui attend dehors. Le recul laisse
+// à gauche la place de la carte du texte, à 1 280 points de large : le mur commence à sa droite.
+const VUES = {large: [-380, 32, 1624, 490], tete: [-420, 10, 902, 272], jardin: [-743, -82.5, 2308, 696.4]};
+let vue = VUES.large.slice(), vueCible = 'large', vueAnim;
+function cadrer(nom) {
+  if (nom === vueCible) return;
+  vueCible = nom;
+  cancelAnimationFrame(vueAnim);
+  const scene = $('scene'), de = vue.slice(), vers = VUES[nom];
+  const poser = k => {
+    vue = de.map((v, i) => v + (vers[i] - v) * k);
+    scene.setAttribute('viewBox', vue.join(' '));
+    if (k === 1 && nom !== 'tete') scene.classList.remove('zoome');
+  };
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { poser(1); return; }
+  const t0 = performance.now();
+  (function image(t) {
+    const x = Math.min(1, Math.max(0, (t - t0) / 1100));
+    poser(x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
+    if (x < 1) vueAnim = requestAnimationFrame(image);
+  })(t0);
+}
+
+// Le clip de l'étape 4 est une suite de douze états. Chaque pas en joue une tranche :
+// 4.4 de 0 à 6, 4.5 de 6 à 8, 4.6 de 8 à 12. Un état ne dépend que de son numéro.
+const CLIP4 = {'4.4': [0, 6], '4.5': [6, 8], '4.6': [8, 12]};
+const COUPS4 = [[4, 1], [2, 3], [6, 5], [0, 7]];  // case jouée, état où elle se joue
+let clipFil = [];
+function etatClip(t) {
+  const q = s => document.querySelector('#clip4 ' + s);
+  const voir = (el, oui) => { el.style.opacity = oui ? 1 : 0; };
+  const garde = t >= 9;  // à partir du réglage 1, le raisonnement reste
+  for (let k = 1; k <= 3; k++) {
+    voir(q(`[data-a="${k}"]`), t < 2 * k && !garde);
+    voir(q(`[data-l="${k}"]`), t >= 2 * k && !garde);
+  }
+  document.querySelectorAll('#clip4 .case').forEach(c => { c.style.fill = ''; });
+  const joues = COUPS4.filter(c => t >= c[1]);
+  joues.forEach((c, i) => { q(`[data-c="${c[0]}"]`).style.fill = i === joues.length - 1 ? '#E4632E' : 'rgba(18,118,118,.35)'; });
+  for (let k = 1; k <= 6; k++) {
+    const b = q(`[data-b="${k}"]`), rang = 74 + (k - 1) * 52;
+    let y = rang, vu = false;
+    if (k <= 3 && !garde) { y = t >= 2 * k ? 470 : 200; vu = t === 2 * k - 1; }
+    else if (k <= 3) { y = t >= 11 ? 74 : rang; vu = t < 11; }
+    else { y = t >= 12 ? 116 + (k - 4) * 52 : rang; vu = t >= 10; }
+    b.style.transform = `translate(0px,${y}px)`;
+    voir(b, vu);
+  }
+  voir($('notes4'), t >= 6 && !garde);
+  voir($('doute4'), t === 8);
+  voir($('reglage1'), garde);
+  voir($('reglage2'), t >= 11);
+  voir($('resume4'), t >= 11);
+}
+function jouerClip(tranche) {
+  clipFil.forEach(clearTimeout);
+  clipFil = [];
+  if (!tranche) return;
+  const [debut, fin] = tranche;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { etatClip(fin); return; }
+  etatClip(debut);
+  for (let t = debut + 1; t <= fin; t++) clipFil.push(setTimeout(() => etatClip(t), 900 + (t - debut - 1) * 800));
+}
+etatClip(0);
+
+// Étape 5. Le rang n dit combien de pièces sont nommées : la dernière est orange, les autres sarcelle.
+// À partir du rang 6, toutes sont acquises.
+const PIECES5 = ['p-coussinet', 'p-surdos', 'p-bricole', 'p-croupiere', 'p-poitrail'].map(c => document.querySelector('#scene .' + c));
+const LIGNES5 = [...document.querySelectorAll('#colonne .lig')];
+function nommer(n) {
+  [PIECES5, LIGNES5].forEach(serie => serie.forEach((el, i) => {
+    el.classList.toggle('neuf', i === n - 1);
+    el.classList.toggle('acquis', i < n - 1 || n === 6);
+    el.classList.toggle('vu', i < n);
+  }));
+}
+// La main levée et le cadenas se rangent après leur mot, une fois la police chargée.
+document.fonts.ready.then(() => document.querySelectorAll('#colonne .picto5').forEach(p => {
+  const mot = p.parentNode.querySelector('.mot5').getBBox();
+  p.setAttribute('transform', `translate(${mot.x + mot.width + 10},${p.dataset.y - 19})`);
+}));
+
+let courant = '0.1';  // le dernier pas joué, d'où partent les flèches du clavier
+function jouer(id) {
+  courant = id;
+  const jetons = (SCENES[id] || '').split(' ').filter(Boolean);
+  const n = Number(id.split('.')[0]);
+  longer(n);
+  if (n < 7) {
+    // Le mode d'emploi porte le zéro : il se joue dans la scène du haut, par-dessus le papier.
+    $('seuil').className = 'seuil' + (n ? '' : jetons.map(j => ' a-' + j).join(''));
+    const resserre = jetons.includes('zoom');
+    $('scene').setAttribute('class', 'scene ' + jetons.map(j => 't-' + j).join(' ') + (resserre || vue[2] < VUES.large[2] ? ' zoome' : ''));
+    cadrer(resserre ? 'tete' : jetons.includes('recul') ? 'jardin' : 'large');
+    jouerClip(CLIP4[id]);
+    nommer(n === 5 ? Math.min(6, Number(id.split('.')[1]) - 1) : 0);
+    compter(jetons.includes('long') ? 38.3 : 13.3);
+    jouerGrille(jetons.includes('grille'));
+    inscrire(jetons.includes('cit'));
+    ecrirePhrase(jetons.includes('phrase'));
+  } else {
+    const f = jetons.includes('F');
+    $('cadre-bas').classList.toggle('f', f);
+    $('cadre-bas').classList.toggle('m', jetons.includes('M'));
+    $('cadre-bas').classList.toggle('t', jetons.includes('T'));
+    $('cadre-bas').classList.toggle('n', jetons.includes('N'));
+    $('cadre-bas').classList.toggle('r', jetons.includes('R'));
+    $('cadre-bas').classList.toggle('q', jetons.includes('question'));
+    $('cadre-bas').classList.toggle('k', jetons.includes('K'));
+    $('cadre-bas').classList.toggle('o', jetons.includes('O'));
+    $('cadre-bas').classList.toggle('p', jetons.includes('P'));
+    $('cadre-bas').classList.toggle('j', jetons.includes('J'));
+    $('cadre-bas').classList.toggle('c', jetons.includes('C'));
+    $('cadre-bas').classList.toggle('s', jetons.includes('S'));
+    $('cadre-bas').classList.toggle('l', jetons.includes('L'));
+    $('cadre-bas').classList.toggle('h', jetons.includes('H'));
+    $('cadre-bas').classList.toggle('b', jetons.includes('B'));
+    $('cadre-bas').classList.toggle('u', jetons.includes('U'));
+    $('mini17').setAttribute('class', jetons.map(j => 'l-' + j).join(' '));
+    $('mini20').setAttribute('class', jetons.map(j => 'h-' + j).join(' '));
+    $('mini19').setAttribute('class', jetons.map(j => 'b-' + j).join(' '));
+    $('mini18').setAttribute('class', jetons.map(j => 'u-' + j).join(' '));
+    $('mini16').setAttribute('class', jetons.map(j => 's-' + j).join(' '));
+    $('mini15').setAttribute('class', jetons.map(j => 'c-' + j).join(' '));
+    $('mini14').setAttribute('class', jetons.map(j => 'j-' + j).join(' '));
+    $('mini13').setAttribute('class', jetons.map(j => 's-' + j).join(' '));
+    $('mini11').setAttribute('class', jetons.map(j => 'o-' + j).join(' '));
+    $('mini10').setAttribute('class', 'memo ' + jetons.map(j => 'k-' + j).join(' '));
+    $('kit10').setAttribute('class', 'kit10 ' + jetons.map(j => 'k-' + j).join(' '));
+    $('mini9').setAttribute('class', jetons.map(j => 'n-' + j).join(' '));
+    $('mini8').setAttribute('class', jetons.map(j => 'h-' + j).join(' '));
+    $('cadre-bas').classList.toggle('pose', jetons.includes('pose'));
+    $('mini7').setAttribute('class', jetons.map(j => 'm-' + j).join(' '));
+    ecrireDemande(id === '7.1');
+    $('arbre').className = 'dossier ' + jetons.map(j => 'd-' + j).join(' ');
+    $('clip').setAttribute('class', jetons.map(j => 'f-' + j).join(' '));
+  }
+  const rang = pas => pas.split('.').reduce((a, b) => a * 100 + Number(b), 0);
+  document.querySelectorAll('.avec-memento').forEach(b => b.classList.toggle('vu', rang(id) >= rang(b.dataset.pas)));
+  document.body.classList.toggle('avant', n === 0);
+  document.body.classList.toggle('sans-longe', id === '0.1');
+  document.body.classList.toggle('entree', n < 2);
+  document.body.classList.toggle('regime-bas', id === '6.7' || n >= 7);
+  document.body.classList.toggle('sans-coin', n === 15 || id === '20.7');
+  document.body.classList.toggle('compteur', n > 8 || (n === 8 && Number(id.split('.')[1]) >= 5));
+}
+
+// La fin de page vient elle aussi du montage : les mentions du pied de page.
+(function monterFin() {
+  const [mentions] = window.FIN;
+  const classes = ['retro-footer-credit', 'retro-footer-licence'];
+  $('pied').innerHTML = '<p class="retro-footer-ornament" aria-hidden="true">❧</p>'
+    + mentions.texte.map((t, i) => `<p class="${classes[i] || 'retro-footer-licence'}">${t}</p>`).join('');
+})();
+
+// Le mode d'emploi vient lui aussi du montage : l'invitation de son premier cran, puis une notice par
+// cran qui a du texte. Une ligne écrite en liste y devient une ligne de légende, devant un nœud de la longe.
+(function monterSeuil() {
+  const [invite, ...suite] = window.AVANT;
+  const noms = ['corde', 'touches'], noeuds = ['ici', 'passe', '', 'anse'];
+  $('seuil').innerHTML = `<div class="invite"><p class="titre">${invite.texte.join(' ')}</p>`
+    + '<svg class="hampe" viewBox="0 0 84 120" aria-hidden="true"><path d="M42,10 V106 M12,74 L42,106 L72,74"/></svg></div>'
+    + '<div class="notices">' + suite.filter(c => c.texte.length).map((c, i) => {
+      const lignes = c.texte.filter(t => t.startsWith('- '));
+      return `<div class="notice nt-${noms[i]}">` + c.texte.filter(t => !t.startsWith('- ')).map(t => `<p>${t}</p>`).join('')
+        + (lignes.length ? '<ul class="signes">' + lignes.map((t, j) => `<li><i class="noeud ${noeuds[j] || ''}" aria-hidden="true"></i>${t.slice(2)}</li>`).join('') + '</ul>' : '')
+        + '</div>';
+    }).join('') + '</div>';
+})();
+
+monter($('pas-haut'), HAUT, true);
+BAS.forEach((choix, i) => {
+  monter($('pas-bas'), [choix], false);
+  const suite = BAS[i + 1];
+  if (!suite || suite.n === choix.n + 1) return;
+  const de = choix.n + 1, a = suite.n - 1;
+  $('pas-bas').insertAdjacentHTML('beforeend', '<p class="coupe">Prototype. '
+    + (de === a ? `L'étape ${de} n'est pas montée` : `Les étapes ${de} à ${a} ne sont pas montées`) + ` ici : la page reprend à l'étape ${suite.n}.</p>`);
+});
+
+// Étape 7. La demande est lue dans le texte du pas 7.1, entre ses guillemets, et coupée en deux
+// lignes au plus près du milieu. Elle s'écrit au pas 7.1 ; ensuite elle est là, entière.
+const DEMANDE = (document.querySelector('[data-pas="7.1"]').textContent.match(/«[^»]+»/) || [''])[0];
+const COUPE7 = DEMANDE.split(' ').reduce((m, mot, i, mots) => {
+  const n = mots.slice(0, i + 1).join(' ').length;
+  return Math.abs(n - DEMANDE.length / 2) < Math.abs(m - DEMANDE.length / 2) ? n : m;
+}, 0);
+let demandeFil = [];
+function ecrireDemande(actif) {
+  const poser = n => { $('dem7a').textContent = DEMANDE.slice(0, Math.min(n, COUPE7)); $('dem7b').textContent = DEMANDE.slice(COUPE7 + 1, Math.max(n, COUPE7 + 1)); };
+  demandeFil.forEach(clearTimeout);
+  demandeFil = [];
+  if (!actif || matchMedia('(prefers-reduced-motion: reduce)').matches) { poser(DEMANDE.length); return; }
+  poser(0);
+  for (let n = 1; n <= DEMANDE.length; n++) demandeFil.push(setTimeout(() => poser(n), 500 + n * 40));
+}
+// Les prompts du kit voyagent dans pas.js : chaque bouton fabrique son fichier dans le navigateur.
+document.querySelectorAll('a[data-fichier]').forEach(a => {
+  const texte = window.KIT[a.dataset.fichier];
+  if (texte) a.href = URL.createObjectURL(new Blob([texte], {type: 'text/markdown'})); else a.remove();
+});
+// Un dossier de skill ne se télécharge pas tel quel : la page en fait une archive .zip, sans compression,
+// ses fichiers rangés sous le nom du dossier. Trois parties : chaque fichier précédé de son en-tête,
+// puis le répertoire de l'archive, puis sa fin.
+function archiver(fichiers) {
+  const enc = new TextEncoder(), j = new Date();
+  const heure = j.getHours() << 11 | j.getMinutes() << 5 | j.getSeconds() >> 1;
+  const jour = (j.getFullYear() - 1980) << 9 | (j.getMonth() + 1) << 5 | j.getDate();
+  const somme = o => { let c = -1; for (const b of o) { c ^= b; for (let k = 0; k < 8; k++) c = c >>> 1 ^ (c & 1 ? 0xEDB88320 : 0); } return ~c >>> 0; };
+  // Chaque champ est un couple [taille en octets, valeur], écrit petit bout en premier.
+  const bloc = (champs, ...suite) => {
+    const v = new DataView(new ArrayBuffer(champs.reduce((n, [t]) => n + t, 0)));
+    let i = 0;
+    for (const [t, x] of champs) { if (t === 2) v.setUint16(i, x, true); else v.setUint32(i, x, true); i += t; }
+    return [new Uint8Array(v.buffer), ...suite];
+  };
+  const corps = [], repertoire = [];
+  let place = 0;
+  for (const [chemin, texte] of Object.entries(fichiers)) {
+    const nom = enc.encode(chemin), contenu = enc.encode(texte);
+    const commun = [[2, 20], [2, 0x0800], [2, 0], [2, heure], [2, jour], [4, somme(contenu)], [4, contenu.length], [4, contenu.length], [2, nom.length], [2, 0]];
+    corps.push(...bloc([[4, 0x04034b50], ...commun], nom, contenu));
+    repertoire.push(...bloc([[4, 0x02014b50], [2, 20], ...commun, [2, 0], [2, 0], [2, 0], [4, 0], [4, place]], nom));
+    place += 30 + nom.length + contenu.length;
+  }
+  const taille = repertoire.reduce((n, o) => n + o.length, 0), n = Object.keys(fichiers).length;
+  return new Blob([...corps, ...repertoire, ...bloc([[4, 0x06054b50], [2, 0], [2, 0], [2, n], [2, n], [4, taille], [4, place], [2, 0]])], {type: 'application/zip'});
+}
+document.querySelectorAll('a[data-dossier]').forEach(a => {
+  const fichiers = window.SKILLS[a.dataset.dossier];
+  if (fichiers) a.href = URL.createObjectURL(archiver(fichiers)); else a.remove();
+});
+// Un lien vers l'extérieur s'ouvre dans un autre onglet : la page reste la feuille de route.
+document.querySelectorAll('.cible a[href^="http"], .retro-footer a').forEach(a => { a.target = '_blank'; a.rel = 'noopener noreferrer'; });
+
+
+// Ce que le participant choisit et coche se garde dans son navigateur, pour survivre à un rechargement.
+const MEMOIRE = 'harnais_ludovia_v2';
+const etat = Object.assign({sys: '', agent: '', faites: []}, (() => { try { return JSON.parse(localStorage.getItem(MEMOIRE)) || {}; } catch (e) { return {}; } })());
+const garder = () => { try { localStorage.setItem(MEMOIRE, JSON.stringify(etat)); } catch (e) { /* sans mémoire, la page marche quand même */ } };
+
+// Étape 8. Le sélecteur ne montre qu'une commande à la fois ; les autres restent dans la page.
+// Les noms de lancement du pas 8.7 suivent l'ordre des agents.
+document.querySelectorAll('.bas .etape').forEach(bloc => {
+  const cmds = [...bloc.querySelectorAll('.cmd')];
+  if (!cmds.length) return;
+  const rang = (quoi, noms, titre) => `<div class="rang" role="group" aria-label="${titre}">`
+    + [...noms].map(([k, n]) => `<button type="button" class="opt" data-quoi="${quoi}" data-val="${k}">${n}</button>`).join('') + '</div>';
+  cmds[0].insertAdjacentHTML('beforebegin', '<div class="choix">' + rang('sys', SYS, 'Votre système')
+    + (cmds.some(c => c.dataset.agent) ? rang('agent', AGENTS_IA, 'Votre agent IA') : '') + '</div>');
+});
+document.querySelectorAll('[data-pas="8.7"] code').forEach((c, i) => { c.dataset.agent = [...AGENTS_IA.keys()][i] || ''; });
+// Étape 9, pas 8 : le régime de chaque agent, dans le même ordre, celui du participant mis en avant.
+const REGIMES = ['abonnement payant', 'compte gratuit limité', 'compte gratuit limité'];
+$('regimes').innerHTML = '<div class="tete"><span>Octobre 2026</span></div>'
+  + [...AGENTS_IA].map(([k, n], i) => `<div class="reg" data-agent="${k}"><strong>${n}</strong><span>${REGIMES[i]}</span><em>le vôtre</em></div>`).join('');
+function choisir() {
+  if (!SYS.has(etat.sys)) etat.sys = [...SYS.keys()].find(k => /win/i.test(navigator.userAgent) === /win/.test(k)) || [...SYS.keys()][0];
+  if (!AGENTS_IA.has(etat.agent)) etat.agent = [...AGENTS_IA.keys()][0];
+  document.querySelectorAll('.opt').forEach(b => b.setAttribute('aria-pressed', String(etat[b.dataset.quoi] === b.dataset.val)));
+  document.querySelectorAll('.cmd').forEach(c => { c.hidden = c.dataset.sys !== etat.sys || (!!c.dataset.agent && c.dataset.agent !== etat.agent); });
+  document.querySelectorAll('code[data-agent], .reg').forEach(c => c.classList.toggle('choisi', c.dataset.agent === etat.agent));
+}
+document.addEventListener('click', e => {
+  const opt = e.target.closest('.opt'), copier = e.target.closest('.copier');
+  if (opt) { etat[opt.dataset.quoi] = opt.dataset.val; garder(); choisir(); }
+  if (copier) {
+    const texte = copier.parentNode.querySelector('code').textContent;
+    const fait = () => { copier.textContent = 'Copié'; copier.classList.add('fait'); setTimeout(() => { copier.textContent = 'Copier'; copier.classList.remove('fait'); }, 1600); };
+    const ancien = () => { const z = document.createElement('textarea'); z.value = texte; document.body.appendChild(z); z.select(); document.execCommand('copy'); z.remove(); fait(); };
+    if (navigator.clipboard) navigator.clipboard.writeText(texte).then(fait, ancien); else ancien();
+  }
+});
+choisir();
+
+// Le cheval du coin : une pièce par case cochée. La dernière posée est orange, les autres sarcelle.
+function harnacher() {
+  document.querySelectorAll('#coin .piece').forEach(p => {
+    const rang = etat.faites.findIndex(id => id.split('.')[0] === p.dataset.etape);
+    p.classList.toggle('posee', rang >= 0);
+    p.classList.toggle('neuve', rang >= 0 && rang === etat.faites.length - 1);
+  });
+  const n = etat.faites.length;
+  $('compte').textContent = `${n} pièce${n > 1 ? 's' : ''} sur 6`;
+}
+document.querySelectorAll('[data-coche]').forEach(c => {
+  c.checked = etat.faites.includes(c.dataset.coche);
+  c.addEventListener('change', () => {
+    etat.faites = etat.faites.filter(id => id !== c.dataset.coche).concat(c.checked ? [c.dataset.coche] : []);
+    garder();
+    harnacher();
+    // À la sixième case, le cheval fait un pas : une fois, au geste, jamais au rechargement.
+    $('coin').classList.remove('pas');
+    if (c.checked && etat.faites.length === 6) { void $('coin').offsetWidth; $('coin').classList.add('pas'); }
+  });
+});
+etat.faites = etat.faites.filter(id => document.querySelector(`[data-coche="${id}"]`));
+harnacher();
+
+// La longe : un nœud par étape montée, son titre lu dans pas.js, une boucle là où l'étape a un « À vous ».
+// Où caler un pas : centré ; plus haut que l'écran, par le haut, pour garder son titre en vue.
+const caler = c => {
+  const r = c.getBoundingClientRect(), marge = 24;
+  return scrollY + (r.height > innerHeight - 2 * marge ? r.top - marge : r.top - (innerHeight - r.height) / 2);
+};
+const ETAPES = [...HAUT, ...BAS].map(c => window.MONTAGE.find(e => e.n === c.n));
+const A_VOUS = new Set(Object.keys(AVOUS).map(id => Number(id.split('.')[0])));
+ETAPES.forEach((e, i) => {
+  const b = document.createElement('button'), bulle = document.createElement('span'), num = document.createElement('b');
+  b.type = 'button';
+  b.className = 'noeud' + (A_VOUS.has(e.n) ? ' anse' : '') + (i < 4 ? ' g' : i > ETAPES.length - 5 ? ' d' : '');
+  b.dataset.etape = e.n;
+  b.setAttribute('aria-label', `${e.n}. ${e.titre}`);
+  bulle.className = 'bulle';
+  bulle.setAttribute('aria-hidden', 'true');
+  num.textContent = e.n;
+  bulle.append(num, e.titre);
+  if (A_VOUS.has(e.n)) bulle.insertAdjacentHTML('beforeend', '<i>À vous</i>');
+  b.appendChild(bulle);
+  $('longe').appendChild(b);
+});
+// Le saut est instantané : un défilement animé jouerait tous les pas traversés.
+$('longe').addEventListener('click', e => {
+  const b = e.target.closest('.noeud');
+  if (!b) return;
+  cancelAnimationFrame(defileAnim);
+  scrollTo({top: caler(document.querySelector(`.cible[data-pas="${b.dataset.etape}.1"]`)), behavior: 'instant'});
+  b.blur();
+});
+function longer(n) {
+  const rang = ETAPES.findIndex(e => e.n === n);
+  [...$('longe').children].forEach((b, i) => {
+    b.classList.toggle('passe', i < rang);
+    b.classList.toggle('ici', i === rang);
+    if (i === rang) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+  });
+  $('longe').style.setProperty('--part', Math.max(0, rang) / (ETAPES.length - 1));
+}
+
+// Le défilement déclenche la scène, il ne la pilote pas : un pas se joue quand
+// son texte passe le milieu de l'écran.
+const observer = marge => new IntersectionObserver(es => {
+  for (const e of es) if (e.isIntersecting) jouer(e.target.dataset.pas);
+}, {rootMargin: marge});
+const oHaut = observer('-49% 0px -50% 0px'), oBas = oHaut;
+document.querySelectorAll('.haut .cible').forEach(c => oHaut.observe(c));
+document.querySelectorAll('.bas .cible').forEach(c => oBas.observe(c));
+// Où en est la page : au dernier pas dont le texte a passé le milieu de l'écran. Au chargement, le navigateur
+// peut la rendre là où le lecteur l'avait laissée, entre deux textes, sans qu'aucun ne se joue.
+const PAS = [...document.querySelectorAll('.cible')];
+const situer = () => (PAS.filter(c => c.getBoundingClientRect().top < innerHeight / 2).pop() || PAS[0]).dataset.pas;
+jouer(situer());
+addEventListener('scroll', () => jouer(situer()), {once: true});
+
+// Les flèches gauche et droite mènent au pas précédent et au pas suivant, par un défilement animé :
+// entre deux pas voisins, un seul texte croise le milieu de l'écran. Le pas visé se cale comme
+// au saut de la longe.
+let vise = -1, appui = 0;
+document.addEventListener('keydown', e => {
+  const sens = {ArrowRight: 1, ArrowLeft: -1}[e.key];
+  if (!sens || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+  if (e.target.closest?.('input:not([type=checkbox]), textarea, select, [contenteditable]')) return;
+  e.preventDefault();
+  // Un appui qui suit de près le précédent repart du pas visé, sans attendre que la page y soit.
+  const depart = e.timeStamp - appui < 1000 && vise >= 0 ? vise : PAS.findIndex(c => c.dataset.pas === courant);
+  appui = e.timeStamp;
+  vise = Math.min(PAS.length - 1, Math.max(0, depart + sens));
+  defiler(caler(PAS[vise]));
+});
+// Le défilement des flèches va deux fois moins vite que celui du navigateur, mesuré à un
+// millième de seconde par point : deux par point ici, entre 0,6 et 1,5 seconde. La molette l'interrompt.
+let defileAnim;
+function defiler(vers) {
+  cancelAnimationFrame(defileAnim);
+  const de = scrollY, duree = Math.min(1500, Math.max(600, 2 * Math.abs(vers - de)));
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { scrollTo({top: vers, behavior: 'instant'}); return; }
+  const t0 = performance.now();
+  (function image(t) {
+    const x = Math.min(1, Math.max(0, (t - t0) / duree));
+    scrollTo({top: de + (vers - de) * (x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2), behavior: 'instant'});
+    if (x < 1) defileAnim = requestAnimationFrame(image);
+  })(t0);
+}
+addEventListener('wheel', () => cancelAnimationFrame(defileAnim), {passive: true});
+</script>
+</body>
+</html>
