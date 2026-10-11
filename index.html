@@ -273,13 +273,13 @@ svg.scene{width:100%;height:auto;max-height:calc(100vh - 60px);display:block;ove
 .sous8{font:600 13px Inter,sans-serif;fill:var(--gris)}
 .mono8{font:600 13px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--paper)}
 @keyframes clin{0%,49%{opacity:1}50%,100%{opacity:0}}
-.h-deux .curseur{animation:clin .9s linear .7s 2 both}
+.h-trois .curseur{animation:clin .9s linear .7s 2 both}
 .fleche8{stroke:var(--orange);stroke-width:2.5;stroke-dasharray:1 1.3;stroke-dashoffset:1.15}
-.h-deux .fleche8{stroke-dashoffset:0;transition:stroke-dashoffset .8s ease 2.5s}
+.h-trois .fleche8{stroke-dashoffset:0;transition:stroke-dashoffset .8s ease 2.5s}
 .nuage8{opacity:0}
-.h-deux .nuage8{opacity:1;transition-delay:3s}
+.h-trois .nuage8{opacity:1;transition-delay:3s}
 .boite{opacity:0;transform:translateY(-44px)}
-.h-trois .boite{opacity:1;transform:none;transition:opacity .3s .6s,transform .7s cubic-bezier(.3,1.5,.5,1) .6s}
+.h-deux .boite{opacity:1;transform:none;transition:opacity .3s .6s,transform .7s cubic-bezier(.3,1.5,.5,1) .6s}
 .d-racine .ligne.sous{display:none}
 .d-racine .ligne{animation:pose .6s ease .3s both}
 /* Les commandes à copier, et le sélecteur de système et d'agent */
@@ -670,6 +670,8 @@ body.sans-coin.regime-bas .coin{opacity:0;transform:translateY(20px);transition-
 .btn{border:2px solid var(--ink);background:var(--jaune);color:var(--ink);font:700 14px/1 Oswald,Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:12px 16px;border-radius:14px 3px 14px 3px;box-shadow:3px 3px 0 var(--ink)}
 .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
 .btn.second{background:transparent;box-shadow:none}
+button.btn{cursor:pointer}
+.btn.fait{background:var(--teal);color:var(--paper)}
 .coche{display:flex;align-items:center;gap:12px;font-weight:600;cursor:pointer}
 .coche input{width:24px;height:24px;accent-color:var(--teal)}
 
@@ -944,19 +946,19 @@ body.compteur .coin .tete span:last-child{opacity:1}
     </div>
     <div class="regimes" id="regimes"></div>
     <div class="trois">
-      <svg id="mini8" viewBox="0 0 480 430" role="img" aria-label="Trois programmes à installer : l'éditeur de code, l'agent IA, uv">
+      <svg id="mini8" viewBox="0 0 480 430" role="img" aria-label="Trois programmes à installer : l'éditeur de code, uv, l'agent IA">
         <g class="slot s1" style="--i:0"><rect class="cadre8" x="44" y="6" width="426" height="130" rx="3"/><text class="num8" x="8" y="66">1</text>
           <g class="plein"><rect class="trait8 fond8" x="62" y="20" width="160" height="102" rx="3"/><path class="trait8" d="M62,36 h160 M106,36 v60 M62,96 h160 M70,48 h26 M70,58 h20 M70,68 h24"/><circle cx="72" cy="28" r="2.5"/><circle cx="81" cy="28" r="2.5"/><circle cx="90" cy="28" r="2.5"/><text class="mono8" style="fill:var(--ink)" x="70" y="114">&gt;_</text>
             <text class="nom8" x="250" y="66">L'éditeur de code</text><text class="sous8" x="250" y="88">VSCodium, avec son terminal</text></g></g>
         <g class="slot s2" style="--i:1"><rect class="cadre8" x="44" y="148" width="426" height="130" rx="3"/><text class="num8" x="8" y="208">2</text>
-          <g class="plein"><path class="trait8 fond8" d="M64,170 h14 l5,6 h25 v26 h-44 z"/><path class="trait8 fleche8" pathLength="1" d="M118,188 h44 m-8,-7 l8,7 l-8,7"/>
+          <g class="plein"><g transform="translate(0,-142)"><rect class="trait8 fond8" x="92" y="352" width="100" height="50" rx="3"/><path class="trait8 fond8" d="M76,402 h132 l-8,8 h-116 z"/>
+            <g class="boite"><path class="trait8" style="stroke:var(--orange)" d="M142,304 v14"/><rect class="trait8" x="104" y="318" width="76" height="30" rx="2" style="fill:var(--jaune)"/><text class="sous8" style="fill:var(--ink)" x="142" y="338" text-anchor="middle">Python</text></g>
+            <text class="nom8" x="250" y="350">uv</text><text class="sous8" x="250" y="372">il met Python sur votre machine</text></g></g></g>
+        <g class="slot s3" style="--i:2"><rect class="cadre8" x="44" y="290" width="426" height="130" rx="3"/><text class="num8" x="8" y="350">3</text>
+          <g class="plein"><g transform="translate(0,142)"><path class="trait8 fond8" d="M64,170 h14 l5,6 h25 v26 h-44 z"/><path class="trait8 fleche8" pathLength="1" d="M118,188 h44 m-8,-7 l8,7 l-8,7"/>
             <g class="nuage8"><path class="trait8 fond8" d="M184,202 a12,12 0 0 1 1,-24 a15,15 0 0 1 28,-3 a12,12 0 0 1 4,27 z"/><text class="sous8" x="200" y="220" text-anchor="middle">le modèle</text></g>
             <rect x="62" y="232" width="166" height="34" rx="3" fill="#0D1617"/><text class="mono8" x="72" y="254">&gt;</text><rect class="curseur" x="88" y="242" width="8" height="15" fill="#F2EFE6"/>
-            <text class="nom8" x="250" y="208">L'agent IA</text><text class="sous8" x="250" y="230">il se lance dans le terminal</text></g></g>
-        <g class="slot s3" style="--i:2"><rect class="cadre8" x="44" y="290" width="426" height="130" rx="3"/><text class="num8" x="8" y="350">3</text>
-          <g class="plein"><rect class="trait8 fond8" x="92" y="352" width="100" height="50" rx="3"/><path class="trait8 fond8" d="M76,402 h132 l-8,8 h-116 z"/>
-            <g class="boite"><path class="trait8" style="stroke:var(--orange)" d="M142,304 v14"/><rect class="trait8" x="104" y="318" width="76" height="30" rx="2" style="fill:var(--jaune)"/><text class="sous8" style="fill:var(--ink)" x="142" y="338" text-anchor="middle">Python</text></g>
-            <text class="nom8" x="250" y="350">uv</text><text class="sous8" x="250" y="372">il met Python sur votre machine</text></g></g>
+            <text class="nom8" x="250" y="208">L'agent IA</text><text class="sous8" x="250" y="230">il se lance dans le terminal</text></g></g></g>
       </svg>
     </div>
     <div class="onze">
@@ -1248,20 +1250,20 @@ const SCENES = {
 };
 const AVOUS = {
   '8.5': {titre: true}, '8.6': {}, '8.7': {}, '8.8': {},
-  '8.9': {coche: "C'est fait, uv affiche son numéro"},
+  '8.9': {coche: "C'est fait, mon agent est lancé"},
   '10.11': {
     titre: true,
-    boutons: [{texte: 'Télécharger le prompt 01', fichier: '01_architecture.md'}, {texte: 'Télécharger le prompt 02', fichier: '02_productions_cours_vibe_coding.md'}],
+    boutons: [{texte: 'Copier le prompt 01', fichier: '01_architecture.md'}, {texte: 'Copier le prompt 02', fichier: '02_productions_cours_vibe_coding.md'}],
     coche: "C'est fait, l'agent a créé mes dossiers",
   },
   '11.5': {
     titre: true,
-    boutons: [{texte: 'Télécharger le prompt 03', fichier: '03_identite_persona.md'}],
+    boutons: [{texte: 'Copier le prompt 03', fichier: '03_identite_persona.md'}],
     coche: "C'est fait, mon agent a écrit mes deux fichiers",
   },
   '12.10': {
     titre: true,
-    boutons: [{texte: 'Télécharger le prompt 04', fichier: '04_agents.md'}],
+    boutons: [{texte: 'Copier le prompt 04', fichier: '04_agents.md'}],
     coche: "C'est fait, mon agent a écrit AGENTS.md",
   },
   '13.10': {
@@ -1275,19 +1277,19 @@ const AVOUS = {
 const POLAROID = {
   '12.1': {legende: 'AGENTS.md : ce qui se trouve où', dessin: '<path d="M6 16h17l5 6h26v28H6z"/><path d="M38 50V32h10v18"/><circle cx="45.5" cy="41" r="1.2" fill="#F2EFE6"/>'},
 };
-// Hors des « À vous » : un pas peut offrir à copier sa première commande, un fichier du kit ou le dossier d'une skill.
+// Hors des « À vous » : un pas peut offrir à copier sa première commande ou un prompt du kit, à télécharger le dossier d'une skill.
 const COPIE = ['17.2', '18.8'];
 const BOUTONS = {
   '16.6': [
     {texte: 'Télécharger validateur', dossier: 'validateur'},
-    {texte: 'Prompt du pont, Claude Code', fichier: 'bonus_hook_claude_code.md', second: true},
+    {texte: 'Copier le prompt du pont, Claude Code', fichier: 'bonus_hook_claude_code.md', second: true},
   ],
   '18.3': [{texte: 'Télécharger git', dossier: 'git'}],
 };
-// Un bouton livre un fichier du kit, ou le dossier d'une skill en archive ; « second » le dessine en contour.
+// Un bouton copie un prompt du kit, ou livre le dossier d'une skill en archive ; « second » le dessine en contour.
 const bouton = b => b.dossier
   ? `<a class="btn" href="#" data-dossier="${b.dossier}" download="${b.dossier}.zip">${b.texte}</a>`
-  : `<a class="btn${b.second ? ' second' : ''}" href="#" data-fichier="${b.fichier}" download="${b.fichier}">${b.texte}</a>`;
+  : `<button type="button" class="btn${b.second ? ' second' : ''}" data-fichier="${b.fichier}">${b.texte}</button>`;
 // La note manuscrite de Leonard : ses mots sont ceux que le montage donne entre guillemets.
 const NOTE = ['13.9'];
 
@@ -1712,11 +1714,8 @@ function ecrireDemande(actif) {
   poser(0);
   for (let n = 1; n <= DEMANDE.length; n++) demandeFil.push(setTimeout(() => poser(n), 500 + n * 40));
 }
-// Les prompts du kit voyagent dans pas.js : chaque bouton fabrique son fichier dans le navigateur.
-document.querySelectorAll('a[data-fichier]').forEach(a => {
-  const texte = window.KIT[a.dataset.fichier];
-  if (texte) a.href = URL.createObjectURL(new Blob([texte], {type: 'text/markdown'})); else a.remove();
-});
+// Les prompts du kit voyagent dans pas.js : chaque bouton copie le sien dans le presse-papiers.
+document.querySelectorAll('[data-fichier]').forEach(b => { if (!window.KIT[b.dataset.fichier]) b.remove(); });
 // Un dossier de skill ne se télécharge pas tel quel : la page en fait une archive .zip, sans compression,
 // ses fichiers rangés sous le nom du dossier. Trois parties : chaque fichier précédé de son en-tête,
 // puis le répertoire de l'archive, puis sa fin.
@@ -1758,7 +1757,7 @@ const etat = Object.assign({sys: '', agent: '', faites: []}, (() => { try { retu
 const garder = () => { try { localStorage.setItem(MEMOIRE, JSON.stringify(etat)); } catch (e) { /* sans mémoire, la page marche quand même */ } };
 
 // Étape 8. Le sélecteur ne montre qu'une commande à la fois ; les autres restent dans la page.
-// Les noms de lancement du pas 8.7 suivent l'ordre des agents.
+// Les noms de lancement du pas 8.9 suivent l'ordre des agents.
 document.querySelectorAll('.bas .etape').forEach(bloc => {
   const cmds = [...bloc.querySelectorAll('.cmd')];
   if (!cmds.length) return;
@@ -1767,9 +1766,9 @@ document.querySelectorAll('.bas .etape').forEach(bloc => {
   cmds[0].insertAdjacentHTML('beforebegin', '<div class="choix">' + rang('sys', SYS, 'Votre système')
     + (cmds.some(c => c.dataset.agent) ? rang('agent', AGENTS_IA, 'Votre agent IA') : '') + '</div>');
 });
-document.querySelectorAll('[data-pas="8.7"] code').forEach((c, i) => { c.dataset.agent = [...AGENTS_IA.keys()][i] || ''; });
+document.querySelectorAll('[data-pas="8.9"] code').forEach((c, i) => { c.dataset.agent = [...AGENTS_IA.keys()][i] || ''; });
 // Étape 9, pas 8 : le régime de chaque agent, dans le même ordre, celui du participant mis en avant.
-const REGIMES = ['abonnement payant', 'compte gratuit limité', 'compte gratuit limité'];
+const REGIMES = ['abonnement payant', 'compte gratuit limité', 'compte gratuit limité', 'compte gratuit limité'];
 $('regimes').innerHTML = '<div class="tete"><span>Octobre 2026</span></div>'
   + [...AGENTS_IA].map(([k, n], i) => `<div class="reg" data-agent="${k}"><strong>${n}</strong><span>${REGIMES[i]}</span><em>le vôtre</em></div>`).join('');
 function choisir() {
@@ -1779,15 +1778,22 @@ function choisir() {
   document.querySelectorAll('.cmd').forEach(c => { c.hidden = c.dataset.sys !== etat.sys || (!!c.dataset.agent && c.dataset.agent !== etat.agent); });
   document.querySelectorAll('code[data-agent], .reg').forEach(c => c.classList.toggle('choisi', c.dataset.agent === etat.agent));
 }
+// Copier : le bouton dit « Copié » un instant, à largeur constante, puis reprend son nom.
+function copie(texte, b) {
+  if (b.classList.contains('fait')) return;
+  const nom = b.textContent;
+  const fait = () => {
+    b.style.minWidth = b.offsetWidth + 'px'; b.textContent = 'Copié'; b.classList.add('fait');
+    setTimeout(() => { b.textContent = nom; b.classList.remove('fait'); b.style.minWidth = ''; }, 1600);
+  };
+  const ancien = () => { const z = document.createElement('textarea'); z.value = texte; document.body.appendChild(z); z.select(); document.execCommand('copy'); z.remove(); fait(); };
+  if (navigator.clipboard) navigator.clipboard.writeText(texte).then(fait, ancien); else ancien();
+}
 document.addEventListener('click', e => {
-  const opt = e.target.closest('.opt'), copier = e.target.closest('.copier');
+  const opt = e.target.closest('.opt'), copier = e.target.closest('.copier'), prompt = e.target.closest('[data-fichier]');
   if (opt) { etat[opt.dataset.quoi] = opt.dataset.val; garder(); choisir(); }
-  if (copier) {
-    const texte = copier.parentNode.querySelector('code').textContent;
-    const fait = () => { copier.textContent = 'Copié'; copier.classList.add('fait'); setTimeout(() => { copier.textContent = 'Copier'; copier.classList.remove('fait'); }, 1600); };
-    const ancien = () => { const z = document.createElement('textarea'); z.value = texte; document.body.appendChild(z); z.select(); document.execCommand('copy'); z.remove(); fait(); };
-    if (navigator.clipboard) navigator.clipboard.writeText(texte).then(fait, ancien); else ancien();
-  }
+  if (copier) copie(copier.parentNode.querySelector('code').textContent, copier);
+  if (prompt) copie(window.KIT[prompt.dataset.fichier], prompt);
 });
 choisir();
 
