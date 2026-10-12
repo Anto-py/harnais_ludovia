@@ -173,6 +173,25 @@ svg.scene{width:100%;height:auto;max-height:calc(100vh - 60px);display:block;ove
 .bas .etape{min-height:72vh;padding:32px 0;display:flex;flex-direction:column;justify-content:center;position:relative}
 .bas .etape p{font-size:19px;max-width:560px}
 .bas .carte{align-self:flex-start;max-width:608px}
+/* Respirations, étapes 9, 15 et 20 : rien à taper, l'image prend la largeur. Le cadre déborde de sa
+   colonne vers la gauche jusqu'aux cartes, resserrées comme en haut. Sa marge se compte en parts de
+   sa colonne : 62 % de la grille en font 163,16 % de la colonne, et 384 points gardent la carte et son écart. */
+@media(min-width:861px){
+.bas .souffle .carte{max-width:340px}
+/* Une respiration s'ouvre sur un demi-écran vide : la carte d'avant est sortie quand l'image s'élargit. */
+.bas .entree{margin-top:50vh}
+.bas .cadre{transition:margin-left .9s cubic-bezier(.22,.7,.25,1),margin-right .9s cubic-bezier(.22,.7,.25,1)}
+.bas.large .cadre{margin-left:calc(384px - 163.16%)}
+.bas.large .quinze svg{width:100%;margin-left:0}
+/* Le montage fini, à partir de l'étape 15, les côtés s'échangent : l'image à gauche, le texte à droite,
+   le cheval du coin en bas à gauche. Le cadre recule de 62 % de la grille ; le texte avance d'autant,
+   compté en parts de sa propre colonne (38 / 62, et les 44 points de l'écart rapportés à 62 %). */
+.bas.inverse .cadre{margin-left:-163.16%;margin-right:163.16%}
+.bas.inverse.large .cadre{margin-right:384px}
+.bas .droite{left:calc(61.29% + 71px)}
+.bas .droite .carte,.bas .droite .avous{align-self:flex-end}
+body.coin-gauche .coin{right:calc(100vw - 242px)}
+}
 .dossier{background:#fff;border:2px solid var(--teal);border-radius:4px 18px 4px 18px;padding:14px 16px;font:14px/1.75 'JetBrains Mono',ui-monospace,Menlo,monospace;position:relative}
 .tete{font:600 12px/1.2 Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);margin-bottom:8px;display:flex;justify-content:space-between}
 .ligne{display:flex;align-items:center;gap:8px;padding:0 6px;border-radius:4px;transition:background var(--duree),color var(--duree),opacity var(--duree),transform var(--duree),outline-color var(--duree)}
@@ -306,10 +325,10 @@ code.choisi{background:var(--jaune);font-weight:600}
 .bande9 text{font:600 11.5px Inter,sans-serif;fill:var(--teal-sombre)}
 .bA{transform:translate(70px,150px)}.bB{transform:translate(70px,184px)}
 .n-envoi .envoi9{opacity:1}
-.n-envoi .bA{transform:translate(349px,150px);transition:transform 1.8s ease .5s}
-.n-envoi .bB{transform:translate(349px,184px);transition:transform 1.8s ease 1.4s}
-.n-range .bA{transform:translate(366px,296px);transition:transform 1s ease .3s}
-.n-range .bB{transform:translate(366px,326px);transition:transform 1s ease .7s}
+.n-envoi .bA{transform:translate(589px,150px);transition:transform 2.4s ease .5s}
+.n-envoi .bB{transform:translate(589px,184px);transition:transform 2.4s ease 1.4s}
+.n-range .bA{transform:translate(606px,296px);transition:transform 1s ease .3s}
+.n-range .bB{transform:translate(606px,326px);transition:transform 1s ease .7s}
 .n-range .suite9{opacity:1;transition-delay:1.6s}
 .pointille{fill:none;stroke:var(--gris);stroke-width:2;stroke-dasharray:5 5}
 .n-loin .cote-f,.n-loin .envoi9,.n-loin .suite9{opacity:.22;transition-delay:0s}
@@ -554,7 +573,7 @@ code.choisi{background:var(--jaune);font-weight:600}
 .mur15 .porte{fill:var(--paper)}
 .loue15 text{font:400 19px Anton,Oswald,Impact,sans-serif;letter-spacing:.06em;text-transform:uppercase;fill:var(--gris)}
 .c-loue .loue15{opacity:1;transition-delay:calc(.4s + var(--i) * .7s)}
-body.sans-coin.regime-bas .coin{opacity:0;transform:translateY(20px);transition-delay:0s}
+body.sans-coin.regime-bas .coin{opacity:0;transform:translateY(20px);transition-delay:0s,0s,.6s}
 
 /* Étape 16 : deux branches partent du dossier, l'une sur la machine, l'autre en ligne */
 .cadre:not(.s) .seize{display:none}
@@ -676,7 +695,7 @@ button.btn{cursor:pointer}
 .coche input{width:24px;height:24px;accent-color:var(--teal)}
 
 /* Le cheval du coin */
-.coin{position:fixed;right:22px;bottom:22px;width:220px;z-index:25;background:#fff;border:2px solid var(--teal);border-radius:18px 4px 18px 4px;padding:10px 12px;box-shadow:0 8px 24px rgba(13,22,23,.25);opacity:0;transform:translateY(20px);pointer-events:none;transition:opacity .6s 1.2s,transform .6s 1.2s}
+.coin{position:fixed;right:22px;bottom:22px;width:220px;z-index:25;background:#fff;border:2px solid var(--teal);border-radius:18px 4px 18px 4px;padding:10px 12px;box-shadow:0 8px 24px rgba(13,22,23,.25);opacity:0;transform:translateY(20px);pointer-events:none;transition:opacity .6s 1.2s,transform .6s 1.2s,right 0s .6s}
 body.regime-bas .coin{opacity:1;transform:none}
 .coin svg{width:100%;height:auto;display:block;mix-blend-mode:multiply}
 .coin .piece{fill:none;stroke:var(--teal);stroke-linecap:round;stroke-linejoin:round;opacity:.9;stroke-dasharray:1 1.3;stroke-dashoffset:1.15;transition:stroke-dashoffset var(--duree) ease,stroke .5s}
@@ -923,16 +942,17 @@ body.compteur .coin .tete span:last-child{opacity:1}
     </div>
     <div class="q9" aria-hidden="true">?</div>
     <div class="neuf">
-      <svg id="mini9" viewBox="0 84 480 400" role="img" aria-label="Votre machine à gauche, les serveurs du fournisseur du modèle à droite, et le texte qui voyage de l'une aux autres">
+      <svg id="mini9" viewBox="0 84 720 400" role="img" aria-label="Votre machine à gauche, les serveurs du fournisseur du modèle à droite, et le texte qui voyage de l'une aux autres">
         <text class="lab7" x="16" y="108">Votre machine</text>
         <rect class="trait8 fond8" x="16" y="120" width="190" height="130" rx="4"/><path class="trait8 fond8" d="M4,250 h214 l-10,12 h-194 z"/>
         <path class="trait8" d="M30,136 h9 l3,4 h14 v14 h-26 z M34,170 h12 l6,6 v16 h-18 z"/><text class="mono8" style="fill:var(--ink)" x="64" y="151">mon_harnais/</text>
         <rect x="30" y="212" width="162" height="26" rx="3" fill="#0D1617"/><text class="mono8" x="38" y="230">&gt;</text><rect x="52" y="218" width="7" height="14" fill="#F2EFE6"/><text class="mono8" x="70" y="230" style="font-weight:400">l'agent</text>
-        <g class="cote-f"><text class="lab7" x="464" y="98" text-anchor="end">Fournisseur du modèle</text>
+        <g class="cote-f"><g transform="translate(240)"><text class="lab7" x="464" y="98" text-anchor="end">Fournisseur du modèle</text>
           <rect class="trait8 fond8" x="330" y="110" width="134" height="152" rx="3"/>
           <path class="trait8" d="M342,124 h110 v26 h-110 z M342,160 h110 v26 h-110 z M342,196 h110 v26 h-110 z M352,237 h30 M352,247 h18"/><circle cx="352" cy="137" r="2.5"/><circle cx="352" cy="173" r="2.5"/><circle cx="352" cy="209" r="2.5"/>
-          <path class="pointille" d="M224,200 H324"/><text class="sous8" x="274" y="190" text-anchor="middle">Internet</text></g>
-        <g class="suite9"><rect class="trait8 fond8" x="330" y="284" width="134" height="78" rx="3"/>
+          </g>
+          <path class="pointille" d="M224,200 H564"/><text class="sous8" x="394" y="190" text-anchor="middle">Internet</text></g>
+        <g class="suite9" transform="translate(240)"><rect class="trait8 fond8" x="330" y="284" width="134" height="78" rx="3"/>
           <path class="trait8" d="M338,296 h20 v20 h-20 z M338,302 h20 M343,292 v6 M353,292 v6"/>
           <path class="pointille" d="M397,362 V388 M397,420 V442 m-7,-9 l7,9 l7,-9"/><circle class="trait8 fond8" cx="397" cy="392" r="4"/><circle class="trait8 fond8" cx="397" cy="416" r="4"/><path class="trait8" d="M397,416 L380,397"/>
           <text class="sous8" x="368" y="410" text-anchor="end">le réglage du compte</text><text class="lab7" x="397" y="464" text-anchor="middle">Prochains modèles</text></g>
@@ -1248,6 +1268,11 @@ const SCENES = {
   '16.1': 'S branches', '16.2': 'S branches local', '16.3': 'S branches local valid', '16.4': 'S branches local valid pont',
   '16.5': P16 + ' zero', '16.6': P16 + ' zero uv', '16.7': P16 + ' uv ligne', '16.8': P16 + ' uv ligne apres',
 };
+// Les pas qui respirent : ceux du clip de l'étape 9, de l'étape 15 et de l'étape 20. L'image y prend
+// la largeur, le texte se resserre, le cheval du coin s'efface.
+// Le montage fini, les côtés s'échangent : à partir de cette étape, l'image est à gauche.
+const INVERSE = 15;
+const LARGE = id => parseFloat(id) >= 7 && /(^| )[NCH]( |$)/.test(SCENES[id] || '');
 const AVOUS = {
   '8.5': {titre: true}, '8.6': {}, '8.7': {}, '8.8': {},
   '8.9': {coche: "C'est fait, mon agent est lancé"},
@@ -1316,6 +1341,8 @@ function corps(p) {
   return h;
 }
 
+// La carte qui suit une respiration reste étroite : elle monte sous l'image encore large.
+let precedent = '';
 function monter(conteneur, selection, haut) {
   for (const choix of selection) {
     const etape = window.MONTAGE.find(e => e.n === choix.n);
@@ -1342,7 +1369,9 @@ function monter(conteneur, selection, haut) {
       const mots = NOTE.includes(p.id) && (p.ecran.match(/« ([^»]+) »/) || [])[1];
       const memento = pol ? polaroid : mots ? `<div class="manuscrite" aria-hidden="true">${mots}</div>` : '';
       const bloc = document.createElement('div');
-      bloc.className = 'etape' + (memento ? ' avec-memento' : '');
+      bloc.className = 'etape' + (memento ? ' avec-memento' : '') + (!haut && (LARGE(p.id) || LARGE(precedent)) ? ' souffle' : '')
+        + (LARGE(p.id) && !LARGE(precedent) ? ' entree' : '') + (!haut && etape.n >= INVERSE ? ' droite' : '');
+      precedent = p.id;
       // En bas aussi le texte vit dans une carte ; seul le « À vous » reste une bande sans cadre.
       bloc.innerHTML = haut ? `<div class="carte cible" data-pas="${p.id}">${h}</div>` : memento + (avous ? h : `<div class="carte">${h}</div>`);
       if (!haut) { bloc.classList.add('cible'); bloc.dataset.pas = p.id; }
@@ -1660,7 +1689,10 @@ function jouer(id) {
   document.body.classList.toggle('sans-longe', id === '0.1' || id === '0.2');
   document.body.classList.toggle('entree', n < 2);
   document.body.classList.toggle('regime-bas', id === '6.7' || n >= 7);
-  document.body.classList.toggle('sans-coin', n === 15 || id === '20.7');
+  document.querySelector('.bas').classList.toggle('large', LARGE(id));
+  document.querySelector('.bas').classList.toggle('inverse', n >= INVERSE);
+  document.body.classList.toggle('coin-gauche', n >= INVERSE);
+  document.body.classList.toggle('sans-coin', LARGE(id));
   document.body.classList.toggle('compteur', n > 8 || (n === 8 && Number(id.split('.')[1]) >= 5));
 }
 
