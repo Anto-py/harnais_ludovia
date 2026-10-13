@@ -175,22 +175,29 @@ svg.scene{width:100%;height:auto;max-height:calc(100vh - 60px);display:block;ove
 .bas .carte{align-self:flex-start;max-width:608px}
 /* Respirations, étapes 9, 15 et 20 : rien à taper, l'image prend la largeur. Le cadre déborde de sa
    colonne vers la gauche jusqu'aux cartes, resserrées comme en haut. Sa marge se compte en parts de
-   sa colonne : 62 % de la grille en font 163,16 % de la colonne, et 384 points gardent la carte et son écart. */
+   sa colonne : 62 % de la grille en font 163,16 % de la colonne, et 404 points gardent la carte et son écart. */
 @media(min-width:861px){
 .bas .souffle .carte{max-width:340px}
 /* Une respiration s'ouvre sur un demi-écran vide : la carte d'avant est sortie quand l'image s'élargit. */
 .bas .entree{margin-top:50vh}
-.bas .cadre{transition:margin-left .9s cubic-bezier(.22,.7,.25,1),margin-right .9s cubic-bezier(.22,.7,.25,1)}
-.bas.large .cadre{margin-left:calc(384px - 163.16%)}
+/* L'image se centre dans la hauteur de l'écran, moins la place du cheval du coin tant qu'il est là :
+   ses 138 points, ses 22 points de marge et 12 d'écart, comptés depuis le bas du cadre. Une image plus
+   haute que cette place se cale en haut, comme avant, et passe sous le cheval. */
+.bas .cadre{height:calc(100vh - 48px);display:flex;flex-direction:column;justify-content:safe center}
+body.regime-bas:not(.sans-coin) .bas .cadre{padding-bottom:148px}
+/* Le cadre occupe l'écran : sous le dernier pas, centré, il lui faut encore 14 % de hauteur pour tenir. */
+.bas .pas{padding-bottom:14vh}
+.bas .cadre{transition:margin-left .9s cubic-bezier(.22,.7,.25,1),margin-right .9s cubic-bezier(.22,.7,.25,1),padding-bottom .6s ease}
+.bas.large .cadre{margin-left:calc(404px - 163.16%)}
 .bas.large .quinze svg{width:100%;margin-left:0}
 /* Le montage fini, à partir de l'étape 15, les côtés s'échangent : l'image à gauche, le texte à droite,
    le cheval du coin en bas à gauche. Le cadre recule de 62 % de la grille ; le texte avance d'autant,
    compté en parts de sa propre colonne (38 / 62, et les 44 points de l'écart rapportés à 62 %). */
 .bas.inverse .cadre{margin-left:-163.16%;margin-right:163.16%}
-.bas.inverse.large .cadre{margin-right:384px}
+.bas.inverse.large .cadre{margin-right:404px}
 .bas .droite{left:calc(61.29% + 71px)}
 .bas .droite .carte,.bas .droite .avous{align-self:flex-end}
-body.coin-gauche .coin{right:calc(100vw - 242px)}
+body.coin-gauche .coin{right:calc(100vw - 176px)}
 }
 .dossier{background:#fff;border:2px solid var(--teal);border-radius:4px 18px 4px 18px;padding:14px 16px;font:14px/1.75 'JetBrains Mono',ui-monospace,Menlo,monospace;position:relative}
 .tete{font:600 12px/1.2 Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);margin-bottom:8px;display:flex;justify-content:space-between}
@@ -695,7 +702,7 @@ button.btn{cursor:pointer}
 .coche input{width:24px;height:24px;accent-color:var(--teal)}
 
 /* Le cheval du coin */
-.coin{position:fixed;right:22px;bottom:22px;width:220px;z-index:25;background:#fff;border:2px solid var(--teal);border-radius:18px 4px 18px 4px;padding:10px 12px;box-shadow:0 8px 24px rgba(13,22,23,.25);opacity:0;transform:translateY(20px);pointer-events:none;transition:opacity .6s 1.2s,transform .6s 1.2s,right 0s .6s}
+.coin{position:fixed;right:22px;bottom:22px;width:154px;z-index:25;background:#fff;border:2px solid var(--teal);border-radius:18px 4px 18px 4px;padding:10px 12px;box-shadow:0 8px 24px rgba(13,22,23,.25);opacity:0;transform:translateY(20px);pointer-events:none;transition:opacity .6s 1.2s,transform .6s 1.2s,right 0s .6s}
 body.regime-bas .coin{opacity:1;transform:none}
 .coin svg{width:100%;height:auto;display:block;mix-blend-mode:multiply}
 .coin .piece{fill:none;stroke:var(--teal);stroke-linecap:round;stroke-linejoin:round;opacity:.9;stroke-dasharray:1 1.3;stroke-dashoffset:1.15;transition:stroke-dashoffset var(--duree) ease,stroke .5s}
@@ -704,7 +711,7 @@ body.regime-bas .coin{opacity:1;transform:none}
 .coin .piece.plein{fill:var(--teal);stroke:none;opacity:0;transition:opacity var(--duree),fill .5s}
 .coin .piece.plein.posee{opacity:.9}
 .coin .piece.plein.neuve{fill:var(--orange)}
-.coin .tete{font-size:11px;letter-spacing:.06em;white-space:nowrap}
+.coin .tete{font-size:11px;letter-spacing:.06em;white-space:nowrap;flex-direction:column;gap:3px}
 .coin .tete span:last-child{opacity:0;transition:opacity .4s}
 body.compteur .coin .tete span:last-child{opacity:1}
 
@@ -775,7 +782,7 @@ body.compteur .coin .tete span:last-child{opacity:1}
 
 /* Aide de relecture du prototype */
 
-@media(max-width:860px){:root{--marge:14px}body{padding:0 8px}.page{padding:0 14px 60px}.bas{display:block}.bas .cadre{position:sticky;top:0;z-index:4;background:var(--paper);padding:8px 0}.polaroid,.manuscrite{position:relative;left:0;top:0;margin:0 0 16px}.coin{width:150px}.haut .carte{font-size:18px}}
+@media(max-width:860px){:root{--marge:14px}body{padding:0 8px}.page{padding:0 14px 60px}.bas{display:block}.bas .cadre{position:sticky;top:0;z-index:4;background:var(--paper);padding:8px 0}.polaroid,.manuscrite{position:relative;left:0;top:0;margin:0 0 16px}.coin{width:105px}.haut .carte{font-size:18px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
