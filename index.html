@@ -29,6 +29,11 @@ a{color:var(--teal-sombre);overflow-wrap:anywhere}
 .haut .carte{max-width:340px;font-size:21px}
 .carte p,.etape p{margin:0 0 .7em}
 .carte p:last-child{margin-bottom:0}
+/* Le surligneur : orange pour la thèse d'un pas, jaune pour le geste. Il se trace à l'arrivée du pas, puis reste. */
+mark{color:inherit;padding:0 .08em;background:linear-gradient(var(--surligne),var(--surligne)) no-repeat 0 0/0% 100%;-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size .6s .35s ease-out}
+mark.these{--surligne:rgba(228,99,46,.32)}
+mark.geste{--surligne:rgba(227,165,53,.6)}
+mark.trace,.a-touches .nt-touches mark{background-size:100% 100%}
 svg.scene{width:100%;height:auto;max-height:calc(100vh - 60px);display:block;overflow:visible}
 .scene .gravure,.scene .piece,.e-petits image,.mini4 image,.e-autre image{mix-blend-mode:multiply}
 .scene > g,.scene > text,.scene > path,.scene > rect,.scene > line{transition:opacity .5s}
@@ -1692,6 +1697,7 @@ function jouer(id) {
   }
   const rang = pas => pas.split('.').reduce((a, b) => a * 100 + Number(b), 0);
   document.querySelectorAll('.avec-memento').forEach(b => b.classList.toggle('vu', rang(id) >= rang(b.dataset.pas)));
+  document.querySelectorAll('.cible mark').forEach(m => m.classList.toggle('trace', rang(id) >= rang(m.closest('.cible').dataset.pas)));
   document.body.classList.toggle('avant', n === 0);
   document.body.classList.toggle('sans-longe', id === '0.1' || id === '0.2');
   document.body.classList.toggle('entree', n < 2);

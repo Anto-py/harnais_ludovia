@@ -15,7 +15,7 @@ window.MONTAGE = [
    {
     "id": "1.2",
     "texte": [
-     "Vous n'êtes pas seuls à le penser. En juillet 2026, des ingénieurs d'OpenAI ont regardé leur propre modèle passer un test. Ils ont écrit qu'il « n'avait pas l'air très malin »."
+     "Vous n'êtes pas seuls à le penser. En juillet 2026, des ingénieurs d'OpenAI ont regardé <mark class=\"these\">leur propre modèle</mark> passer un test. Ils ont écrit qu'il « n'avait pas l'air très malin »."
     ],
     "ecran": "Le cheval, inchangé. Au-dessus de lui, la phrase des ingénieurs entre guillemets, en capitales : « n'avait pas l'air très malin »."
    },
@@ -23,14 +23,14 @@ window.MONTAGE = [
     "id": "1.3",
     "texte": [
      "Alors, d'où vient l'intelligence d'une IA ? Du modèle, ou de ce qui l'entoure ?",
-     "Des deux. Mais ce qui l'entoure pèse bien plus qu'on ne croit : sa mémoire, ses consignes, ses outils."
+     "Des deux. Mais ce qui l'entoure <mark class=\"these\">pèse bien plus qu'on ne croit</mark> : sa mémoire, ses consignes, ses outils."
     ],
     "ecran": "La citation s'efface. Deux mots en capitales de part et d'autre du cheval : « le modèle » pointe son corps, « ce qui l'entoure » pointe ses sangles, encore noires. Puis trois mots s'alignent sous le second : mémoire, consignes, outils."
    },
    {
     "id": "1.4",
     "texte": [
-     "Cette page vous montre pourquoi. Ensuite, elle vous fait monter votre propre environnement, localement, sur votre ordinateur."
+     "Cette page vous montre pourquoi. Ensuite, elle vous fait monter <mark class=\"these\">votre propre environnement</mark>, localement, sur votre ordinateur."
     ],
     "ecran": "Les mots s'effacent. Le cheval seul, sans rien d'autre."
    }
@@ -44,7 +44,7 @@ window.MONTAGE = [
    {
     "id": "2.1",
     "texte": [
-     "Le test s'appelle ARC-AGI-3. Il est fait de petits jeux de réflexion dont personne ne donne les règles. Il faut les deviner en jouant."
+     "Le test s'appelle ARC-AGI-3. Il est fait de petits jeux de réflexion <mark class=\"these\">dont personne ne donne les règles</mark>. Il faut les deviner en jouant."
     ],
     "ecran": "Le cheval, sans charge. À sa droite, une grille de neuf cases où trois cases de couleur clignotent, se déplacent d'une case à la fois et changent de couleur : un petit jeu sans règle écrite."
    },
@@ -58,7 +58,7 @@ window.MONTAGE = [
    {
     "id": "2.3",
     "texte": [
-     "Puis les ingénieurs activent deux réglages, ceux qu'ils utilisent déjà dans leurs propres produits. L'étape 4 dit lesquels. Le score passe à 38,3 %."
+     "Puis les ingénieurs <mark class=\"these\">activent deux réglages</mark>, ceux qu'ils utilisent déjà dans leurs propres produits. L'étape 4 dit lesquels. Le score passe à 38,3 %."
     ],
     "ecran": "Le trait, la longue sangle qui va du poitrail au crochet, se trace en orange le long de la gravure. Le bloc s'allonge jusqu'à presque trois fois sa longueur, et le chiffre devient 38,3 %. La règle n'a pas bougé : le bloc reste en deçà de la marque de l'humain."
    },
@@ -72,21 +72,21 @@ window.MONTAGE = [
    {
     "id": "2.5",
     "texte": [
-     "Tout ce qui entoure un modèle, réglages compris, porte un nom : son harnais. Le mot vient du cheval de trait. Son harnais est l'ensemble des sangles qui lui permettent de tirer une charge."
+     "<mark class=\"these\">Tout ce qui entoure un modèle</mark>, réglages compris, porte un nom : son harnais. Le mot vient du cheval de trait. Son harnais est l'ensemble des sangles qui lui permettent de tirer une charge."
     ],
     "ecran": "Toutes les sangles du harnais se tracent à leur tour, en sarcelle, le trait restant orange. Au-dessus du dos, en capitales : « son harnais »."
    },
    {
     "id": "2.6",
     "texte": [
-     "Pourquoi le test n'avait-il pas ces deux réglages dès le départ ? Parce que ses auteurs ont voulu un harnais très simple, le même pour tous les modèles, afin de les comparer à égalité."
+     "Pourquoi le test n'avait-il pas ces deux réglages dès le départ ? Parce que ses auteurs ont voulu un harnais très simple, le même pour tous les modèles, afin de <mark class=\"these\">les comparer à égalité</mark>."
     ],
     "ecran": "Le cheval, son harnais et le bloc long à 38,3 % ne bougent pas. À droite, trois petits chevaux identiques alignés portent chacun un seul fil mince et tirent un bloc court : le harnais très simple, le même pour tous."
    },
    {
     "id": "2.7",
     "texte": [
-     "Une réserve d'abord : c'est OpenAI qui mesure son propre modèle, et personne d'autre n'a refait le calcul. Une précision ensuite : ce harnais-là est fait de réglages logiciels, le vôtre sera fait de fichiers."
+     "Une réserve d'abord : c'est OpenAI qui mesure son propre modèle, et personne d'autre n'a refait le calcul. Une précision ensuite : ce harnais-là est fait de réglages logiciels, <mark class=\"these\">le vôtre sera fait de fichiers</mark>."
     ],
     "ecran": "Les petits chevaux s'effacent. Sous le chiffre, une mention en sarcelle sombre : « mesuré par OpenAI sur son propre modèle ». À côté du harnais, deux pictogrammes reliés au harnais par un fil : trois curseurs de réglage, puis un fichier."
    }
@@ -100,14 +100,14 @@ window.MONTAGE = [
    {
     "id": "3.1",
     "texte": [
-     "Le modèle, lui, n'a pas changé. On l'appelle LLM, pour grand modèle de langage. C'est un programme entraîné sur d'énormes quantités de textes. On lui présente un texte, il calcule la suite la plus probable. Il ne fait rien d'autre."
+     "Le modèle, lui, n'a pas changé. On l'appelle LLM, pour grand modèle de langage. C'est un programme entraîné sur d'énormes quantités de textes. On lui présente un texte, <mark class=\"these\">il calcule la suite la plus probable</mark>. Il ne fait rien d'autre."
     ],
     "ecran": "La charge et le chiffre s'effacent. Les sangles pâlissent jusqu'au gris ; le corps du cheval garde tout son noir. À droite du cheval, une ligne de texte s'écrit : « Le cheval tire une ». Trois mots candidats apparaissent dessous, chacun avec une barre sans chiffre : charge, charrette, carotte. La barre la plus longue l'emporte, le mot « charge » rejoint la phrase."
    },
    {
     "id": "3.2",
     "texte": [
-     "Seul, il ne se souvient de rien. Il ne lit pas vos fichiers. Il n'ouvre aucune application. Dans cette page, le modèle est le cheval. Sa force est réelle. Mais un cheval sans harnais ne tire rien."
+     "Seul, il ne se souvient de rien. Il ne lit pas vos fichiers. Il n'ouvre aucune application. Dans cette page, le modèle est le cheval. Sa force est réelle. Mais <mark class=\"these\">un cheval sans harnais ne tire rien</mark>."
     ],
     "ecran": "La phrase et les candidats s'effacent. Le cheval seul, sangles grises. Sous lui, en capitales : « le modèle »."
    }
@@ -122,21 +122,21 @@ window.MONTAGE = [
     "id": "4.1",
     "texte": [
      "Si le modèle prolonge un texte, de quel texte part-il ?",
-     "De sa fenêtre de contexte. C'est tout le texte qu'il a sous les yeux au moment de répondre : votre demande, la conversation en cours, ce qu'on y a ajouté."
+     "De <mark class=\"these\">sa fenêtre de contexte</mark>. C'est tout le texte qu'il a sous les yeux au moment de répondre : votre demande, la conversation en cours, ce qu'on y a ajouté."
     ],
     "ecran": "Le cadre se resserre sur la tête et l'encolure du cheval, agrandies un peu moins de deux fois. Devant ses yeux, un rectangle au trait : la fenêtre de contexte. Trois bandes s'y rangent, étiquetées : votre demande, la conversation en cours, ce qu'on y a ajouté."
    },
    {
     "id": "4.2",
     "texte": [
-     "Ce qui n'y est pas n'existe pas pour lui. Voilà pourquoi une nouvelle conversation repart de zéro. Votre cheval est amnésique."
+     "Ce qui n'y est pas n'existe pas pour lui. Voilà pourquoi une nouvelle conversation repart de zéro. <mark class=\"these\">Votre cheval est amnésique</mark>."
     ],
     "ecran": "Hors du rectangle, quatre bandes grises apparaissent, puis s'éteignent. Le rectangle se vide d'un coup : une nouvelle conversation."
    },
    {
     "id": "4.3",
     "texte": [
-     "Un cheval de trait porte des œillères, des volets fixés près de ses yeux. Il ne voit que ce qui est devant lui. Le modèle aussi, sauf que ses œillères sont une limite de texte."
+     "Un cheval de trait porte des œillères, des volets fixés près de ses yeux. Il ne voit que ce qui est devant lui. Le modèle aussi, sauf que <mark class=\"these\">ses œillères sont une limite de texte</mark>."
     ],
     "ecran": "Les trois bandes sont revenues dans le rectangle. L'œillère se trace en orange sur la tête du cheval. Deux lignes en partent et bordent le rectangle : il ne voit que cela."
    },
@@ -150,7 +150,7 @@ window.MONTAGE = [
    {
     "id": "4.5",
     "texte": [
-     "Il savait ce qu'il avait joué. Il ne savait plus pourquoi. À chaque tour, il devait tout recomprendre."
+     "Il savait ce qu'il avait joué. <mark class=\"these\">Il ne savait plus pourquoi</mark>. À chaque tour, il devait tout recomprendre."
     ],
     "ecran": "Clip, suite. Le coup suivant se joue ; un point d'interrogation occupe la place de la bulle tombée."
    },
@@ -213,7 +213,7 @@ window.MONTAGE = [
    {
     "id": "5.7",
     "texte": [
-     "Votre chatbot a déjà tout cela. Sa mémoire fait partie de son contexte. Ses connecteurs, des branchements vers d'autres services, sont ses outils."
+     "<mark class=\"these\">Votre chatbot a déjà tout cela</mark>. Sa mémoire fait partie de son contexte. Ses connecteurs, des branchements vers d'autres services, sont ses outils."
     ],
     "ecran": "Toutes les pièces sont en sarcelle. Dans la colonne, deux lignes se soulignent : « contexte » reçoit la mention « sa mémoire », « outils » reçoit « ses connecteurs »."
    },
@@ -221,7 +221,7 @@ window.MONTAGE = [
     "id": "5.8",
     "texte": [
      "Vous n'avez donc jamais utilisé un modèle nu. Le cheval que vous connaissez a toujours été harnaché.",
-     "Le seul problème, c'est que ce n'est pas votre harnais, c'est celui du fournisseur. Vous ne décidez pas complètement de ce qui est dedans. Vous acceptez qu'un autre équipe votre cheval de façon standard."
+     "Le seul problème, c'est que <mark class=\"these\">ce n'est pas votre harnais</mark>, c'est celui du fournisseur. Vous ne décidez pas complètement de ce qui est dedans. Vous acceptez qu'un autre équipe votre cheval de façon standard."
     ],
     "ecran": "La colonne s'efface. Le cheval seul, harnaché de couleur de la tête au crochet. C'est le dessin de l'étape 1, pas un trait de plus."
    }
@@ -242,42 +242,42 @@ window.MONTAGE = [
    {
     "id": "6.2",
     "texte": [
-     "On appelle cela un jardin clos (walled garden, en anglais). L'expression vient des opérateurs de télécommunications américains des années 1990. Leurs premiers portails ne donnaient accès qu'aux sites qu'ils avaient choisis."
+     "On appelle cela un jardin clos (walled garden, en anglais). L'expression vient des opérateurs de télécommunications américains des années 1990. Leurs premiers portails ne donnaient accès qu'<mark class=\"these\">aux sites qu'ils avaient choisis</mark>."
     ],
     "ecran": "Le cadre recule. Un mur au trait sarcelle se dresse autour du cheval : un enclos sans remplissage, qui borde la gravure et laisse voir le cheval, avec une porte fermée sur son côté droit. Sur le bandeau du haut, en capitales : « jardin clos »."
    },
    {
     "id": "6.3",
     "texte": [
-     "De l'intérieur, on ne voit pas le mur. Tout y est soigné, souvent mieux que dehors. Le confort est réel, et personne ne vous trompe."
+     "De l'intérieur, <mark class=\"these\">on ne voit pas le mur</mark>. Tout y est soigné, souvent mieux que dehors. Le confort est réel, et personne ne vous trompe."
     ],
     "ecran": "Vue de l'intérieur : le mur s'estompe jusqu'à disparaître, le sol se couvre de quelques brins en volute, dessinés par code dans l'esprit du fond Art nouveau. Le cheval et son harnais, bien soignés."
    },
    {
     "id": "6.4",
     "texte": [
-     "Mais ce que vous y déposez, vos consignes, votre mémoire, reste chez le fournisseur... L'expérience utilisateur confortable enferme le consommateur !"
+     "Mais ce que vous y déposez, vos consignes, votre mémoire, <mark class=\"these\">reste chez le fournisseur</mark>... L'expérience utilisateur confortable enferme le consommateur !"
     ],
     "ecran": "Le mur revient. Deux bandes de texte, « vos consignes » et « votre mémoire », entrent par la porte et se rangent près du cheval. La porte se referme."
    },
    {
     "id": "6.5",
     "texte": [
-     "La question change donc. Elle n'est plus « le modèle ou ce qui l'entoure ? ». Elle devient « à qui appartient ce qui multiplie l'intelligence du modèle ? »."
+     "La question change donc. Elle n'est plus « le modèle ou ce qui l'entoure ? ». Elle devient « <mark class=\"these\">à qui appartient ce qui multiplie l'intelligence</mark> du modèle ? »."
     ],
     "ecran": "L'étiquette « au fournisseur du modèle » clignote une fois, en orange."
    },
    {
     "id": "6.6",
     "texte": [
-     "Et elle en amène une autre. Un jour, un autre modèle vous conviendra peut-être mieux. Il ne pourra pas entrer dans ce jardin : le mur l'en empêche. Vos consignes et votre mémoire, elles, resteront derrière ce mur, et vous repartirez de zéro ailleurs. Comment être libre de choisir le cheval sur lequel on veut poser son harnais pour galoper intelligemment dans les vastes plaines de l'IA ?"
+     "Et elle en amène une autre. Un jour, un autre modèle vous conviendra peut-être mieux. Il ne pourra pas entrer dans ce jardin : le mur l'en empêche. Vos consignes et votre mémoire, elles, resteront derrière ce mur, et <mark class=\"these\">vous repartirez de zéro</mark> ailleurs. Comment être libre de choisir le cheval sur lequel on veut poser son harnais pour galoper intelligemment dans les vastes plaines de l'IA ?"
     ],
     "ecran": "Hors du mur, à droite, un second cheval de la planche, celui du haut, détouré et sans couleur. Il avance jusqu'à la porte et s'arrête. Les deux bandes restent à l'intérieur."
    },
    {
     "id": "6.7",
     "texte": [
-     "La suite de la page se fait clavier en main. Vous allez monter votre harnais, étape par étape. Pour cela, vous recevez un kit : des textes déjà rédigés, à télécharger au fil de la page, là où ils servent."
+     "La suite de la page se fait clavier en main. Vous allez <mark class=\"these\">monter votre harnais</mark>, étape par étape. Pour cela, vous recevez un kit : des textes déjà rédigés, à télécharger au fil de la page, là où ils servent."
     ],
     "ecran": "Le mur et le second cheval s'effacent. Les couleurs quittent les sangles : le cheval redevient la gravure noire de l'ouverture, se réduit et glisse vers le coin inférieur droit, où il reste. Ce harnais-là reste à poser. La page change de régime : le texte prend la gauche, une colonne vide s'ouvre à droite. Trois fichiers du kit tombent en pile, avec une flèche de téléchargement."
    }
@@ -299,7 +299,7 @@ window.MONTAGE = [
    {
     "id": "7.2",
     "texte": [
-     "Sans le fichier, le modèle devine. Quel âge ont les élèves ? De quel matériel dispose la classe ? Il ne le sait pas, alors il donne une réponse générale."
+     "Sans le fichier, <mark class=\"these\">le modèle devine</mark>. Quel âge ont les élèves ? De quel matériel dispose la classe ? Il ne le sait pas, alors il donne une réponse générale."
     ],
     "ecran": "Sous le rectangle, une carte de réponse faite de lignes grises, sans mots. Deux points d'interrogation flottent à côté : l'âge, le matériel."
    },
@@ -313,28 +313,28 @@ window.MONTAGE = [
    {
     "id": "7.4",
     "texte": [
-     "Même demande. Cette fois, le modèle n'a plus à deviner, et sa réponse s'ajuste. Rien d'autre n'a changé. (L'exemple est inventé pour cette page.)"
+     "Même demande. Cette fois, le modèle <mark class=\"these\">n'a plus à deviner</mark>, et sa réponse s'ajuste. Rien d'autre n'a changé. (L'exemple est inventé pour cette page.)"
     ],
     "ecran": "La carte de réponse se redessine : trois de ses lignes prennent la couleur des trois lignes du fichier. Les points d'interrogation ont disparu. Aucun texte de réponse n'est affiché, l'exemple étant inventé."
    },
    {
     "id": "7.5",
     "texte": [
-     "Ce fichier est un fichier texte : des mots, sans mise en forme cachée, que n'importe quel programme peut ouvrir. Ceux de votre harnais finiront par <code>.md</code>, pour Markdown, une façon d'écrire des titres et des listes avec de simples signes."
+     "Ce fichier est un fichier texte : des mots, sans mise en forme cachée, que <mark class=\"these\">n'importe quel programme peut ouvrir</mark>. Ceux de votre harnais finiront par <code>.md</code>, pour Markdown, une façon d'écrire des titres et des listes avec de simples signes."
     ],
     "ecran": "Le fichier sort du rectangle et grossit, la carte de réponse s'efface. Son nom apparaît : `ma_classe.md`. À l'intérieur, le titre `# Ma classe` et les trois lignes en liste à tirets."
    },
    {
     "id": "7.6",
     "texte": [
-     "Et ce fichier est persistant. La conversation s'efface, lui reste sur votre disque. Demain, on le relira au modèle sans que vous retapiez rien."
+     "Et ce fichier est persistant. La conversation s'efface, lui <mark class=\"these\">reste sur votre disque</mark>. Demain, on le relira au modèle sans que vous retapiez rien."
     ],
     "ecran": "Le rectangle de la conversation se vide et s'éteint. Le fichier reste, posé sur un disque dessiné au trait."
    },
    {
     "id": "7.7",
     "texte": [
-     "Les fichiers persistants de votre harnais sont des fichiers Markdown. Ce n'est pas tout à fait exact, mais retenez que ceux dont le nom s'écrit en capitales, comme <code>AGENTS.md</code>, sont ceux que l'agent lit en premier quand il arrive dans un dossier. L'agent est le programme que vous installerez à l'étape suivante.",
+     "Les fichiers persistants de votre harnais sont des fichiers Markdown. Ce n'est pas tout à fait exact, mais retenez que ceux dont le nom s'écrit en capitales, comme <code>AGENTS.md</code>, sont ceux que <mark class=\"these\">l'agent lit en premier</mark> quand il arrive dans un dossier. L'agent est le programme que vous installerez à l'étape suivante.",
      "Un harnais à soi commence là."
     ],
     "ecran": "Le nom du fichier devient `AGENTS.md`, en capitales, surligné d'orange. Dans la colonne de droite, la carte « Votre dossier » apparaît, vide."
@@ -356,14 +356,14 @@ window.MONTAGE = [
    {
     "id": "8.2",
     "texte": [
-     "Un : l'éditeur de code, qu'on appelle aussi IDE, pour environnement de développement intégré. Il sert à voir et à ouvrir les fichiers d'un dossier. Celui de l'atelier s'appelle VSCodium. C'est un dérivé de VS Code, l'éditeur développé par Microsoft. Il a sur lui deux avantages. Il est libre : son code est public, chacun peut le lire et le vérifier. Et sa télémétrie est désactivée : il n'envoie pas de données d'usage à un fabricant. Il contient un terminal, une fenêtre où l'on tape des commandes au lieu de cliquer."
+     "Un : l'éditeur de code, qu'on appelle aussi IDE, pour environnement de développement intégré. Il sert à voir et à ouvrir les fichiers d'un dossier. Celui de l'atelier s'appelle VSCodium. C'est un dérivé de VS Code, l'éditeur développé par Microsoft. Il a sur lui deux avantages. <mark class=\"these\">Il est libre</mark> : son code est public, chacun peut le lire et le vérifier. Et sa télémétrie est désactivée : il n'envoie pas de données d'usage à un fabricant. Il contient un terminal, une fenêtre où l'on tape des commandes au lieu de cliquer."
     ],
     "ecran": "Premier emplacement : une fenêtre d'éditeur au trait, une colonne de fichiers à gauche, une bande de terminal en bas."
    },
    {
     "id": "8.3",
     "texte": [
-     "Deux : uv. Les petits outils que l'agent IA construira sont écrits en Python, un langage de programmation. Pour fonctionner, ils ont besoin que Python soit présent sur votre machine. uv s'en charge.",
+     "Deux : uv. Les petits outils que l'agent IA construira sont écrits en Python, un langage de programmation. Pour fonctionner, ils ont besoin que Python soit présent sur votre machine. <mark class=\"these\">uv s'en charge</mark>.",
      "De plus, uv facilitera le fonctionnement de tous ces outils en local, sur votre machine. Cela permet une économie de tokens."
     ],
     "ecran": "Deuxième emplacement : une petite boîte étiquetée Python, que « uv » pose sur la machine."
@@ -371,7 +371,7 @@ window.MONTAGE = [
    {
     "id": "8.4",
     "texte": [
-     "Trois : l'agent IA. C'est lui qui lit vos fichiers, envoie leur texte au modèle et écrit dans le dossier. Il se lance dans le terminal. De nombreux agents conviennent. Les plus connus sont Claude Code, Codex, Antigravity et Mistral Vibe."
+     "Trois : l'agent IA. C'est lui qui <mark class=\"these\">lit vos fichiers</mark>, envoie leur texte au modèle et écrit dans le dossier. Il se lance dans le terminal. De nombreux agents conviennent. Les plus connus sont Claude Code, Codex, Antigravity et Mistral Vibe."
     ],
     "ecran": "Troisième emplacement : dans la bande de terminal, un curseur clignote une fois puis une flèche part du dossier vers un nuage, « le modèle »."
    },
@@ -379,7 +379,7 @@ window.MONTAGE = [
     "id": "8.5",
     "texte": [
      "<strong>À vous.</strong> Téléchargez VSCodium sur <a href=\"https://vscodium.com/\">vscodium.com</a> et installez-le. Créez un dossier vide et ouvrez-le dans VSCodium. Petit conseil : pas dans un dossier qui se synchronise avec le cloud (OneDrive, Google Drive, Dropbox ou autre). La copie en ligne viendra par un autre chemin, à l'étape 18.",
-     "Première chose très importante à faire : dans le menu File, cochez Auto Save. Cela vous évitera bien des ennuis.",
+     "Première chose très importante à faire : dans le menu File, <mark class=\"geste\">cochez Auto Save</mark>. Cela vous évitera bien des ennuis.",
      "Ouvrez ensuite le terminal. Trois chemins y mènent, les mêmes sur Mac et sur Windows. Par le menu : cliquez sur Terminal, puis sur New Terminal. Par le bouton : en haut à droite de la fenêtre, cliquez sur le petit rectangle barré d'un trait en bas ; une bande s'ouvre sous vos fichiers, avec un onglet Terminal. Par le clavier : appuyez sur Cmd et J sur Mac, sur Ctrl et J sur Windows. Le terminal s'ouvre dans votre dossier, et toute l'installation s'y fait."
     ],
     "ecran": "Première bande « À vous ». Dans la carte du dossier, une ligne apparaît : `mon_harnais/`, vide. Le cheval du coin, sans couleur depuis la fin de l'étape 6, reçoit son compteur : « 0 pièce sur 6 »."
@@ -401,7 +401,7 @@ window.MONTAGE = [
    {
     "id": "8.7",
     "texte": [
-     "Le terminal ouvert ne connaît pas encore le programme que vous venez d'installer : il faut le relancer. Sur Mac, cliquez sur la corbeille, à droite de la bande du terminal, puis ouvrez un nouveau terminal. Sur Windows, cela ne suffit pas : fermez VSCodium tout entier, relancez-le, puis rouvrez le terminal. Tapez ensuite <code>uv --version</code>. Un numéro s'affiche : uv est en place."
+     "Le terminal ouvert ne connaît pas encore le programme que vous venez d'installer : <mark class=\"geste\">il faut le relancer</mark>. Sur Mac, cliquez sur la corbeille, à droite de la bande du terminal, puis ouvrez un nouveau terminal. Sur Windows, cela ne suffit pas : fermez VSCodium tout entier, relancez-le, puis rouvrez le terminal. Tapez ensuite <code>uv --version</code>. Un numéro s'affiche : uv est en place."
     ],
     "ecran": "Dans le texte, la commande `uv --version`."
    },
@@ -475,35 +475,35 @@ window.MONTAGE = [
    {
     "id": "9.3",
     "texte": [
-     "Le modèle, lui, n'y est pas. Il tourne sur les serveurs de son fournisseur."
+     "<mark class=\"these\">Le modèle, lui, n'y est pas</mark>. Il tourne sur les serveurs de son fournisseur."
     ],
     "ecran": "Clip. À droite, un bâtiment de serveurs étiqueté « fournisseur du modèle ». Entre les deux, un espace vide traversé d'un pointillé, « Internet », qui dit la distance."
    },
    {
     "id": "9.4",
     "texte": [
-     "Pour l'interroger, l'agent lui envoie donc du texte par Internet : vos demandes, et ce qu'il y joint pour que le modèle puisse répondre. Considérez que le texte d'un fichier qu'il a lu peut en faire partie."
+     "Pour l'interroger, l'agent lui envoie donc du texte par Internet : vos demandes, et ce qu'il y joint pour que le modèle puisse répondre. Considérez que <mark class=\"these\">le texte d'un fichier qu'il a lu</mark> peut en faire partie."
     ],
     "ecran": "Clip. Une bande de texte, « votre demande », quitte l'ordinateur et traverse l'espace. Une seconde bande sort d'un fichier du dossier et la suit."
    },
    {
     "id": "9.5",
     "texte": [
-     "Là-bas, ce texte peut être conservé, parfois des années. Il peut aussi servir à entraîner les prochains modèles. Cela dépend de votre abonnement et des réglages de votre compte. Cherchez dans ses paramètres le réglage qui le refuse."
+     "Là-bas, ce texte peut être conservé, parfois des années. Il peut aussi servir à entraîner les prochains modèles. Cela dépend de votre abonnement et des réglages de votre compte. Cherchez dans ses paramètres <mark class=\"geste\">le réglage qui le refuse</mark>."
     ],
     "ecran": "Clip, fin. Chez le fournisseur, les bandes se rangent sur une étagère marquée d'un calendrier. Une flèche pointillée va vers « prochains modèles », coupée par un interrupteur : le réglage du compte."
    },
    {
     "id": "9.6",
     "texte": [
-     "Or les données de vos élèves sont protégées par le RGPD, le règlement européen sur les données personnelles. Les envoyer ainsi à un fournisseur de modèle ne serait pas conforme."
+     "Or les données de vos élèves sont protégées par le RGPD, le règlement européen sur les données personnelles. Les envoyer ainsi à un fournisseur de modèle ne serait <mark class=\"these\">pas conforme</mark>."
     ],
     "ecran": "Le côté du fournisseur pâlit. Une fiche d'élève au trait, avec un nom masqué, reste du côté de l'ordinateur. Un sceau « RGPD » se pose dessus."
    },
    {
     "id": "9.7",
     "texte": [
-     "D'où une règle simple. Ce harnais sert à concevoir des cours et de petits outils. Il ne sert pas à traiter des données d'élèves.",
+     "D'où une règle simple. Ce harnais sert à concevoir des cours et de petits outils. Il ne sert <mark class=\"these\">pas à traiter des données d'élèves</mark>.",
      "N'y écrivez ni noms d'élèves, ni notes, ni mots de passe."
     ],
     "ecran": "Trois étiquettes barrées d'orange s'alignent du côté de l'ordinateur : noms d'élèves, notes, mots de passe."
@@ -511,7 +511,7 @@ window.MONTAGE = [
    {
     "id": "9.8",
     "texte": [
-     "Dernière limite : le modèle se loue. Claude Code demande un abonnement payant, une vingtaine de dollars par mois. Codex, Antigravity et Mistral Vibe s'essaient avec un compte gratuit, dont l'usage est limité. Ces conditions datent d'octobre 2026 et changent souvent."
+     "Dernière limite : <mark class=\"these\">le modèle se loue</mark>. Claude Code demande un abonnement payant, une vingtaine de dollars par mois. Codex, Antigravity et Mistral Vibe s'essaient avec un compte gratuit, dont l'usage est limité. Ces conditions datent d'octobre 2026 et changent souvent."
     ],
     "ecran": "Le clip s'efface. Quatre lignes sobres, une par agent, avec son régime : abonnement payant, compte gratuit limité. La ligne de l'agent choisi à l'étape 8 est mise en avant, avec la mention « le vôtre ». Mention datée : octobre 2026."
    }
@@ -525,7 +525,7 @@ window.MONTAGE = [
    {
     "id": "10.1",
     "texte": [
-     "Avant de ranger, un film. Dans Memento, de Christopher Nolan, Leonard cherche l'assassin de sa femme. Un coup à la tête l'a laissé incapable de fabriquer de nouveaux souvenirs. Au bout de quelques minutes, il a tout oublié. Leonard est amnésique comme votre cheval."
+     "Avant de ranger, un film. Dans Memento, de Christopher Nolan, Leonard cherche l'assassin de sa femme. Un coup à la tête l'a laissé incapable de fabriquer de nouveaux souvenirs. Au bout de quelques minutes, il a tout oublié. Leonard est <mark class=\"these\">amnésique comme votre cheval</mark>."
     ],
     "ecran": "Dans la colonne de droite, au-dessus de la carte du dossier, un polaroïd vide, incliné. Dans la photo, une silhouette de dos au trait."
    },
@@ -539,7 +539,7 @@ window.MONTAGE = [
    {
     "id": "10.3",
     "texte": [
-     "Votre agent est donc dans la situation de Leonard : à chaque conversation, il repart de zéro. Les étapes qui suivent vont lui donner ses photos, ses notes et ses tatouages."
+     "Votre agent est donc dans la situation de Leonard : <mark class=\"these\">à chaque conversation, il repart de zéro</mark>. Les étapes qui suivent vont lui donner ses photos, ses notes et ses tatouages."
     ],
     "ecran": "Les trois objets rétrécissent et se rangent en petit, en attente, au-dessus de la carte du dossier, qui remonte vers eux."
    },
@@ -574,14 +574,14 @@ window.MONTAGE = [
    {
     "id": "10.8",
     "texte": [
-     "Ce découpage est un choix, pas une obligation. Un autre marcherait. Ce qui compte, c'est que l'agent et vous sachiez où chercher et où déposer."
+     "Ce découpage est un choix, pas une obligation. Un autre marcherait. Ce qui compte, c'est que l'agent et vous sachiez <mark class=\"these\">où chercher et où déposer</mark>."
     ],
     "ecran": "Les six lignes se mélangent un instant dans un autre ordre, puis reviennent à leur place ; `5.productions/` se déplace avec ses deux sous-lignes."
    },
    {
     "id": "10.9",
     "texte": [
-     "Vous n'allez pas créer ces dossiers à la main. Vous allez le demander à l'agent, par un prompt, c'est-à-dire une instruction écrite. Le kit en contient quatre, déjà rédigés."
+     "Vous n'allez pas créer ces dossiers à la main. Vous allez <mark class=\"these\">le demander à l'agent</mark>, par un prompt, c'est-à-dire une instruction écrite. Le kit en contient quatre, déjà rédigés."
     ],
     "ecran": "Sous la carte du dossier, quatre fichiers de prompts numérotés tombent en pile."
    },
@@ -616,7 +616,7 @@ window.MONTAGE = [
    {
     "id": "11.2",
     "texte": [
-     "Ici, vous le dites une fois. L'agent vous pose neuf questions, une à la fois : votre métier, vos élèves, une contrainte réelle de votre classe, votre façon de travailler."
+     "Ici, <mark class=\"these\">vous le dites une fois</mark>. L'agent vous pose neuf questions, une à la fois : votre métier, vos élèves, une contrainte réelle de votre classe, votre façon de travailler."
     ],
     "ecran": "Neuf points numérotés, alignés. Ils se remplissent un à un ; quatre portent un mot, sous la question qui le demande : métier (1), élèves (2), contrainte (3), façon de travailler (5)."
    },
@@ -624,21 +624,21 @@ window.MONTAGE = [
     "id": "11.3",
     "texte": [
      "Puis il écrit deux fichiers. <code>IDENTITE.md</code> dit qui vous êtes. <code>PERSONA.md</code> dit qui il est, lui, et comment il doit se comporter : proposer sans décider à votre place, ne rien inventer.",
-     "Ce sont des fichiers persistants. Il les relira à chaque conversation."
+     "Ce sont des fichiers persistants. <mark class=\"these\">Il les relira à chaque conversation</mark>."
     ],
     "ecran": "Les neuf points restent pleins. Dans le dossier, deux lignes apparaissent sous la racine : `IDENTITE.md`, avec un petit portrait au trait, et `PERSONA.md`, avec le signe d'invite d'un terminal. Une flèche qui tourne en rond entoure les deux lignes."
    },
    {
     "id": "11.4",
     "texte": [
-     "Rappelez-vous la règle de l'étape 9. Décrivez votre classe, pas les personnes. Aucun nom d'élève."
+     "Rappelez-vous la règle de l'étape 9. Décrivez votre classe, pas les personnes. <mark class=\"geste\">Aucun nom d'élève</mark>."
     ],
     "ecran": "Une classe en silhouettes, sept têtes sans visage ni nom. À côté, un badge de nom barré d'orange."
    },
    {
     "id": "11.5",
     "texte": [
-     "<strong>À vous.</strong> Copiez le prompt 03, collez-le, et répondez aux neuf questions. C'est l'étape la plus longue : comptez vingt minutes."
+     "<strong>À vous.</strong> Copiez le prompt 03, collez-le, et <mark class=\"geste\">répondez aux neuf questions</mark>. C'est l'étape la plus longue : comptez vingt minutes."
     ],
     "ecran": "Bande « À vous » : bouton jaune du prompt 03, case à cocher. La classe sans nom reste à l'écran. Cochée, la case trace la sangle du ventre sur le cheval du coin, et le compteur avance d'une pièce."
    }
@@ -652,7 +652,7 @@ window.MONTAGE = [
    {
     "id": "12.1",
     "texte": [
-     "Comment l'agent sait-il que ces deux fichiers existent ? Par un troisième, <code>AGENTS.md</code>. C'est la porte du dossier : l'agent le lit avant d'agir. Ce sont les photos Polaroid de Leonard : elles disent ce qui se trouve où."
+     "Comment l'agent sait-il que ces deux fichiers existent ? Par un troisième, <code>AGENTS.md</code>. C'est la <mark class=\"these\">porte du dossier</mark> : l'agent le lit avant d'agir. Ce sont les photos Polaroid de Leonard : elles disent ce qui se trouve où."
     ],
     "ecran": "Le polaroïd se pose sur le texte à l'arrivée du pas, incliné : un dossier avec une porte, et la légende manuscrite « AGENTS.md : ce qui se trouve où ». Le dossier garde les pictogrammes et les filets de l'étape 11 ; la ligne `AGENTS.md` y apparaît en aplat sarcelle, mention « lu d'abord »."
    },
@@ -660,7 +660,7 @@ window.MONTAGE = [
     "id": "12.2",
     "texte": [
      "Il y trouve deux choses. Le chemin de vos deux fichiers, à lire tout de suite. Et le plan des six dossiers.",
-     "Voici la version exacte du signe de l'étape 7. De lui-même, l'agent ne cherche qu'un seul nom, <code>AGENTS.md</code>. Les autres fichiers en capitales, il les lit parce qu'<code>AGENTS.md</code> les lui désigne."
+     "Voici la version exacte du signe de l'étape 7. De lui-même, l'agent <mark class=\"these\">ne cherche qu'un seul nom</mark>, <code>AGENTS.md</code>. Les autres fichiers en capitales, il les lit parce qu'<code>AGENTS.md</code> les lui désigne."
     ],
     "ecran": "`IDENTITE.md` et `PERSONA.md` prennent un fond sarcelle léger et la mention « tout de suite ». Les filets des six sous-dossiers passent à l'orange le temps du pas."
    },
@@ -674,14 +674,14 @@ window.MONTAGE = [
    {
     "id": "12.4",
     "texte": [
-     "Pourquoi ne pas tout lui donner d'un coup ? Parce qu'un modèle lit mal un texte très long."
+     "Pourquoi ne pas tout lui donner d'un coup ? Parce qu'un modèle <mark class=\"these\">lit mal un texte très long</mark>."
     ],
     "ecran": "Le rectangle de la fenêtre de contexte, très haut, rempli de bandes de texte de bas en haut."
    },
    {
     "id": "12.5",
     "texte": [
-     "Des chercheurs l'ont mesuré en 2023. Un modèle retrouve bien une information placée au début ou à la fin de sa fenêtre de contexte. Il la retrouve nettement moins bien quand elle est au milieu. Ils ont appelé cela « perdu au milieu »."
+     "Des chercheurs l'ont mesuré en 2023. Un modèle retrouve bien une information placée au début ou à la fin de sa fenêtre de contexte. Il la retrouve nettement moins bien quand elle est au milieu. Ils ont appelé cela « <mark class=\"these\">perdu au milieu</mark> »."
     ],
     "ecran": "Clip. Dans le rectangle plein, une bande est marquée d'un point orange. Placée en haut, elle est retrouvée : une coche. Placée en bas, une coche. Placée au milieu, une croix."
    },
@@ -695,7 +695,7 @@ window.MONTAGE = [
    {
     "id": "12.7",
     "texte": [
-     "En 2024, une autre équipe a regardé ces poids. Le début et la fin en reçoivent plus que le milieu, quoi qu'il y soit écrit. Elle a même mélangé les passages : le penchant est resté."
+     "En 2024, une autre équipe a regardé ces poids. <mark class=\"these\">Le début et la fin en reçoivent plus que le milieu</mark>, quoi qu'il y soit écrit. Elle a même mélangé les passages : le penchant est resté."
     ],
     "ecran": "Clip. Les barres dessinent un U couché : longues en haut et en bas, courtes au milieu. Les bandes sont mélangées ; le U ne bouge pas."
    },
@@ -709,7 +709,7 @@ window.MONTAGE = [
    {
     "id": "12.9",
     "texte": [
-     "Plus la fenêtre est remplie, plus le milieu est grand. Mieux vaut donc n'y mettre que ce qui sert."
+     "Plus la fenêtre est remplie, plus le milieu est grand. Mieux vaut donc <mark class=\"these\">n'y mettre que ce qui sert</mark>."
     ],
     "ecran": "Clip, fin. Le rectangle raccourcit, ne gardant que quelques bandes : le creux du U se réduit."
    },
@@ -731,7 +731,7 @@ window.MONTAGE = [
     "id": "13.1",
     "texte": [
      "Comment apprend-on à un agent à faire quelque chose ? On le lui écrit.",
-     "Une skill est une procédure écrite dans un fichier, <code>SKILL.md</code>. L'agent la suit quand vous la lui demandez."
+     "Une skill est <mark class=\"these\">une procédure écrite dans un fichier</mark>, <code>SKILL.md</code>. L'agent la suit quand vous la lui demandez."
     ],
     "ecran": "Dans le dossier, `4.automatisations/` se déplie sur trois lignes : `skills/`, un sous-dossier encore sans nom, montré par une barre grise, et dedans le fichier `SKILL.md`. Les trois lignes « au besoin » de l'étape 12 ont quitté le dossier."
    },
@@ -766,14 +766,14 @@ window.MONTAGE = [
    {
     "id": "13.6",
     "texte": [
-     "La skill est la solidification de ce parcours. Des gestes appris un à un, et refaits à la main à chaque fois, se sont figés en une procédure écrite. Elle a changé depuis. Elle changera sans doute encore."
+     "La skill est la solidification de ce parcours. Des gestes appris un à un, et refaits à la main à chaque fois, se sont <mark class=\"these\">figés en une procédure écrite</mark>. Elle a changé depuis. Elle changera sans doute encore."
     ],
     "ecran": "Le trait hésitant s'efface. Les quatre repères s'alignent et deviennent les puces d'une liste nette de quatre lignes, dans le cadre d'un fichier nommé `SKILL.md`. Aucune écriture réaliste, seulement des lignes."
    },
    {
     "id": "13.7",
     "texte": [
-     "Une skill est un fichier texte : elle se partage. On la reçoit de quelqu'un, on l'adapte à sa façon de travailler, on la passe à d'autres. Chacun profite alors de ce que les autres ont compris : c'est une forme d'intelligence collective."
+     "Une skill est un fichier texte : elle se partage. On la reçoit de quelqu'un, on l'adapte à sa façon de travailler, on la passe à d'autres. Chacun profite alors de ce que les autres ont compris : c'est <mark class=\"these\">une forme d'intelligence collective</mark>."
     ],
     "ecran": "Le fichier `SKILL.md` à gauche, deux dossiers à droite. Une copie part vers le premier dossier, une autre vers le second. Dans la seconde, une ligne passe à l'orange, sous le mot « adaptée »."
    },
@@ -815,7 +815,7 @@ window.MONTAGE = [
    {
     "id": "14.2",
     "texte": [
-     "Pas en gardant la conversation ouverte. Une conversation qui s'allonge remplit la fenêtre de contexte, et vous savez depuis l'étape 12 ce qui se perd au milieu."
+     "<mark class=\"these\">Pas en gardant la conversation ouverte</mark>. Une conversation qui s'allonge remplit la fenêtre de contexte, et vous savez depuis l'étape 12 ce qui se perd au milieu."
     ],
     "ecran": "La fenêtre de contexte, un rectangle, s'allonge et se remplit de quatorze passages. À côté, en petit, les barres orange de l'étape 12 : longues en haut et en bas, courtes au milieu, sous le mot « attention »."
    },
@@ -823,7 +823,7 @@ window.MONTAGE = [
     "id": "14.3",
     "texte": [
      "OpenAI l'a noté aussi dans son test : un modèle peut travailler un peu moins bien quand sa fenêtre est pleine. C'est pour cela que le second réglage résumait la conversation quand elle devenait trop longue.",
-     "Mieux vaut fermer la conversation et en ouvrir une neuve."
+     "Mieux vaut <mark class=\"these\">fermer la conversation et en ouvrir une neuve</mark>."
     ],
     "ecran": "La fenêtre longue se replie vers le haut et pâlit. À droite, une fenêtre courte s'ouvre, un seul passage dedans, sous les mots « une neuve »."
    },
@@ -831,7 +831,7 @@ window.MONTAGE = [
     "id": "14.4",
     "texte": [
      "Pour ne rien perdre, vous demandez à l'agent de noter l'essentiel dans un fichier, <code>JOURNAL.md</code>, l'entrée la plus récente en haut. La prochaine fois, il lira les premières lignes et retrouvera le fil.",
-     "Un journal sert à retrouver le fil. Il ne sert pas à tout raconter."
+     "<mark class=\"these\">Un journal sert à retrouver le fil</mark>. Il ne sert pas à tout raconter."
     ],
     "ecran": "Sous la fenêtre repliée, le fichier `JOURNAL.md` s'ouvre : trois entrées, la plus récente en haut, surlignée de jaune et datée « aujourd'hui » ; les deux autres ont une barre grise pour date. Une flèche orange va de l'entrée du haut à la fenêtre neuve."
    },
@@ -845,7 +845,7 @@ window.MONTAGE = [
    {
     "id": "14.6",
     "texte": [
-     "Votre harnais est monté. Un dossier rangé, un fichier qui vous décrit, un autre qui décrit votre agent, une porte d'entrée, deux skills, un journal."
+     "<mark class=\"these\">Votre harnais est monté</mark>. Un dossier rangé, un fichier qui vous décrit, un autre qui décrit votre agent, une porte d'entrée, deux skills, un journal."
     ],
     "ecran": "Le dossier fini, douze lignes. Six allumages, dans l'ordre de la phrase : les six sous-dossiers, `IDENTITE.md`, `PERSONA.md`, `AGENTS.md`, `skills/`, `JOURNAL.md`. Chaque ligne allumée le reste."
    },
@@ -873,21 +873,21 @@ window.MONTAGE = [
    {
     "id": "15.2",
     "texte": [
-     "Vous ne refaites rien. Ouvrez le même dossier avec un autre agent, branché sur un autre modèle. Lui aussi commence par lire <code>AGENTS.md</code>, et il y trouve le chemin de vos fichiers."
+     "<mark class=\"these\">Vous ne refaites rien</mark>. Ouvrez le même dossier avec un autre agent, branché sur un autre modèle. Lui aussi commence par lire <code>AGENTS.md</code>, et il y trouve le chemin de vos fichiers."
     ],
     "ecran": "Les six pièces quittent le premier cheval une à une et se tracent sur le second, relevées sur sa pose. L'étiquette « à vous » descend avec elles et gagne une ligne : `mon_harnais/`."
    },
    {
     "id": "15.3",
     "texte": [
-     "Pourquoi cela marche-t-il ? Parce que vos fichiers sont du texte, et que tout agent sait lire du texte."
+     "Pourquoi cela marche-t-il ? Parce que vos fichiers sont du texte, et que <mark class=\"these\">tout agent sait lire du texte</mark>."
     ],
     "ecran": "À droite du premier cheval, à la place qu'a quittée l'étiquette, un fichier ouvert : des lignes, rien d'autre, sous les mots « du texte »."
    },
    {
     "id": "15.4",
     "texte": [
-     "Souvenez-vous du jardin clos. Là-bas, le harnais restait chez le fournisseur du modèle. Ici, il est à vous, et vous le posez sur le cheval de votre choix : Claude Code, Codex, Antigravity, Mistral Vibe, DeepSeek, voire même, quand les machines suivront, un LLM hébergé localement !"
+     "Souvenez-vous du jardin clos. Là-bas, le harnais restait chez le fournisseur du modèle. Ici, il est à vous, et vous le posez sur <mark class=\"these\">le cheval de votre choix</mark> : Claude Code, Codex, Antigravity, Mistral Vibe, DeepSeek, voire même, quand les machines suivront, un LLM hébergé localement !"
     ],
     "ecran": "L'enclos de l'étape 6 revient en trait pâle autour du premier cheval, porte fermée, sous les mots « jardin clos ». Le second cheval, harnaché, est dehors."
    },
@@ -915,7 +915,7 @@ window.MONTAGE = [
    {
     "id": "16.2",
     "texte": [
-     "Sur votre machine, l'agent peut piloter des programmes qui tournent en local, c'est-à-dire sur votre ordinateur, sans passer par Internet. Deux exemples. FFmpeg découpe et convertit le son et la vidéo. Whisper, installé localement, transcrit un enregistrement en texte, sans que les voix quittent votre ordinateur. L'étape 18 dit comment les installer."
+     "Sur votre machine, l'agent peut <mark class=\"these\">piloter des programmes qui tournent en local</mark>, c'est-à-dire sur votre ordinateur, sans passer par Internet. Deux exemples. FFmpeg découpe et convertit le son et la vidéo. Whisper, installé localement, transcrit un enregistrement en texte, sans que les voix quittent votre ordinateur. L'étape 18 dit comment les installer."
     ],
     "ecran": "Branche de gauche, dans le contour d'un ordinateur étiqueté « votre machine » : deux boîtes arrivent l'une après l'autre, FFmpeg avec une bande de film, Whisper avec une onde sonore qui devient des lignes de texte."
    },
@@ -923,21 +923,21 @@ window.MONTAGE = [
     "id": "16.3",
     "texte": [
      "Le kit vous en offre deux autres, tout petits.",
-     "Le premier est un validateur. Il parcourt votre dossier et signale, entre autres, les fichiers mal nommés. Il ne modifie rien. Votre <code>AGENTS.md</code> fixe en effet une règle de nommage : des minuscules, pas d'espaces, pas d'accents. Un agent peut l'oublier en route. Le validateur, jamais."
+     "Le premier est un validateur. Il parcourt votre dossier et signale, entre autres, les fichiers mal nommés. Il ne modifie rien. Votre <code>AGENTS.md</code> fixe en effet une règle de nommage : des minuscules, pas d'espaces, pas d'accents. Un agent peut l'oublier en route. <mark class=\"these\">Le validateur, jamais</mark>."
     ],
     "ecran": "Dans l'ordinateur, FFmpeg et Whisper se réduisent à deux étiquettes, en haut. Une boîte arrive dessous, bordée d'orange : « validateur », une liste de trois lignes cochées, et la mention « contrôle les noms »."
    },
    {
     "id": "16.4",
     "texte": [
-     "Le second ne sert que sur Claude Code, qui cherche d'abord un fichier nommé <code>CLAUDE.md</code>. Chaque fois qu'un <code>AGENTS.md</code> est créé, ce petit programme pose à côté un <code>CLAUDE.md</code> d'une ligne, qui y renvoie. C'est un pont, jamais une copie. Les versions récentes de Claude Code savent aussi lire <code>AGENTS.md</code> seules, et le pont évite d'en dépendre."
+     "Le second ne sert que sur Claude Code, qui cherche d'abord un fichier nommé <code>CLAUDE.md</code>. Chaque fois qu'un <code>AGENTS.md</code> est créé, ce petit programme pose à côté un <code>CLAUDE.md</code> d'une ligne, qui y renvoie. C'est <mark class=\"these\">un pont, jamais une copie</mark>. Les versions récentes de Claude Code savent aussi lire <code>AGENTS.md</code> seules, et le pont évite d'en dépendre."
     ],
     "ecran": "La boîte du validateur passe au sarcelle. Une seconde arrive sous elle, bordée d'orange : « pont », deux fichiers reliés par une arche, et la mention « sur Claude Code »."
    },
    {
     "id": "16.5",
     "texte": [
-     "Ces deux programmes sont déterministes : devant les mêmes fichiers, ils donnent toujours le même résultat. Un modèle, lui, peut répondre autrement d'une fois à l'autre.",
+     "<mark class=\"these\">Ces deux programmes sont déterministes</mark> : devant les mêmes fichiers, ils donnent toujours le même résultat. Un modèle, lui, peut répondre autrement d'une fois à l'autre.",
      "Et ils tournent sur votre machine, sans rien demander au modèle. Ils ne coûtent donc aucun token. Le token est un mot ou un morceau de mot : c'est l'unité dans laquelle un fournisseur compte ce que son modèle lit et écrit."
     ],
     "ecran": "Les deux boîtes sont sarcelle. Sous elles, dans l'ordinateur, la mention « toujours le même résultat ». À droite, hors de l'ordinateur, un nuage « le modèle » : le pointillé qui y mène est barré d'une croix orange. Sous le nuage, « 0 token »."
@@ -945,7 +945,7 @@ window.MONTAGE = [
    {
     "id": "16.6",
     "texte": [
-     "Qui les fait tourner ? uv, que vous avez installé à l'étape 8. Il leur fournit Python et ce qu'il leur faut, en le téléchargeant la première fois. C'est ce qui les rend si simples à installer. Et à créer : demandez un petit programme à votre agent, uv le lancera de la même façon.",
+     "Qui les fait tourner ? uv, que vous avez installé à l'étape 8. Il leur fournit Python et ce qu'il leur faut, en le téléchargeant la première fois. C'est ce qui les rend si simples à installer. Et à créer : <mark class=\"these\">demandez un petit programme à votre agent</mark>, uv le lancera de la même façon.",
      "Les voici. Le validateur s'intègre comme une skill, par <code>1.depot/</code>. Le second s'installe en collant un prompt."
     ],
     "ecran": "Au bas de l'ordinateur, sous les deux boîtes, une bande jaune apparaît, au nom de « uv » ; le socle passe au jaune avec elle. Sous le texte, deux boutons : jaune pour le dossier du validateur, en contour pour le prompt du pont, marqué « Claude Code »."
@@ -953,7 +953,7 @@ window.MONTAGE = [
    {
     "id": "16.7",
     "texte": [
-     "En ligne, l'agent peut se brancher à un service, un agenda ou une base de notes. Le branchement s'appelle MCP, pour Model Context Protocol : une prise standard entre un agent et un service. Vous n'avez plus à copier et coller."
+     "En ligne, l'agent peut se brancher à un service, un agenda ou une base de notes. Le branchement s'appelle MCP, pour Model Context Protocol : <mark class=\"these\">une prise standard entre un agent et un service</mark>. Vous n'avez plus à copier et coller."
     ],
     "ecran": "Le nuage et son compteur s'effacent. Branche de droite, hors de l'ordinateur : une prise étiquetée MCP s'enfonce dans son socle. De là, le pointillé « Internet » de l'étape 9 mène à un agenda et à un carnet de notes."
    },
@@ -981,7 +981,7 @@ window.MONTAGE = [
    {
     "id": "17.2",
     "texte": [
-     "Par une idée de petit outil. Écrivez <code>/conception_numerique</code>, suivi de votre idée en une phrase. La skill vous interroge, puis écrit l'idée, le plan et la fiche du projet.",
+     "<mark class=\"these\">Par une idée de petit outil</mark>. Écrivez <code>/conception_numerique</code>, suivi de votre idée en une phrase. La skill vous interroge, puis écrit l'idée, le plan et la fiche du projet.",
      "Demandez ensuite à l'agent d'exécuter le plan, étape par étape. Puis de journaliser."
     ],
     "ecran": "Une ligne de commande s'écrit dans un terminal : `/conception_numerique`, suivie d'un blanc souligné. Trois fichiers en sortent, l'idée, le plan, la fiche du projet. Puis une liste de trois étapes, sous les mots « le plan », se coche case après case. Puis `JOURNAL.md` s'allume en jaune. Sous le texte, la commande dans un bloc à copier."
@@ -996,14 +996,14 @@ window.MONTAGE = [
    {
     "id": "18.1",
     "texte": [
-     "Votre agent sait piloter bien d'autres programmes que ceux du kit. En voici sept, tous gratuits. Aucun n'est nécessaire pour monter votre harnais : installez ceux qui vous serviront, le jour où ils vous serviront. Chacun s'installe par une commande, à coller dans le terminal de VSCodium."
+     "Votre agent sait piloter bien d'autres programmes que ceux du kit. En voici sept, tous gratuits. <mark class=\"these\">Aucun n'est nécessaire pour monter votre harnais</mark> : installez ceux qui vous serviront, le jour où ils vous serviront. Chacun s'installe par une commande, à coller dans le terminal de VSCodium."
     ],
     "ecran": "Sept cases vides, en pointillé : une large en haut, puis six sur deux colonnes."
    },
    {
     "id": "18.2",
     "texte": [
-     "Le premier sert à installer les six autres. C'est un gestionnaire de paquets : un programme qui en télécharge d'autres depuis un catalogue tenu à jour, ce qui vous évite de chercher un installeur de site en site. Il s'appelle Homebrew sur Mac, Scoop sur Windows. Sur Mac :",
+     "<mark class=\"these\">Le premier sert à installer les six autres</mark>. C'est un gestionnaire de paquets : un programme qui en télécharge d'autres depuis un catalogue tenu à jour, ce qui vous évite de chercher un installeur de site en site. Il s'appelle Homebrew sur Mac, Scoop sur Windows. Sur Mac :",
      {
       "code": "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
      },
@@ -1018,7 +1018,7 @@ window.MONTAGE = [
    {
     "id": "18.3",
     "texte": [
-     "Pour oser essayer, il y a git. C'est un outil qui garde l'historique de votre dossier, comme un bouton « annuler » qui remonte aussi loin que vous voulez. Si une modification de l'agent ne vous convient pas, vous revenez à l'état d'avant. Sur Mac :",
+     "Pour oser essayer, il y a git. C'est un outil qui garde l'historique de votre dossier, comme <mark class=\"these\">un bouton « annuler »</mark> qui remonte aussi loin que vous voulez. Si une modification de l'agent ne vous convient pas, vous revenez à l'état d'avant. Sur Mac :",
      {
       "code": "brew install git"
      },
@@ -1076,7 +1076,7 @@ window.MONTAGE = [
    {
     "id": "18.7",
     "texte": [
-     "FFmpeg, vu à l'étape 16, découpe et convertit le son et la vidéo. Demandez à l'agent d'extraire la piste sonore d'un cours filmé, ou d'alléger une vidéo trop lourde : il écrit la commande pour vous. Sur Mac :",
+     "FFmpeg, vu à l'étape 16, découpe et convertit le son et la vidéo. Demandez à l'agent d'extraire la piste sonore d'un cours filmé, ou d'alléger une vidéo trop lourde : <mark class=\"these\">il écrit la commande pour vous</mark>. Sur Mac :",
      {
       "code": "brew install ffmpeg"
      },
@@ -1104,7 +1104,7 @@ window.MONTAGE = [
    {
     "id": "19.1",
     "texte": [
-     "Le kit contient douze skills de plus. Vous n'en avez pas besoin pour monter votre harnais. Ces skills sont à vous. Adaptez-les à votre façon de travailler, puis passez-les à d'autres.",
+     "Le kit contient douze skills de plus. Vous n'en avez pas besoin pour monter votre harnais. <mark class=\"these\">Ces skills sont à vous</mark>. Adaptez-les à votre façon de travailler, puis passez-les à d'autres.",
      "Chacune s'intègre comme les deux premières : glissez son dossier dans <code>1.depot/</code>, puis demandez à l'agent de l'intégrer."
     ],
     "ecran": "Douze cases vides, en pointillé, sur cinq rangées : deux, deux, trois, trois et deux."
@@ -1244,9 +1244,10 @@ window.AVANT = [
  {
   "id": "0.4",
   "texte": [
-   "Au clavier, <code>←</code> revient d'un pas et <code>→</code> avance d'un pas."
+   "Au clavier, <code>←</code> revient d'un pas et <code>→</code> avance d'un pas.",
+   "Dans le texte, <mark class=\"these\">l'idée à retenir</mark> est surlignée en orange, <mark class=\"geste\">ce que vous avez à faire</mark> en jaune."
   ],
-  "ecran": "Sous la légende, qui reste, une ligne de plus, ses deux flèches dessinées en touches de clavier."
+  "ecran": "Sous la légende, qui reste, une ligne de plus, ses deux flèches dessinées en touches de clavier. Dessous, la légende des deux surlignages, dont les bandes se tracent."
  },
  {
   "id": "0.5",
