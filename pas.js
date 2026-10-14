@@ -363,7 +363,8 @@ window.MONTAGE = [
    {
     "id": "8.3",
     "texte": [
-     "Deux : uv. Les petits outils que l'agent IA construira sont écrits en Python, un langage de programmation. Pour fonctionner, ils ont besoin que Python soit présent sur votre machine. uv s'en charge."
+     "Deux : uv. Les petits outils que l'agent IA construira sont écrits en Python, un langage de programmation. Pour fonctionner, ils ont besoin que Python soit présent sur votre machine. uv s'en charge.",
+     "De plus, uv facilitera le fonctionnement de tous ces outils en local, sur votre machine. Cela permet une économie de tokens."
     ],
     "ecran": "Deuxième emplacement : une petite boîte étiquetée Python, que « uv » pose sur la machine."
    },
