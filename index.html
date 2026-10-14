@@ -210,7 +210,7 @@ body.coin-gauche .coin{right:calc(100vw - 176px)}
 .ligne .ico{width:16px;height:16px;flex:none}
 .ligne.sous{margin-left:22px}
 .ligne .note{margin-left:auto;font:600 11px/1 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;opacity:0;transition:opacity var(--duree)}
-.l-agents{opacity:0;transform:translateX(-10px)}
+.l-agents,.l-claude{opacity:0;transform:translateX(-10px)}
 .d-agents .l-agents{opacity:1;transform:none;background:var(--teal);color:var(--paper)}
 .d-agents .l-agents .note{opacity:1}
 .d-tout .l-tout{background:rgba(18,118,118,.16)}
@@ -219,6 +219,11 @@ body.coin-gauche .coin{right:calc(100vw - 176px)}
 .l-besoin{opacity:.28;outline:1.5px dashed transparent;outline-offset:-2px}
 .d-besoin .l-besoin{opacity:1;outline-color:var(--orange);transition-delay:calc(var(--i) * .4s)}
 .d-besoin .l-besoin .note{opacity:1;color:#B8431A}
+.l-claude{display:none}
+.d-claude .l-claude{display:flex;opacity:1;transform:none;animation:pose .5s ease .2s both}
+.d-claude .l-claude .note{opacity:1;color:var(--teal-sombre)}
+.arche{position:absolute;left:8px;top:66px;width:18px;height:40px;opacity:0;transition:opacity var(--duree)}
+.d-claude .arche{opacity:1}
 .cadre .dossier,.cadre .fenetre{transition:opacity .5s}
 .cadre.f .dossier{opacity:0;position:absolute;inset:0 0 auto 0;pointer-events:none}
 .cadre:not(.f) .fenetre{display:none}
@@ -244,7 +249,7 @@ body.coin-gauche .coin{right:calc(100vw - 176px)}
 @keyframes pose{from{opacity:0;transform:translateY(14px)}}
 .cadre.pose .dossier{margin:14px 56px 0 0;animation:pose .6s ease .9s both}
 .d-vide{min-height:74px}
-.d-vide .ligne{display:none}
+.d-vide .ligne,.d-vide .arche{display:none}
 .mini svg{width:100%;height:auto;max-height:calc(100vh - 170px);display:block}
 .mini svg *{transition:opacity .5s,transform .9s ease,fill .5s,stroke .5s}
 .lab7{font:600 12px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;fill:var(--gris)}
@@ -311,7 +316,7 @@ body.coin-gauche .coin{right:calc(100vw - 176px)}
 .h-trois .nuage8{opacity:1;transition-delay:3s}
 .boite{opacity:0;transform:translateY(-44px)}
 .h-deux .boite{opacity:1;transform:none;transition:opacity .3s .6s,transform .7s cubic-bezier(.3,1.5,.5,1) .6s}
-.d-racine .ligne.sous{display:none}
+.d-racine .ligne.sous,.d-racine .arche{display:none}
 .d-racine .ligne{animation:pose .6s ease .3s both}
 /* Les commandes à copier, et le sélecteur de système et d'agent */
 .cmd p{margin:0 0 .3em!important;font-size:15px!important;font-weight:600;color:var(--teal-sombre)}
@@ -376,7 +381,7 @@ code.choisi{background:var(--jaune);font-weight:600}
 .leg{font:600 12px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;fill:var(--gris);opacity:0;transition:opacity .5s}
 .memo.k-legendes .leg{opacity:1;transition-delay:calc(.5s + var(--i) * .8s)}
 .memo.k-petit .leg{opacity:0;transition-delay:0s}
-.d-dix .l-agents,.d-dix .l-tout,.d-dix .l-besoin{display:none}
+.d-dix .l-claude,.d-dix .l-agents,.d-dix .l-tout,.d-dix .l-besoin,.d-dix .arche{display:none}
 .d-deroule .l-plan{animation:pose .5s ease calc(.2s + var(--i) * .15s) both}
 .d-dix .l-plan{color:var(--gris);transition:color .5s,box-shadow .5s;transition-delay:calc(.2s + var(--j) * .8s)}
 .d-dix .l-plan .suite{color:transparent;background:#d9dcd8;border-radius:3px;transition:color .5s,background .5s;transition-delay:calc(.2s + var(--j) * .8s)}
@@ -400,8 +405,9 @@ code.choisi{background:var(--jaune);font-weight:600}
 .kit10.k-pile .f10{opacity:1;transform:none;transition-delay:calc(.3s + var(--i) * .25s)}
 .feuille10{fill:#fff;stroke:var(--teal-sombre);stroke-width:2;stroke-linejoin:round}
 .n10{font:600 13px 'JetBrains Mono',ui-monospace,Menlo,monospace;fill:var(--teal-sombre)}
-.pile10 .lab7{opacity:0}
+.pile10 .lab7,.pile10 .sous8{opacity:0}
 .kit10.k-pile .pile10 .lab7{opacity:1}
+.kit10.k-pile .pile10 .sous8{opacity:1;transition-delay:1.8s}
 .kit10.k-premiers .un .feuille10{fill:var(--jaune);transition-delay:.4s}
 .kit10.k-permission .pile10,.perm10{opacity:0}
 .kit10.k-permission .perm10{opacity:1;transition-delay:.4s}
@@ -1147,7 +1153,9 @@ body.compteur .coin .tete span:last-child{opacity:1}
     </svg>
     <div class="dossier" id="arbre">
       <div class="tete"><span>Votre dossier</span></div>
+      <svg class="arche" viewBox="0 0 18 40" fill="none" stroke="#E4632E" stroke-width="2"><path d="M16,4 C2,4 2,36 16,36"/></svg>
       <div class="ligne"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 3.5h5l1.5 2h6.5v8h-13z"/></svg>mon_harnais/</div>
+      <div class="ligne sous l-claude"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h6l3 3v10h-9z"/></svg>CLAUDE.md<span class="note">le pont</span></div>
       <div class="ligne sous l-agents"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h6l3 3v10h-9z"/></svg>AGENTS.md<span class="note">lu d'abord</span><svg class="mem" style="--m:0" viewBox="0 0 28 28" aria-hidden="true"><g transform="rotate(-6 14 14)"><rect x="4" y="2" width="20" height="24" fill="#fdfcf8"/><rect x="6.5" y="4.5" width="15" height="14" fill="#0B4E4E"/></g></svg></div>
       <div class="bloc11"><svg class="boucle" viewBox="0 0 180 51" aria-hidden="true"><path class="tour" pathLength="1" d="M178,24 V39 a10,10 0 0 1 -10,10 H12 a10,10 0 0 1 -10,-10 V12 a10,10 0 0 1 10,-10 H168 a10,10 0 0 1 10,10"/><path class="pointe" d="M172,8 l6,9 l6,-9"/></svg>
         <div class="ligne sous l-tout" style="--i:0"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h6l3 3v10h-9z"/></svg>IDENTITE.md<svg class="ico pic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5a2.6 2.6 0 1 0 .01 0z M3 14c0-3.4 2.2-5 5-5s5 1.6 5 5"/></svg><span class="note">tout de suite</span></div>
@@ -1168,10 +1176,10 @@ body.compteur .coin .tete span:last-child{opacity:1}
       <div class="ligne sous l-besoin" style="--i:1">JOURNAL.md<span class="note">au besoin</span></div>
       <div class="ligne sous l-besoin" style="--i:2">skills/…/SKILL.md<span class="note">au besoin</span></div>
     </div>
-    <svg id="kit10" class="kit10" viewBox="0 0 480 118" role="img" aria-label="Les prompts du kit : quatre fichiers numérotés, puis la fenêtre où l'agent demande la permission d'écrire">
+    <svg id="kit10" class="kit10" viewBox="0 0 480 118" role="img" aria-label="Les prompts du kit : quatre fichiers numérotés et un cinquième réservé à Claude Code, puis la fenêtre où l'agent demande la permission d'écrire">
       <g class="pile10"><text class="lab7" x="10" y="14">Les prompts du kit</text>
-        <g transform="translate(20,26)"><g class="f10 un" style="--i:0"><path class="feuille10" d="M0,0 h32 l14,14 v52 h-46 z"/><text class="n10" x="5" y="60">01</text></g></g><g transform="translate(50,31)"><g class="f10 un" style="--i:1"><path class="feuille10" d="M0,0 h32 l14,14 v52 h-46 z"/><text class="n10" x="5" y="60">02</text></g></g><g transform="translate(80,36)"><g class="f10" style="--i:2"><path class="feuille10" d="M0,0 h32 l14,14 v52 h-46 z"/><text class="n10" x="5" y="60">03</text></g></g><g transform="translate(110,41)"><g class="f10" style="--i:3"><path class="feuille10" d="M0,0 h32 l14,14 v52 h-46 z"/><text class="n10" x="5" y="60">04</text></g></g>
-        </g>
+        <g transform="translate(20,26)"><g class="f10 un" style="--i:0"><path class="feuille10" d="M0,0 h32 l14,14 v52 h-46 z"/><text class="n10" x="5" y="60">01</text></g></g><g transform="translate(50,31)"><g class="f10 un" style="--i:1"><path class="feuille10" d="M0,0 h32 l14,14 v52 h-46 z"/><text class="n10" x="5" y="60">02</text></g></g><g transform="translate(80,36)"><g class="f10" style="--i:2"><path class="feuille10" d="M0,0 h32 l14,14 v52 h-46 z"/><text class="n10" x="5" y="60">03</text></g></g><g transform="translate(110,41)"><g class="f10" style="--i:3"><path class="feuille10" d="M0,0 h32 l14,14 v52 h-46 z"/><text class="n10" x="5" y="60">04</text></g></g><g transform="translate(190,36)"><g class="f10" style="--i:5"><path class="feuille10" d="M0,0 h32 l14,14 v52 h-46 z"/><text class="n10" x="5" y="60">05</text></g></g>
+        <text class="sous8" x="246" y="68">prompt 05,</text><text class="sous8" x="246" y="86">Claude Code</text></g>
       <g class="perm10"><rect class="trait8 fond8" x="10" y="14" width="300" height="96" rx="4"/><path class="trait8" d="M10,36 h300"/><circle cx="24" cy="25" r="2.5"/><circle cx="34" cy="25" r="2.5"/><text class="lab7" x="50" y="29">l'agent</text>
         <text class="q10" x="30" y="64">écrire dans mon_harnais ?</text>
         <rect class="trait8" x="30" y="76" width="64" height="24" rx="12"/><text class="b10" x="62" y="93" text-anchor="middle">oui</text>
@@ -1222,13 +1230,13 @@ const K10 = 'K photo note encre legendes', D10 = K10 + ' petit dix', S10 = D10 +
 // À l'étape 11, le dossier garde ses six sous-dossiers, repliés pour tenir au-dessus du cheval du coin ;
 // les deux fichiers s'y ajoutent au pas 3.
 const D11 = 'O dix noms6 icones', E11 = D11 + ' onze';
-// À l'étape 12, il garde ses pictogrammes et ses filets.
+// À l'étape 12, il garde ses pictogrammes et ses filets ; CLAUDE.md n'y prend sa ligne qu'au pas 10.
 const D12 = 'douze icones agents', T12 = D12 + ' tout besoin';
 // À l'étape 13, les trois lignes « au besoin » laissent la place à la skill, dépliée sous 4.automatisations/.
 // Du pas 3 au pas 8, le parcours puis le partage prennent la colonne, comme la fenêtre à l'étape 12.
-const D13 = 'douze icones agents treize', P13 = 'P trait reperes';
+const D13 = 'douze icones agents claude treize', P13 = 'P trait reperes';
 // À l'étape 14, le dossier est fini : JOURNAL.md y a sa ligne, skills/ se replie sur ses deux skills.
-const D14 = 'douze icones quatorze', F14 = 'J fen long';
+const D14 = 'douze icones claude quatorze', F14 = 'J fen long';
 // À l'étape 16, les deux petits programmes du kit se posent sur la machine, puis ce qui les distingue du modèle.
 const P16 = 'S branches local valid pont det';
 const SCENES = {
@@ -1261,7 +1269,7 @@ const SCENES = {
   '12.1': D12, '12.2': D12 + ' tout plan', '12.3': T12,
   '12.4': 'F', '12.5': 'F repere', '12.6': 'F poids', '12.7': 'F poids melange',
   '12.8': 'F poids melange pourquoi', '12.9': 'F poids court',
-  '12.10': T12,
+  '12.10': T12 + ' claude', '12.11': T12 + ' claude',
   '13.1': D13 + ' deplie13', '13.2': D13 + ' nom13 sorties',
   '13.3': 'P trait', '13.4': P13, '13.5': P13 + ' bulle', '13.6': P13 + ' bulle fige',
   '13.7': 'P partage', '13.8': 'P filiation',
@@ -1298,9 +1306,12 @@ const AVOUS = {
     boutons: [{texte: 'Copier le prompt 03', fichier: '03_identite_persona.md'}],
     coche: "C'est fait, mon agent a écrit mes deux fichiers",
   },
-  '12.10': {
+  '12.11': {
     titre: true,
-    boutons: [{texte: 'Copier le prompt 04', fichier: '04_agents.md'}],
+    boutons: [
+      {texte: 'Copier le prompt 04', fichier: '04_agents.md'},
+      {texte: 'Copier le prompt 05, Claude Code', fichier: '05_hook_claude_code.md', second: true},
+    ],
     coche: "C'est fait, mon agent a écrit AGENTS.md",
   },
   '13.10': {
@@ -1317,10 +1328,7 @@ const POLAROID = {
 // Hors des « À vous » : un pas peut offrir à copier sa première commande ou un prompt du kit, à télécharger le dossier d'une skill.
 const COPIE = ['17.2', '18.8'];
 const BOUTONS = {
-  '16.6': [
-    {texte: 'Télécharger validateur', dossier: 'validateur'},
-    {texte: 'Copier le prompt du pont, Claude Code', fichier: 'bonus_hook_claude_code.md', second: true},
-  ],
+  '16.6': [{texte: 'Télécharger validateur', dossier: 'validateur'}],
   '18.3': [{texte: 'Télécharger git', dossier: 'git'}],
 };
 // Un bouton copie un prompt du kit, ou livre le dossier d'une skill en archive ; « second » le dessine en contour.
