@@ -220,7 +220,8 @@ window.MONTAGE = [
    {
     "id": "5.8",
     "texte": [
-     "Vous n'avez donc jamais utilisé un modèle nu. Le cheval que vous connaissez a toujours été harnaché."
+     "Vous n'avez donc jamais utilisé un modèle nu. Le cheval que vous connaissez a toujours été harnaché.",
+     "Le seul problème, c'est que ce n'est pas votre harnais, c'est celui du fournisseur. Vous ne décidez pas complètement de ce qui est dedans. Vous acceptez qu'un autre équipe votre cheval de façon standard."
     ],
     "ecran": "La colonne s'efface. Le cheval seul, harnaché de couleur de la tête au crochet. C'est le dessin de l'étape 1, pas un trait de plus."
    }
