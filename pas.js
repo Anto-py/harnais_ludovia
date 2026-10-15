@@ -401,7 +401,7 @@ window.MONTAGE = [
    {
     "id": "8.7",
     "texte": [
-     "Le terminal ouvert ne connaît pas encore le programme que vous venez d'installer : <mark class=\"geste\">il faut le relancer</mark>. Sur Mac, cliquez sur la corbeille, à droite de la bande du terminal, puis ouvrez un nouveau terminal. Sur Windows, cela ne suffit pas : fermez VSCodium tout entier, relancez-le, puis rouvrez le terminal. Tapez ensuite <code>uv --version</code>. Un numéro s'affiche : uv est en place."
+     "Le terminal ouvert ne connaît pas encore le programme que vous venez d'installer : il faut le relancer. Sur Mac, <mark class=\"geste\">fermez le terminal en cliquant sur la corbeille</mark>, à droite de sa bande, puis ouvrez-en un nouveau. Sur Windows, cela ne suffit pas : <mark class=\"geste\">fermez VSCodium tout entier, puis relancez-le</mark>, et rouvrez le terminal. Tapez ensuite <code>uv --version</code>. Un numéro s'affiche : uv est en place."
     ],
     "ecran": "Dans le texte, la commande `uv --version`."
    },
@@ -440,14 +440,15 @@ window.MONTAGE = [
      "Mistral Vibe, sur Windows :",
      {
       "code": "uv tool install mistral-vibe"
-     }
+     },
+     "Attendez ensuite que le programme se télécharge : cela peut prendre un moment, et certains installateurs n'affichent rien pendant ce temps. Ne fermez pas le terminal avant qu'il vous rende la main, quand une nouvelle ligne attend votre prochaine commande. Si l'installateur de Codex demande « Start Codex now? », tapez n, puis Entrée : vous le lancerez au pas suivant."
     ],
     "ecran": "Un sélecteur à deux rangs : le système (Mac, Windows) et l'agent (Claude Code, Codex, Antigravity, Mistral Vibe). Une seule commande s'affiche, celle du couple choisi, dans un bloc de code avec son bouton « copier ». Les huit commandes du script sont toutes dans la page, le sélecteur n'en montre qu'une à la fois."
    },
    {
     "id": "8.9",
     "texte": [
-     "Relancez encore le terminal, de la même façon : la corbeille sur Mac, VSCodium tout entier sur Windows. Lancez alors l'agent par son nom : <code>claude</code>, <code>codex</code>, <code>agy</code> ou <code>vibe</code>. La première fois, il vous demande de vous connecter à votre compte, le plus souvent en ouvrant votre navigateur. Une fois connecté, tout est prêt."
+     "Relancez encore le terminal, de la même façon : sur Mac, <mark class=\"geste\">fermez le terminal par la corbeille</mark> ; sur Windows, <mark class=\"geste\">fermez VSCodium tout entier, puis relancez-le</mark>. Lancez alors l'agent par son nom : <code>claude</code>, <code>codex</code>, <code>agy</code> ou <code>vibe</code>. La première fois, il vous pose quelques questions pour finir son installation : il vous demande de vous connecter à votre compte, le plus souvent en ouvrant votre navigateur, et parfois de choisir l'apparence de l'écran ou d'accorder votre confiance au dossier. Ce n'est pas une panne : lisez chaque question et répondez-y. Le dossier est le vôtre, vous pouvez lui faire confiance. Une fois ces questions passées, tout est prêt."
     ],
     "ecran": "Dans le texte, les quatre noms de lancement, celui de l'agent choisi étant surligné de jaune. Une case à cocher : « c'est fait, mon agent est lancé ». Cochée, elle trace la bride et les œillères sur le cheval du coin, en orange. Compteur : 1 pièce sur 6."
    }
