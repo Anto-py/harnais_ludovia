@@ -823,7 +823,7 @@ window.MONTAGE = [
  {
   "n": 14,
   "titre": "Le journal",
-  "sources": "<a href=\"https://openai.com/index/how-two-settings-tripled-our-arc-agi-3-scores/\">billet d'OpenAI</a>, « a fuller context window, which can slightly impair performance ».",
+  "sources": "<a href=\"https://openai.com/index/how-two-settings-tripled-our-arc-agi-3-scores/\">billet d'OpenAI</a>, « a fuller context window, which can slightly impair performance ». Le seuil de 60 à 70 % est une estimation de l'auteur, non mesurée.",
   "pas": [
    {
     "id": "14.1",
@@ -835,7 +835,8 @@ window.MONTAGE = [
    {
     "id": "14.2",
     "texte": [
-     "<mark class=\"these\">Pas en gardant la conversation ouverte</mark>. Une conversation qui s'allonge remplit la fenêtre de contexte, et vous savez depuis l'étape 12 ce qui se perd au milieu."
+     "<mark class=\"these\">Pas en gardant la conversation ouverte</mark>. Une conversation qui s'allonge remplit la fenêtre de contexte, et vous savez depuis l'étape 12 ce qui se perd au milieu.",
+     "Les fournisseurs annoncent des fenêtres immenses. Prenez leurs chiffres pour un plafond, pas pour une zone de confort. D'expérience, j'estime que les résultats restent optimaux tant que la fenêtre n'est pas remplie à plus de 60 à 70 %. C'est une estimation personnelle, pas une mesure."
     ],
     "ecran": "La fenêtre de contexte, un rectangle, s'allonge et se remplit de quatorze passages. À côté, en petit, les barres orange de l'étape 12 : longues en haut et en bas, courtes au milieu, sous le mot « attention »."
    },
@@ -843,7 +844,7 @@ window.MONTAGE = [
     "id": "14.3",
     "texte": [
      "OpenAI l'a noté aussi dans son test : un modèle peut travailler un peu moins bien quand sa fenêtre est pleine. C'est pour cela que le second réglage résumait la conversation quand elle devenait trop longue.",
-     "Mieux vaut <mark class=\"these\">fermer la conversation et en ouvrir une neuve</mark>."
+     "Mieux vaut <mark class=\"these\">fermer la conversation et en ouvrir une neuve</mark>. Pour un travail complexe, cela oblige à le découper en plusieurs séances, chacune dans une conversation neuve."
     ],
     "ecran": "La fenêtre longue se replie vers le haut et pâlit. À droite, une fenêtre courte s'ouvre, un seul passage dedans, sous les mots « une neuve »."
    },
@@ -1180,53 +1181,90 @@ window.MONTAGE = [
  },
  {
   "n": 20,
+  "titre": "Pour aller encore plus loin (si vraiment vous vous embêtez !)",
+  "sources": "<a href=\"https://docs.github.com/\">GitHub</a> pour le dépôt privé ; Tiago Forte, « Building a Second Brain », 2022, pour l'expression ; <a href=\"https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f\">Andrej Karpathy, « LLM Wiki »</a>, 4 avril 2026, pour la méthode, « The knowledge is compiled once and then kept current, not re-derived on every query ».",
+  "pas": [
+   {
+    "id": "20.1",
+    "texte": [
+     "Votre harnais tourne. Deux pistes le feront grandir, pour les semaines qui viennent : le synchroniser avec GitHub, et lui donner un second cerveau."
+    ],
+    "ecran": "Deux grandes cases vides, en pointillé, l'une au-dessus de l'autre."
+   },
+   {
+    "id": "20.2",
+    "texte": [
+     "Première piste : <strong>synchroniser votre harnais</strong>. L'étape 18 l'a évoqué : GitHub garde une copie de votre dossier en ligne. À quoi cela sert-il ? Votre harnais survit à la panne ou au vol de votre ordinateur. Et vous le retrouvez <mark class=\"these\">à l'identique sur un second ordinateur</mark>, à l'école comme à la maison, skills et journal compris.",
+     "Synchroniser, c'est envoyer vos points de retour vers GitHub depuis un ordinateur, puis les récupérer sur l'autre avant de vous y mettre. La skill <code>git</code> fait les deux : « sauvegarde mon travail » d'un côté, « récupère la dernière version » de l'autre. Même privé, ce dépôt reste chez un tiers : pas de données d'élèves."
+    ],
+    "ecran": "Première case, en jaune, titrée « synchroniser » : à gauche un ordinateur « école », à droite un ordinateur « maison », chacun avec son dossier `mon_harnais/` ; au milieu, un nuage « GitHub, privé ». Deux flèches orange partent de l'école vers le nuage, puis du nuage vers la maison."
+   },
+   {
+    "id": "20.3",
+    "texte": [
+     "Seconde piste : <strong>un second cerveau</strong>. L'expression, popularisée par Tiago Forte, désigne un lieu hors de votre tête où vous rangez ce que vous apprenez, pour le retrouver. Votre harnais lui a déjà réservé une place : <code>3.connaissances/</code>.",
+     "À quoi cela sert-il ? <mark class=\"these\">Vous choisissez où votre agent puise</mark>. Quand il prépare un cours, il lit les fiches et les sources que vous avez triées, au lieu de chercher sur Internet à chaque fois. Pour commencer, deux skills de l'étape 19 : <code>fiche</code> range une idée ou une source, <code>exploration_perso</code> vous aide à comprendre un sujet puis en écrit la fiche."
+    ],
+    "ecran": "La première case passe au blanc. Seconde case, en jaune, titrée « un second cerveau », sous-titre `3.connaissances/` : cinq fiches reliées par des traits sarcelle. À droite, l'agent, un terminal `>_`, tire une flèche orange vers les fiches ; à gauche, un globe « Internet » grisé, sa flèche barrée."
+   },
+   {
+    "id": "20.4",
+    "texte": [
+     "Andrej Karpathy, chercheur cofondateur d'OpenAI, a décrit en avril 2026 une méthode voisine, le « LLM Wiki ». Vous déposez vos sources ; l'agent les lit une fois, en tire des pages reliées entre elles, et les tient à jour. Le savoir est ainsi <mark class=\"these\">compilé une fois, au lieu d'être recherché à chaque question</mark>. Sa note, en anglais, est écrite pour être collée telle quelle à votre agent : <a href=\"https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f\">LLM Wiki</a>."
+    ],
+    "ecran": "Dans la seconde case, sous les fiches, s'inscrit en capitales orange « compilé une fois »."
+   }
+  ]
+ },
+ {
+  "n": 21,
   "titre": "Six mots à emporter",
   "sources": "",
   "pas": [
    {
-    "id": "20.1",
+    "id": "21.1",
     "texte": [
      "Modèle de langage : le programme qui prolonge un texte."
     ],
     "ecran": "Six vignettes vides, en pointillé, sur deux rangées de trois. La première s'allume, avec son mot dessous : le cheval gravé, sans couleur."
    },
    {
-    "id": "20.2",
+    "id": "21.2",
     "texte": [
      "Fenêtre de contexte : ce qu'il a sous les yeux."
     ],
     "ecran": "Deuxième vignette : le rectangle de la fenêtre de contexte, trois passages dedans, et un œil qui le regarde."
    },
    {
-    "id": "20.3",
+    "id": "21.3",
     "texte": [
      "Harnais : tout ce qui l'entoure."
     ],
     "ecran": "Troisième vignette : les six pièces du harnais en sarcelle, sans le cheval."
    },
    {
-    "id": "20.4",
+    "id": "21.4",
     "texte": [
      "Jardin clos : un harnais qui ne vous appartient pas."
     ],
     "ecran": "Quatrième vignette : l'enclos en double trait et sa porte fermée."
    },
    {
-    "id": "20.5",
+    "id": "21.5",
     "texte": [
      "Fichier persistant : ce qui reste quand la conversation s'efface."
     ],
     "ecran": "Cinquième vignette : un fichier `.md` posé sur le disque."
    },
    {
-    "id": "20.6",
+    "id": "21.6",
     "texte": [
      "Skill : un savoir-faire écrit."
     ],
     "ecran": "Sixième vignette : la note manuscrite, papier jaune griffonné."
    },
    {
-    "id": "20.7",
+    "id": "21.7",
     "texte": [
      "Vous disiez que les résultats étaient parfois très moyens. La prochaine fois, avant d'accuser le cheval, regardez le harnais."
     ],
